@@ -821,7 +821,6 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
       <span class="pl-live-txt" id="pl-live-txt">LIVE</span>
     </div>
     <div class="pl-name">BEATZONE FM</div>
-    <div class="pl-listeners" id="pl-listeners"></div>
   </div>
 
   <!-- center: controls + waveform -->
@@ -876,11 +875,6 @@ footer{padding-bottom:80px;}
 .pl-name{
   font-family:'Barlow Condensed',sans-serif;font-weight:900;
   font-size:.95rem;letter-spacing:.06em;color:#f0ede5;
-  white-space:nowrap;
-}
-.pl-listeners{
-  font-family:'Space Mono',monospace;font-size:.5rem;
-  letter-spacing:.1em;color:rgba(240,237,229,.35);
   white-space:nowrap;
 }
 
@@ -1035,18 +1029,9 @@ function fetchNowPlaying(){
       // update track display
       const trackEl  = document.getElementById('pl-track');
       const artistEl = document.getElementById('pl-artist');
-      const listEl   = document.getElementById('pl-listeners');
-
-      if(trackEl){
-        if(title){
-          trackEl.textContent  = title;
-          if(artistEl) artistEl.textContent = artist;
-        }
-      }
-      if(listEl){
-        listEl.textContent = listeners === 1
-          ? '1 Hörer'
-          : listeners + ' Hörer';
+      if(trackEl && title){
+        trackEl.textContent  = title;
+        if(artistEl) artistEl.textContent = artist;
       }
     })
     .catch(() => {}); // silent fail — stream still works

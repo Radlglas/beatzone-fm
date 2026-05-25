@@ -1154,25 +1154,29 @@ fbdb.collection('shows').orderBy('order').get().then(snapshot => {
 });
 
 /* ── WUNSCHBOX: Status aus Firebase laden ── */
+// Standard: geschlossen — wird nur geöffnet wenn DJ es im Radio Panel aktiviert
+document.getElementById('wish-form').style.display   = 'none';
+document.getElementById('wish-closed').style.display = 'block';
+
 (function loadWishboxStatus(){
   fbdb.collection('settings').doc('studio').get().then(function(snap){
-    var greetingsOpen    = true;
-    var songRequestsOpen = true;
+    var greetingsOpen    = false; // Standard: geschlossen
+    var songRequestsOpen = false;
     if(snap.exists){
       var d = snap.data();
-      greetingsOpen    = d.greetingsOpen    !== false;
-      songRequestsOpen = d.songRequestsOpen !== false;
+      greetingsOpen    = d.greetingsOpen    === true;
+      songRequestsOpen = d.songRequestsOpen === true;
     }
-    if(!greetingsOpen){
-      document.getElementById('wish-form').style.display   = 'none';
-      document.getElementById('wish-closed').style.display = 'block';
+    if(greetingsOpen){
+      document.getElementById('wish-form').style.display   = 'flex';
+      document.getElementById('wish-closed').style.display = 'none';
     }
     if(!songRequestsOpen){
       var sw = document.getElementById('w-song-wrap');
       if(sw) sw.style.display = 'none';
     }
   }).catch(function(){
-    // Bei Fehler: Box offen anzeigen (fail-open)
+    // Bei Firebase-Fehler: geschlossen bleiben
   });
 })();
 

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Discord — BEATZONE FM</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --cream:#f5f1e8;--cream2:#ede9df;--ink:#0e0c09;
+  --red:#e8200a;--mid:#857f70;--faint:#ccc7bc;--rule:rgba(14,12,9,0.12);
+  --disc:#5865F2;--disc-d:#4752C4;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.04;mix-blend-mode:multiply;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,5vw,64px);
+  background:rgba(245,241,232,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--rule);}
+.n-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.25rem;
+  letter-spacing:0.05em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px;}
+.n-bar{width:3px;border-radius:1px;background:var(--red);
+  animation:signal var(--d,.5s) var(--del,0s) ease-in-out infinite alternate;}
+@keyframes signal{from{height:4px;}to{height:var(--h,14px);}}
+.n-signal{display:flex;align-items:center;gap:3px;height:16px;}
+.n-links{display:flex;gap:2px;}
+.n-a{padding:6px 14px;border-radius:3px;font-size:0.82rem;font-weight:500;
+  color:var(--mid);text-decoration:none;transition:color .15s,background .15s;}
+.n-a:hover,.n-a.active{color:var(--ink);background:rgba(14,12,9,.05);}
+.n-cta{padding:7px 20px;background:var(--ink);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--cream);text-decoration:none;cursor:pointer;transition:opacity .2s;}
+.n-cta:hover{opacity:.8;}
+
+/* HERO */
+.disc-hero{
+  margin-top:54px;
+  background:linear-gradient(135deg, #3c4ddb 0%, var(--disc) 40%, #7289da 70%, #4752C4 100%);
+  padding:clamp(70px,12vw,140px) clamp(20px,5vw,64px);
+  position:relative;overflow:hidden;
+}
+.disc-hero::before{
+  content:'';position:absolute;top:-40%;right:-10%;
+  width:70%;height:200%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 65%);
+}
+.disc-hero::after{
+  content:'';position:absolute;bottom:-50%;left:-5%;
+  width:50%;height:150%;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.07) 0%,transparent 60%);
+}
+.disc-hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.disc-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:16px;}
+.disc-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(3rem,8vw,7rem);letter-spacing:-.03em;line-height:.9;color:#fff;margin-bottom:20px;}
+.disc-sub{font-family:'Barlow',sans-serif;font-size:.95rem;
+  color:rgba(255,255,255,.65);line-height:1.75;margin-bottom:32px;max-width:480px;}
+.disc-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-white{display:inline-flex;align-items:center;gap:10px;
+  padding:13px 28px;background:#fff;border:none;border-radius:4px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--disc);text-decoration:none;cursor:pointer;transition:opacity .2s;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);}
+.btn-white:hover{opacity:.9;}
+.btn-ghost-white{display:inline-flex;align-items:center;gap:10px;
+  padding:13px 28px;background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:4px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;
+  letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.8);
+  text-decoration:none;cursor:pointer;transition:all .2s;}
+.btn-ghost-white:hover{border-color:rgba(255,255,255,.7);color:#fff;}
+
+/* SERVER PREVIEW */
+.disc-preview{
+  background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12);
+  border-radius:8px;overflow:hidden;backdrop-filter:blur(10px);
+}
+.prev-top{background:rgba(0,0,0,.3);padding:14px 16px;
+  display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.07);}
+.prev-avatar{width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),#ff6b35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1rem;color:#fff;}
+.prev-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem;color:#fff;}
+.prev-status{font-family:'Barlow',sans-serif;font-size:.72rem;color:rgba(255,255,255,.35);}
+.prev-online{display:inline-flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;
+  font-size:.5rem;letter-spacing:.15em;text-transform:uppercase;color:#3ba55d;}
+.prev-dot{width:6px;height:6px;border-radius:50%;background:#3ba55d;}
+.prev-channels{padding:12px 0;}
+.prev-cat{font-family:'Space Mono',monospace;font-size:.45rem;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.25);padding:6px 16px 4px;}
+.prev-ch{display:flex;align-items:center;gap:8px;padding:5px 16px;
+  font-family:'Barlow',sans-serif;font-size:.82rem;color:rgba(255,255,255,.4);cursor:pointer;}
+.prev-ch.active{background:rgba(255,255,255,.07);color:rgba(255,255,255,.85);}
+.prev-ch-icon{font-size:.7rem;opacity:.5;}
+.prev-ch.active .prev-ch-icon{opacity:.85;}
+
+/* BOT SECTION */
+.bot-section{background:var(--ink);padding:clamp(60px,10vw,100px) clamp(20px,5vw,64px);}
+.bot-wrap{max-width:1280px;margin:0 auto;}
+.bot-head{margin-bottom:56px;}
+.bot-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--disc);margin-bottom:14px;}
+.bot-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,6vw,5rem);letter-spacing:-.02em;line-height:.95;color:#f0ede5;}
+.bot-ttl em{font-style:normal;color:var(--disc);}
+.bot-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:48px;}
+.bot-feat{padding:28px 24px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.02);
+  transition:background .2s;}
+.bot-feat:hover{background:rgba(88,101,242,.08);}
+.bot-feat-icon{font-size:1.4rem;margin-bottom:14px;}
+.bot-feat-t{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.1rem;
+  letter-spacing:.04em;text-transform:uppercase;color:#f0ede5;margin-bottom:8px;}
+.bot-feat-d{font-family:'Barlow',sans-serif;font-size:.83rem;
+  color:rgba(240,237,229,.4);line-height:1.7;}
+
+/* COMMANDS */
+.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.cmd-row{display:flex;align-items:start;gap:16px;padding:16px 20px;
+  border:1px solid rgba(255,255,255,.05);transition:background .2s;}
+.cmd-row:hover{background:rgba(88,101,242,.06);}
+.cmd-name{font-family:'Space Mono',monospace;font-weight:700;font-size:.7rem;
+  color:var(--disc);letter-spacing:.05em;white-space:nowrap;min-width:120px;}
+.cmd-desc{font-family:'Barlow',sans-serif;font-size:.82rem;color:rgba(240,237,229,.45);line-height:1.5;}
+.cmd-invite{margin-top:36px;text-align:center;}
+.btn-disc{display:inline-flex;align-items:center;gap:10px;
+  padding:14px 32px;background:var(--disc);border:none;border-radius:4px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.9rem;
+  letter-spacing:.12em;text-transform:uppercase;color:#fff;text-decoration:none;
+  transition:background .2s;box-shadow:0 4px 20px rgba(88,101,242,.35);}
+.btn-disc:hover{background:var(--disc-d);}
+
+/* SERVER CTA */
+.server-section{padding:clamp(60px,10vw,100px) clamp(20px,5vw,64px);}
+.server-wrap{max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.serv-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+.serv-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:-.02em;line-height:.95;color:var(--ink);margin-bottom:16px;}
+.serv-ttl em{font-style:normal;color:var(--red);}
+.serv-desc{font-family:'Barlow',sans-serif;font-size:.92rem;color:var(--mid);line-height:1.75;margin-bottom:28px;}
+.serv-perks{display:flex;flex-direction:column;gap:12px;margin-bottom:32px;}
+.serv-perk{display:flex;align-items:center;gap:12px;}
+.serv-perk-icon{width:32px;height:32px;border-radius:3px;
+  background:rgba(232,32,10,.08);border:1px solid rgba(232,32,10,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.78rem;color:var(--red);flex-shrink:0;}
+.serv-perk-text{font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--ink);}
+.disc-widget{
+  background:linear-gradient(135deg,#36393f,#2f3136);
+  border-radius:8px;padding:28px;
+  box-shadow:0 8px 40px rgba(0,0,0,.2);
+}
+.dw-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.dw-logo{width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--red),#ff6b35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;color:#fff;}
+.dw-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.3rem;color:#fff;}
+.dw-members{font-family:'Barlow',sans-serif;font-size:.78rem;color:rgba(255,255,255,.45);}
+.dw-channels{margin-bottom:20px;}
+.dw-cat{font-family:'Space Mono',monospace;font-size:.45rem;letter-spacing:.2em;
+  text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:6px;}
+.dw-ch{font-family:'Barlow',sans-serif;font-size:.82rem;color:rgba(255,255,255,.5);
+  padding:4px 0;display:flex;align-items:center;gap:8px;}
+.dw-ch i{opacity:.4;font-size:.72rem;}
+.dw-join{display:block;width:100%;padding:12px;background:var(--disc);border:none;
+  border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;
+  text-decoration:none;text-align:center;cursor:pointer;transition:background .2s;}
+.dw-join:hover{background:var(--disc-d);}
+
+/* FOOTER */
+footer{background:var(--cream2);border-top:1px solid var(--rule);}
+.f-wrap{max-width:1280px;margin:0 auto;padding:44px clamp(20px,5vw,64px) 28px;}
+.f-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.f-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.2rem;
+  letter-spacing:.06em;color:var(--ink);text-decoration:none;display:block;margin-bottom:10px;}
+.f-logo em{font-style:normal;color:var(--red);}
+.f-desc{font-size:.8rem;color:var(--mid);line-height:1.6;margin-bottom:16px;max-width:240px;}
+.f-soc{display:flex;gap:8px;}
+.f-s{width:32px;height:32px;border-radius:50%;border:1px solid var(--faint);
+  display:flex;align-items:center;justify-content:center;color:var(--mid);font-size:.78rem;text-decoration:none;transition:all .15s;}
+.f-s:hover{color:var(--red);border-color:var(--red);}
+.f-col h5{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;}
+.f-col a{display:block;font-size:.82rem;color:var(--mid);text-decoration:none;margin-bottom:8px;transition:color .15s;}
+.f-col a:hover{color:var(--ink);}
+.f-bot{display:flex;align-items:center;justify-content:space-between;
+  padding-top:18px;border-top:1px solid var(--rule);flex-wrap:wrap;gap:10px;}
+.f-copy{font-size:.72rem;color:var(--faint);}
+.f-freq{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+.f-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:ld 2s ease-in-out infinite;}
+@keyframes ld{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+.rev{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.rev.on{opacity:1;transform:none;}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+
+@media(max-width:900px){
+  .disc-hero-inner{grid-template-columns:1fr;}
+  .disc-preview{display:none;}
+  .server-wrap{grid-template-columns:1fr;}
+  .bot-grid{grid-template-columns:1fr 1fr;}
+  .cmd-grid{grid-template-columns:1fr;}
+  .n-links{display:none;}
+}
+@media(max-width:560px){
+  .bot-grid{grid-template-columns:1fr;}
+  .f-top{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="n-logo">
+    <div class="n-signal">
+      <div class="n-bar" style="--d:.4s;--del:0s;--h:6px;"></div>
+      <div class="n-bar" style="--d:.5s;--del:.08s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.45s;--del:.16s;--h:14px;"></div>
+      <div class="n-bar" style="--d:.55s;--del:.06s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.38s;--del:.22s;--h:7px;"></div>
+    </div>
+    BEATZONE FM
+  </a>
+  <div class="n-links">
+    <a href="index.html#shows" class="n-a">Programme</a>
+    <a href="djs.html" class="n-a">DJs</a>
+    <a href="about.html" class="n-a">Über uns</a>
+    <a href="discord.html" class="n-a active">Discord</a>
+    <a href="index.html#wunschbox" class="n-a">Grüße & Wünsche</a>
+  </div>
+  <a href="index.html#" class="n-cta">Live hören</a>
+</nav>
+
+<!-- HERO -->
+<div class="disc-hero">
+  <div class="disc-hero-inner">
+    <div>
+      <div class="disc-eyebrow rev">— Community & Musikbot —</div>
+      <div class="disc-ttl rev d1">DISCORD</div>
+      <p class="disc-sub rev d2">Tritt unserem Server bei, chille mit anderen Hörern, und hol dir den BeatZone-Musikbot direkt in deinen Server.</p>
+      <div class="disc-btns rev d3">
+        <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="btn-white">
+          <i class="fa-brands fa-discord"></i> Server beitreten
+        </a>
+        <a href="https://discord.com/oauth2/authorize?client_id=1507851906846949376" target="_blank" rel="noopener" class="btn-ghost-white">
+          <i class="fa-solid fa-robot"></i> Bot einladen
+        </a>
+      </div>
+    </div>
+    <div class="disc-preview rev d2">
+      <div class="prev-top">
+        <div class="prev-avatar">B</div>
+        <div>
+          <div class="prev-name">BeatZone FM</div>
+          <div class="prev-online"><span class="prev-dot"></span> Online</div>
+        </div>
+      </div>
+      <div class="prev-channels">
+        <div class="prev-cat">Allgemein</div>
+        <div class="prev-ch active"><span class="prev-ch-icon"><i class="fa-solid fa-hashtag"></i></span> willkommen</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-hashtag"></i></span> news</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-hashtag"></i></span> chart</div>
+        <div class="prev-cat">Musik</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-hashtag"></i></span> wuensche</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-hashtag"></i></span> bot-befehle</div>
+        <div class="prev-cat">Voice</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-volume-high"></i></span> Musikroom</div>
+        <div class="prev-ch"><span class="prev-ch-icon"><i class="fa-solid fa-volume-high"></i></span> Chill-Lounge</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOT SECTION -->
+<div class="bot-section">
+  <div class="bot-wrap">
+    <div class="bot-head">
+      <div class="bot-eyebrow rev">— Musik direkt in Discord —</div>
+      <div class="bot-ttl rev d1">DER BEATZONE <em>MUSIKBOT</em></div>
+    </div>
+
+    <div class="bot-grid rev d2">
+      <div class="bot-feat">
+        <div class="bot-feat-icon">🎵</div>
+        <div class="bot-feat-t">YouTube & mehr</div>
+        <div class="bot-feat-d">Songs, Playlists und Alben aus YouTube direkt in deinen Voicechannel. Einfach /play und Songname eingeben.</div>
+      </div>
+      <div class="bot-feat">
+        <div class="bot-feat-icon">📋</div>
+        <div class="bot-feat-t">Warteschlange</div>
+        <div class="bot-feat-d">Mehrere Songs einreihen, mischen, überspringen — /queue zeigt alles auf einen Blick.</div>
+      </div>
+      <div class="bot-feat">
+        <div class="bot-feat-icon">🔊</div>
+        <div class="bot-feat-t">Lautstärke & Filter</div>
+        <div class="bot-feat-d">Lautstärke anpassen und spezielle Filter wie Bass-Boost oder Nightcore aktivieren.</div>
+      </div>
+      <div class="bot-feat">
+        <div class="bot-feat-icon">📻</div>
+        <div class="bot-feat-t">Radio-Streams</div>
+        <div class="bot-feat-d">BeatZone FM live in Discord hören — oder jeden anderen Internetradio-Stream.</div>
+      </div>
+      <div class="bot-feat">
+        <div class="bot-feat-icon">⚡</div>
+        <div class="bot-feat-t">Slash Commands</div>
+        <div class="bot-feat-d">Alle Funktionen per /Befehl. Schnell, übersichtlich, kein Präfix nötig.</div>
+      </div>
+      <div class="bot-feat">
+        <div class="bot-feat-icon">👥</div>
+        <div class="bot-feat-t">Kostenlos</div>
+        <div class="bot-feat-d">Kein Premium, kein Abo. Jeder auf dem Server kann den Bot sofort nutzen.</div>
+      </div>
+    </div>
+
+    <!-- Commands -->
+    <div style="margin-bottom:20px;">
+      <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px;">Befehle</div>
+    </div>
+    <div class="cmd-grid rev">
+      <div class="cmd-row"><span class="cmd-name">/play</span><span class="cmd-desc">Song oder YouTube-Link abspielen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/queue</span><span class="cmd-desc">Warteschlange anzeigen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/skip</span><span class="cmd-desc">Aktuellen Song überspringen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/pause / /resume</span><span class="cmd-desc">Pausieren und fortfahren</span></div>
+      <div class="cmd-row"><span class="cmd-name">/volume</span><span class="cmd-desc">Lautstärke anpassen (0 – 100)</span></div>
+      <div class="cmd-row"><span class="cmd-name">/shuffle</span><span class="cmd-desc">Queue zufällig mischen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/loop</span><span class="cmd-desc">Song oder Queue-Loop aktivieren</span></div>
+      <div class="cmd-row"><span class="cmd-name">/nowplaying</span><span class="cmd-desc">Aktuell spielenden Song anzeigen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/search</span><span class="cmd-desc">Song auf YouTube suchen</span></div>
+      <div class="cmd-row"><span class="cmd-name">/stop</span><span class="cmd-desc">Musik stoppen und Bot verlassen</span></div>
+    </div>
+    <div class="cmd-invite rev d1">
+      <a href="https://discord.com/oauth2/authorize?client_id=1507851906846949376" target="_blank" rel="noopener" class="btn-disc">
+        <i class="fa-solid fa-robot"></i> Bot zu Discord hinzufügen
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- SERVER CTA -->
+<div class="server-section">
+  <div class="server-wrap">
+    <div>
+      <div class="serv-eyebrow rev">— Community —</div>
+      <div class="serv-ttl rev d1">DEM SERVER <em>BEITRETEN</em></div>
+      <p class="serv-desc rev d2">Mehr als nur ein Chatserver. Hier passiert BeatZone FM live — Wunschlisten, Sendungsankündigungen, Abstimmungen und direkte Kommunikation mit den DJs.</p>
+      <div class="serv-perks rev d2">
+        <div class="serv-perk">
+          <div class="serv-perk-icon"><i class="fa-solid fa-music"></i></div>
+          <span class="serv-perk-text">Songwünsche direkt an die DJs senden</span>
+        </div>
+        <div class="serv-perk">
+          <div class="serv-perk-icon"><i class="fa-solid fa-bell"></i></div>
+          <span class="serv-perk-text">Live-Benachrichtigungen wenn ein DJ on air geht</span>
+        </div>
+        <div class="serv-perk">
+          <div class="serv-perk-icon"><i class="fa-solid fa-users"></i></div>
+          <span class="serv-perk-text">Community aus echten Musikbegeisterten</span>
+        </div>
+        <div class="serv-perk">
+          <div class="serv-perk-icon"><i class="fa-solid fa-microphone"></i></div>
+          <span class="serv-perk-text">Bewirb dich als DJ direkt über Discord</span>
+        </div>
+      </div>
+      <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="btn-disc rev d3">
+        <i class="fa-brands fa-discord"></i> Server beitreten
+      </a>
+    </div>
+    <div class="disc-widget rev d2">
+      <div class="dw-header">
+        <div class="dw-logo">B</div>
+        <div>
+          <div class="dw-name">BeatZone FM</div>
+          <div class="dw-members">Discord Community</div>
+        </div>
+      </div>
+      <div class="dw-channels">
+        <div class="dw-cat">Allgemein</div>
+        <div class="dw-ch"><i class="fa-solid fa-hashtag"></i> willkommen</div>
+        <div class="dw-ch"><i class="fa-solid fa-hashtag"></i> news &amp; updates</div>
+        <div class="dw-ch"><i class="fa-solid fa-hashtag"></i> chart &amp; feedback</div>
+        <div class="dw-cat">Musik</div>
+        <div class="dw-ch"><i class="fa-solid fa-hashtag"></i> wuensche</div>
+        <div class="dw-ch"><i class="fa-solid fa-hashtag"></i> bot-befehle</div>
+        <div class="dw-cat">Voice</div>
+        <div class="dw-ch"><i class="fa-solid fa-volume-high"></i> Musikroom</div>
+        <div class="dw-ch"><i class="fa-solid fa-volume-high"></i> Chill-Lounge</div>
+      </div>
+      <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="dw-join">
+        <i class="fa-brands fa-discord"></i> &nbsp;Jetzt beitreten
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-wrap">
+    <div class="f-top">
+      <div>
+        <a href="index.html" class="f-logo">BEAT<em>ZONE</em> FM</a>
+        <p class="f-desc">Unabhängiges Webradio aus Deutschland. Für echte Musikliebhaber.</p>
+        <div class="f-soc">
+          <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="f-s"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-twitch"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Sender</h5>
+        <a href="index.html">Startseite</a>
+        <a href="index.html#shows">Programme</a>
+        <a href="djs.html">DJs</a>
+        <a href="about.html">Über uns</a>
+      </div>
+      <div class="f-col">
+        <h5>Mitmachen</h5>
+        <a href="about.html#mitmachen">DJ werden</a>
+        <a href="discord.html">Discord</a>
+        <a href="index.html#wunschbox">Grüße & Wünsche</a>
+      </div>
+      <div class="f-col">
+        <h5>Rechtliches</h5>
+        <a href="impressum.html">Impressum</a>
+        <a href="impressum.html#datenschutz">Datenschutz</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <div class="f-copy">All rights reserved by Galaxyflawa</div>
+      <div class="f-freq"><span class="f-live-dot"></span>On Air · Webradio</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.05,rootMargin:'0px 0px 40px 0px'});
+document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+setTimeout(()=>document.querySelectorAll('.rev').forEach(el=>el.classList.add('on')),200);
+</script>
+</body>
+</html>

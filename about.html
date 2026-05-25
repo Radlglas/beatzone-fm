@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Über uns — BEATZONE FM</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --cream:#f5f1e8;--cream2:#ede9df;--ink:#0e0c09;
+  --red:#e8200a;--mid:#857f70;--faint:#ccc7bc;--rule:rgba(14,12,9,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.04;mix-blend-mode:multiply;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,5vw,64px);
+  background:rgba(245,241,232,0.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--rule);}
+.n-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.25rem;
+  letter-spacing:0.05em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:9px;}
+.n-bar{width:3px;border-radius:1px;background:var(--red);
+  animation:signal var(--d,.5s) var(--del,0s) ease-in-out infinite alternate;}
+@keyframes signal{from{height:4px;}to{height:var(--h,14px);}}
+.n-signal{display:flex;align-items:center;gap:3px;height:16px;}
+.n-links{display:flex;gap:2px;}
+.n-a{padding:6px 14px;border-radius:3px;font-size:0.82rem;font-weight:500;
+  color:var(--mid);text-decoration:none;transition:color .15s,background .15s;}
+.n-a:hover,.n-a.active{color:var(--ink);background:rgba(14,12,9,.05);}
+.n-cta{padding:7px 20px;background:var(--ink);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--cream);text-decoration:none;cursor:pointer;transition:opacity .2s;}
+.n-cta:hover{opacity:.8;}
+
+/* PAGE HERO */
+.page-hero{
+  padding:clamp(100px,14vw,160px) clamp(20px,5vw,64px) clamp(60px,8vw,100px);
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;
+  border-bottom:1px solid var(--rule);
+}
+.ph-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.ph-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(3.5rem,9vw,8rem);letter-spacing:-.03em;line-height:.9;color:var(--ink);}
+.ph-ttl em{font-style:normal;color:var(--red);}
+.ph-desc{font-family:'Barlow',sans-serif;font-size:1.05rem;color:var(--mid);
+  line-height:1.75;margin-bottom:24px;}
+.ph-detail{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--faint);line-height:2;}
+
+/* MISSION */
+.mission{max-width:1280px;margin:0 auto;padding:clamp(60px,10vw,120px) clamp(20px,5vw,64px);
+  display:grid;grid-template-columns:1fr 2fr;gap:clamp(40px,6vw,80px);align-items:start;}
+.mission-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(5rem,12vw,10rem);letter-spacing:-.04em;line-height:.85;
+  color:rgba(14,12,9,.06);}
+.mission-content{}
+.mission-label{font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:12px;}
+.mission-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2rem,5vw,4rem);letter-spacing:-.02em;line-height:.95;
+  color:var(--ink);margin-bottom:18px;}
+.mission-ttl em{font-style:normal;color:var(--red);}
+.mission-p{font-family:'Barlow',sans-serif;font-size:.95rem;color:var(--mid);
+  line-height:1.8;max-width:540px;}
+
+/* TIMELINE */
+.timeline-section{background:var(--ink);padding:clamp(60px,10vw,100px) clamp(20px,5vw,64px);}
+.tl-wrap{max-width:1280px;margin:0 auto;}
+.tl-head{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.tl-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,6vw,5rem);letter-spacing:-.02em;line-height:.95;
+  color:#f0ede5;margin-bottom:56px;}
+.tl-title em{font-style:normal;color:var(--red);}
+.tl-items{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.tl-item{
+  padding:32px;border:1px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.02);
+}
+.tl-year{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:3rem;letter-spacing:-.02em;color:var(--red);margin-bottom:8px;}
+.tl-event{font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:1.2rem;letter-spacing:.04em;text-transform:uppercase;
+  color:#f0ede5;margin-bottom:10px;}
+.tl-desc{font-family:'Barlow',sans-serif;font-size:.85rem;
+  color:rgba(240,237,229,.45);line-height:1.7;}
+
+/* VALUES */
+.values-section{max-width:1280px;margin:0 auto;
+  padding:clamp(60px,10vw,120px) clamp(20px,5vw,64px);}
+.values-head{margin-bottom:48px;}
+.values-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:14px;}
+.values-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,5vw,4.5rem);letter-spacing:-.02em;line-height:.95;color:var(--ink);}
+.values-ttl em{font-style:normal;color:var(--red);}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.val-card{padding:36px 32px;border:1px solid var(--rule);background:transparent;transition:background .2s;}
+.val-card:hover{background:var(--cream2);}
+.val-num{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:20px;}
+.val-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.8rem;letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;}
+.val-desc{font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--mid);line-height:1.7;}
+
+/* JOIN */
+.join-section{background:#0e0c09;padding:clamp(60px,10vw,100px) clamp(20px,5vw,64px);}
+.join-wrap{max-width:800px;margin:0 auto;text-align:center;}
+.join-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--red);margin-bottom:20px;}
+.join-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(3rem,7vw,6rem);letter-spacing:-.03em;line-height:.9;
+  color:#f0ede5;margin-bottom:16px;}
+.join-ttl em{font-style:normal;color:var(--red);}
+.join-sub{font-family:'Barlow',sans-serif;font-size:.92rem;
+  color:rgba(240,237,229,.45);line-height:1.7;max-width:500px;margin:0 auto 36px;}
+.join-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:40px;}
+.jstep{padding:24px 20px;border:1px solid rgba(255,255,255,.07);}
+.jstep-n{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2.5rem;
+  letter-spacing:-.02em;color:rgba(232,32,10,.3);margin-bottom:8px;}
+.jstep-t{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1rem;
+  letter-spacing:.06em;text-transform:uppercase;color:#f0ede5;margin-bottom:6px;}
+.jstep-d{font-family:'Barlow',sans-serif;font-size:.8rem;
+  color:rgba(240,237,229,.35);line-height:1.6;}
+.btn-red{display:inline-flex;align-items:center;gap:10px;
+  padding:14px 32px;background:var(--red);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;
+  letter-spacing:.12em;text-transform:uppercase;color:#fff;text-decoration:none;transition:opacity .2s;}
+.btn-red:hover{opacity:.85;}
+
+/* FOOTER */
+footer{background:var(--cream2);border-top:1px solid var(--rule);}
+.f-wrap{max-width:1280px;margin:0 auto;padding:44px clamp(20px,5vw,64px) 28px;}
+.f-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.f-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.2rem;
+  letter-spacing:.06em;color:var(--ink);text-decoration:none;display:block;margin-bottom:10px;}
+.f-logo em{font-style:normal;color:var(--red);}
+.f-desc{font-size:.8rem;color:var(--mid);line-height:1.6;margin-bottom:16px;max-width:240px;}
+.f-soc{display:flex;gap:8px;}
+.f-s{width:32px;height:32px;border-radius:50%;border:1px solid var(--faint);
+  display:flex;align-items:center;justify-content:center;color:var(--mid);font-size:.78rem;text-decoration:none;transition:all .15s;}
+.f-s:hover{color:var(--red);border-color:var(--red);}
+.f-col h5{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;}
+.f-col a{display:block;font-size:.82rem;color:var(--mid);text-decoration:none;margin-bottom:8px;transition:color .15s;}
+.f-col a:hover{color:var(--ink);}
+.f-bot{display:flex;align-items:center;justify-content:space-between;
+  padding-top:18px;border-top:1px solid var(--rule);flex-wrap:wrap;gap:10px;}
+.f-copy{font-size:.72rem;color:var(--faint);}
+.f-freq{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+.f-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:ld 2s ease-in-out infinite;}
+@keyframes ld{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.rev.on{opacity:1;transform:none;}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .page-hero{grid-template-columns:1fr;}
+  .mission{grid-template-columns:1fr;gap:16px;}
+  .mission-num{display:none;}
+  .tl-items{grid-template-columns:1fr;}
+  .values-grid{grid-template-columns:1fr 1fr;}
+  .join-steps{grid-template-columns:1fr;}
+  .n-links{display:none;}
+}
+@media(max-width:560px){
+  .values-grid{grid-template-columns:1fr;}
+  .f-top{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="n-logo">
+    <div class="n-signal">
+      <div class="n-bar" style="--d:.4s;--del:0s;--h:6px;"></div>
+      <div class="n-bar" style="--d:.5s;--del:.08s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.45s;--del:.16s;--h:14px;"></div>
+      <div class="n-bar" style="--d:.55s;--del:.06s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.38s;--del:.22s;--h:7px;"></div>
+    </div>
+    BEATZONE FM
+  </a>
+  <div class="n-links">
+    <a href="index.html#shows" class="n-a">Programme</a>
+    <a href="djs.html" class="n-a">DJs</a>
+    <a href="about.html" class="n-a active">Über uns</a>
+    <a href="discord.html" class="n-a">Discord</a>
+    <a href="index.html#wunschbox" class="n-a">Grüße & Wünsche</a>
+  </div>
+  <a href="index.html#" class="n-cta">Live hören</a>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div>
+    <div class="ph-eyebrow rev">— Unsere Geschichte —</div>
+    <div class="ph-ttl rev d1">ÜBER <em>UNS</em></div>
+  </div>
+  <div>
+    <p class="ph-desc rev d2">BeatZone FM ist kein Sender aus dem Lehrbuch. Wir sind ein unabhängiges Webradio — gegründet von echten Musiknerds, betrieben von Menschen, die Radio lieben.</p>
+    <div class="ph-detail rev d3">
+      Gegründet · 2024<br>
+      Standort · Deutschland<br>
+      Stream · 24/7 Online
+    </div>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section style="border-bottom:1px solid var(--rule);">
+  <div class="mission">
+    <div class="mission-num rev">01</div>
+    <div class="mission-content">
+      <div class="mission-label rev">Unsere Mission</div>
+      <div class="mission-ttl rev d1">Radio, das <em>wirklich</em><br>für euch spielt</div>
+      <p class="mission-p rev d2">Wir glauben, dass gutes Radio mehr ist als ein Algorithmus, der dir den nächsten Hit reindrückt. Bei BeatZone FM entscheiden echte DJs, was läuft — mit Geschmack, Leidenschaft und einem Gespür für den Moment. Kein Format-Radio. Keine Werbung. Nur Musik.</p>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:1px solid var(--rule);">
+  <div class="mission">
+    <div class="mission-num rev">02</div>
+    <div class="mission-content">
+      <div class="mission-label rev">Was uns antreibt</div>
+      <div class="mission-ttl rev d1">Immer live.<br>Niemals <em>still.</em></div>
+      <p class="mission-p rev d2">Wenn kein DJ auf Sendung ist, übernimmt unser Auto DJ — so ist BeatZone FM zu jeder Tages- und Nachtzeit auf Empfang. Wir denken Radio nicht als Hintergrundgeräusch, sondern als echtes Erlebnis. Jede Sendung hat eine Handschrift. Und die kann man hören.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<div class="timeline-section">
+  <div class="tl-wrap">
+    <div class="tl-head rev">— Wie alles begann —</div>
+    <div class="tl-title rev d1">UNSERE <em>GESCHICHTE</em></div>
+    <div class="tl-items">
+      <div class="tl-item rev">
+        <div class="tl-year">2024</div>
+        <div class="tl-event">Die Idee</div>
+        <div class="tl-desc">GalaxyFlawa und Marius beschließen: Wenn kein Radio spielt, was man hören will — dann baut man eben eins. BeatZone FM ist geboren.</div>
+      </div>
+      <div class="tl-item rev d1">
+        <div class="tl-year">2024</div>
+        <div class="tl-event">Erste Sendung</div>
+        <div class="tl-desc">Der Stream geht live. Die ersten DJs sind on air. Die Community auf Discord wächst schneller als erwartet.</div>
+      </div>
+      <div class="tl-item rev d2">
+        <div class="tl-year">2025</div>
+        <div class="tl-event">Heute</div>
+        <div class="tl-desc">BeatZone FM läuft 24/7, hat ein wachsendes Team und eine Community, die mitgestaltet. Das ist erst der Anfang.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VALUES -->
+<div class="values-section">
+  <div class="values-head">
+    <div class="values-eyebrow rev">— Wofür wir stehen —</div>
+    <div class="values-ttl rev d1">UNSERE <em>WERTE</em></div>
+  </div>
+  <div class="values-grid">
+    <div class="val-card rev">
+      <div class="val-num">01</div>
+      <div class="val-title">Unabhängigkeit</div>
+      <div class="val-desc">Kein Konzern, kein Formatdiktat. Wir spielen, was gut ist — und das entscheiden wir selbst.</div>
+    </div>
+    <div class="val-card rev d1">
+      <div class="val-num">02</div>
+      <div class="val-title">Authentizität</div>
+      <div class="val-desc">Echte DJs, echte Musik, echte Meinungen. Was du hörst, kommt von Menschen, denen es nicht egal ist.</div>
+    </div>
+    <div class="val-card rev d2">
+      <div class="val-num">03</div>
+      <div class="val-title">Community</div>
+      <div class="val-desc">Du bist kein Zuhörer — du bist Teil von BeatZone FM. Grüße, Wünsche, Discord: Die Hörer machen den Sender.</div>
+    </div>
+  </div>
+</div>
+
+<!-- JOIN / MITMACHEN -->
+<div class="join-section" id="mitmachen">
+  <div class="join-wrap">
+    <div class="join-eyebrow rev">— Werde Teil davon —</div>
+    <div class="join-ttl rev d1">DJ <em>WERDEN</em></div>
+    <p class="join-sub rev d2">Du hast einen Sound und Bock auf eine eigene Sendung? Wir suchen DJs, die etwas zu sagen haben — egal welches Genre, egal welcher Level.</p>
+    <div class="join-steps rev d2">
+      <div class="jstep">
+        <div class="jstep-n">01</div>
+        <div class="jstep-t">Discord beitreten</div>
+        <div class="jstep-d">Komm auf unseren Server und stell dich vor. Kein langer Prozess.</div>
+      </div>
+      <div class="jstep">
+        <div class="jstep-n">02</div>
+        <div class="jstep-t">Probemix</div>
+        <div class="jstep-d">Zeig uns deinen Sound — ein kurzer Mix reicht, um zu verstehen, was du draufhast.</div>
+      </div>
+      <div class="jstep">
+        <div class="jstep-n">03</div>
+        <div class="jstep-t">On Air gehen</div>
+        <div class="jstep-d">Eigener Sendeplatz, eigener Stil, eigene Community. Los geht's.</div>
+      </div>
+    </div>
+    <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="btn-red rev d3">
+      <i class="fa-brands fa-discord"></i> Jetzt auf Discord melden
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-wrap">
+    <div class="f-top">
+      <div>
+        <a href="index.html" class="f-logo">BEAT<em>ZONE</em> FM</a>
+        <p class="f-desc">Unabhängiges Webradio aus Deutschland. Für echte Musikliebhaber.</p>
+        <div class="f-soc">
+          <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="f-s"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-twitch"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Sender</h5>
+        <a href="index.html">Startseite</a>
+        <a href="index.html#shows">Programme</a>
+        <a href="djs.html">DJs</a>
+        <a href="about.html">Über uns</a>
+      </div>
+      <div class="f-col">
+        <h5>Mitmachen</h5>
+        <a href="about.html#mitmachen">DJ werden</a>
+        <a href="discord.html">Discord</a>
+        <a href="index.html#wunschbox">Grüße & Wünsche</a>
+      </div>
+      <div class="f-col">
+        <h5>Rechtliches</h5>
+        <a href="impressum.html">Impressum</a>
+        <a href="impressum.html#datenschutz">Datenschutz</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <div class="f-copy">All rights reserved by Galaxyflawa</div>
+      <div class="f-freq"><span class="f-live-dot"></span>On Air · Webradio</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.05,rootMargin:'0px 0px 40px 0px'});
+document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+setTimeout(()=>document.querySelectorAll('.rev').forEach(el=>el.classList.add('on')),200);
+</script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DJs — BEATZONE FM</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --cream:#f5f1e8;--cream2:#ede9df;--ink:#0e0c09;
+  --red:#e8200a;--mid:#857f70;--faint:#ccc7bc;--rule:rgba(14,12,9,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Barlow',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* GRAIN */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.04;mix-blend-mode:multiply;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,5vw,64px);
+  background:rgba(245,241,232,0.88);backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--rule);}
+.n-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.25rem;
+  letter-spacing:0.05em;color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:9px;}
+.n-bar{width:3px;border-radius:1px;background:var(--red);
+  animation:signal var(--d,.5s) var(--del,0s) ease-in-out infinite alternate;}
+@keyframes signal{from{height:4px;}to{height:var(--h,14px);}}
+.n-signal{display:flex;align-items:center;gap:3px;height:16px;}
+.n-links{display:flex;gap:2px;}
+.n-a{padding:6px 14px;border-radius:3px;font-size:0.82rem;font-weight:500;
+  color:var(--mid);text-decoration:none;transition:color .15s,background .15s;}
+.n-a:hover,.n-a.active{color:var(--ink);background:rgba(14,12,9,.05);}
+.n-cta{padding:7px 20px;background:var(--ink);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--cream);
+  text-decoration:none;cursor:pointer;transition:opacity .2s;}
+.n-cta:hover{opacity:.8;}
+
+/* PAGE HERO */
+.page-hero{
+  padding:clamp(100px,14vw,160px) clamp(20px,5vw,64px) clamp(60px,8vw,100px);
+  border-bottom:1px solid var(--rule);max-width:1280px;margin:0 auto;
+}
+.ph-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.ph-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(3.5rem,9vw,8rem);letter-spacing:-.03em;line-height:.9;
+  color:var(--ink);}
+.ph-ttl em{font-style:normal;color:var(--red);}
+.ph-sub{font-family:'Barlow',sans-serif;font-size:clamp(.9rem,1.5vw,1.05rem);
+  color:var(--mid);line-height:1.7;max-width:480px;margin-top:20px;}
+
+/* DJ GRID */
+.dj-grid{max-width:1280px;margin:0 auto;padding:0 clamp(20px,5vw,64px) 80px;}
+
+/* DJ FULL CARD */
+.dj-full{
+  display:grid;grid-template-columns:1fr 1fr;
+  border-bottom:1px solid var(--rule);
+  min-height:520px;
+}
+.dj-full:nth-child(even) .dj-f-img{order:2;}
+.dj-full:nth-child(even) .dj-f-info{order:1;}
+
+.dj-f-img{
+  background:#111;
+  position:relative;overflow:hidden;
+  min-height:400px;
+}
+.dj-f-img img{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(30%) contrast(1.1);transition:filter .4s;}
+.dj-full:hover .dj-f-img img{filter:grayscale(0%) contrast(1);}
+.dj-f-img-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top, rgba(14,12,9,.7) 0%, transparent 50%);
+}
+.dj-f-num{
+  position:absolute;top:24px;left:24px;
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);
+}
+.dj-f-placeholder{
+  width:100%;height:100%;min-height:400px;
+  display:flex;align-items:center;justify-content:center;
+  background:#111;
+}
+.dj-f-avatar{
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(232,32,10,.15);border:2px solid rgba(232,32,10,.3);
+  display:flex;align-items:center;justify-content:center;
+}
+.dj-f-avatar-letter{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:4rem;color:var(--red);letter-spacing:-.02em;
+}
+
+.dj-f-info{
+  padding:clamp(32px,5vw,56px);
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--cream);
+}
+.dj-f-role{font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:16px;}
+.dj-f-name{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.8rem,6vw,5.5rem);letter-spacing:-.03em;line-height:.9;
+  color:var(--ink);margin-bottom:14px;}
+.dj-f-tagline{font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:clamp(1rem,2vw,1.4rem);letter-spacing:.04em;text-transform:uppercase;
+  color:var(--mid);margin-bottom:20px;}
+.dj-f-bio{font-family:'Barlow',sans-serif;font-size:.9rem;
+  color:var(--mid);line-height:1.75;max-width:440px;margin-bottom:28px;}
+
+.dj-f-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;}
+.dj-chip{
+  display:inline-block;padding:5px 12px;border-radius:2px;
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  background:rgba(14,12,9,.06);color:var(--mid);
+}
+.dj-chip.red{background:rgba(232,32,10,.1);color:var(--red);}
+
+.dj-f-show{
+  display:flex;align-items:center;gap:16px;
+  padding:14px 18px;
+  background:var(--cream2);border:1px solid var(--rule);border-radius:3px;
+  margin-bottom:20px;
+}
+.dj-f-show-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--red);flex-shrink:0;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.dj-f-show-label{font-family:'Space Mono',monospace;font-size:.55rem;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+.dj-f-show-name{font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:1.1rem;letter-spacing:.04em;color:var(--ink);}
+.dj-f-show-time{font-family:'Space Mono',monospace;font-size:.6rem;
+  color:var(--red);letter-spacing:.1em;}
+
+.dj-f-social{display:flex;gap:10px;}
+.dj-soc-btn{
+  width:36px;height:36px;border-radius:3px;
+  border:1px solid var(--rule);background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mid);text-decoration:none;font-size:.82rem;
+  transition:all .15s;
+}
+.dj-soc-btn:hover{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+
+/* JOIN CARD */
+.join-card{
+  background:#0e0c09;
+  padding:clamp(48px,8vw,80px) clamp(20px,5vw,64px);
+  text-align:center;
+}
+.join-eyebrow{font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:20px;}
+.join-ttl{font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.5rem,6vw,5rem);letter-spacing:-.02em;line-height:.95;
+  color:#f0ede5;margin-bottom:16px;}
+.join-ttl em{font-style:normal;color:var(--red);}
+.join-sub{font-family:'Barlow',sans-serif;font-size:.9rem;
+  color:rgba(240,237,229,.45);line-height:1.7;
+  max-width:480px;margin:0 auto 36px;}
+.join-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-red{display:inline-flex;align-items:center;gap:10px;
+  padding:13px 28px;background:var(--red);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.88rem;letter-spacing:.12em;text-transform:uppercase;
+  color:#fff;text-decoration:none;cursor:pointer;transition:opacity .2s;}
+.btn-red:hover{opacity:.85;}
+.btn-ghost{display:inline-flex;align-items:center;gap:10px;
+  padding:13px 28px;background:transparent;border:1px solid rgba(255,255,255,.2);
+  border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.88rem;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(240,237,229,.7);text-decoration:none;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);color:#f0ede5;}
+
+/* FOOTER */
+footer{background:var(--cream2);border-top:1px solid var(--rule);}
+.f-wrap{max-width:1280px;margin:0 auto;padding:44px clamp(20px,5vw,64px) 28px;}
+.f-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:36px;}
+.f-logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.2rem;
+  letter-spacing:.06em;color:var(--ink);text-decoration:none;display:block;margin-bottom:10px;}
+.f-logo em{font-style:normal;color:var(--red);}
+.f-desc{font-size:.8rem;color:var(--mid);line-height:1.6;margin-bottom:16px;max-width:240px;}
+.f-soc{display:flex;gap:8px;}
+.f-s{width:32px;height:32px;border-radius:50%;border:1px solid var(--faint);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mid);font-size:.78rem;text-decoration:none;transition:all .15s;}
+.f-s:hover{color:var(--red);border-color:var(--red);}
+.f-col h5{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:12px;}
+.f-col a{display:block;font-size:.82rem;color:var(--mid);text-decoration:none;margin-bottom:8px;transition:color .15s;}
+.f-col a:hover{color:var(--ink);}
+.f-bot{display:flex;align-items:center;justify-content:space-between;
+  padding-top:18px;border-top:1px solid var(--rule);flex-wrap:wrap;gap:10px;}
+.f-copy{font-size:.72rem;color:var(--faint);}
+.f-freq{display:flex;align-items:center;gap:7px;font-family:'Space Mono',monospace;
+  font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--mid);}
+.f-live-dot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:ld 2s ease-in-out infinite;}
+@keyframes ld{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* REVEAL */
+.rev{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
+.rev.on{opacity:1;transform:none;}
+.d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .dj-full{grid-template-columns:1fr;}
+  .dj-full:nth-child(even) .dj-f-img{order:0;}
+  .dj-full:nth-child(even) .dj-f-info{order:1;}
+  .f-top{grid-template-columns:1fr 1fr;}
+  .n-links{display:none;}
+}
+@media(max-width:480px){.f-top{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="n-logo">
+    <div class="n-signal">
+      <div class="n-bar" style="--d:.4s;--del:0s;--h:6px;"></div>
+      <div class="n-bar" style="--d:.5s;--del:.08s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.45s;--del:.16s;--h:14px;"></div>
+      <div class="n-bar" style="--d:.55s;--del:.06s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.38s;--del:.22s;--h:7px;"></div>
+    </div>
+    BEATZONE FM
+  </a>
+  <div class="n-links">
+    <a href="index.html#shows" class="n-a">Programme</a>
+    <a href="djs.html" class="n-a active">DJs</a>
+    <a href="about.html" class="n-a">Über uns</a>
+    <a href="discord.html" class="n-a">Discord</a>
+    <a href="index.html#wunschbox" class="n-a">Grüße & Wünsche</a>
+  </div>
+  <a href="index.html#" class="n-cta">Live hören</a>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-eyebrow rev">— Das Team hinter dem Mikrofon —</div>
+  <div class="ph-ttl rev d1">UNSERE <em>DJs</em></div>
+  <p class="ph-sub rev d2">Jeder von uns hat einen eigenen Sound. Zusammen sind wir BeatZone FM.</p>
+</div>
+
+<!-- DJ GRID -->
+<div class="dj-grid">
+
+  <!-- DJ 1: GALAXYFLAWA -->
+  <div class="dj-full">
+    <div class="dj-f-img">
+      <div class="dj-f-placeholder">
+        <div class="dj-f-avatar"><span class="dj-f-avatar-letter">G</span></div>
+      </div>
+      <div class="dj-f-img-overlay"></div>
+      <div class="dj-f-num">01 / OWNER</div>
+    </div>
+    <div class="dj-f-info rev">
+      <div class="dj-f-role">Owner · Gründer</div>
+      <div class="dj-f-name">GALAXY<em style="font-style:normal;color:var(--red);">FLAWA</em></div>
+      <div class="dj-f-tagline">Nightshows · Electronic · Bass</div>
+      <p class="dj-f-bio">GalaxyFlawa ist der Kopf hinter BeatZone FM. Von der ersten Minute an dabei — mit einem Sound, der keine Grenzen kennt. Treibende Basslines, atmosphärische Elektro-Sounds und ein Gespür dafür, wann die Crowd mehr will.</p>
+      <div class="dj-f-chips">
+        <span class="dj-chip red">Owner</span>
+        <span class="dj-chip">Electronic</span>
+        <span class="dj-chip">Bass</span>
+        <span class="dj-chip">House</span>
+      </div>
+      <div class="dj-f-show">
+        <div class="dj-f-show-dot"></div>
+        <div>
+          <div class="dj-f-show-label">Sendung</div>
+          <div class="dj-f-show-name">GALAXY NIGHTS</div>
+          <div class="dj-f-show-time">Sa &amp; So · 22:00 – 00:00</div>
+        </div>
+      </div>
+      <div class="dj-f-social">
+        <a href="https://discord.gg/BNMrRcNGj" target="_blank" class="dj-soc-btn" title="Discord"><i class="fa-brands fa-discord"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- DJ 2: MARIUS -->
+  <div class="dj-full">
+    <div class="dj-f-img">
+      <div class="dj-f-placeholder">
+        <div class="dj-f-avatar"><span class="dj-f-avatar-letter">M</span></div>
+      </div>
+      <div class="dj-f-img-overlay"></div>
+      <div class="dj-f-num">02 / HEAD DJ</div>
+    </div>
+    <div class="dj-f-info rev">
+      <div class="dj-f-role">Head DJ · Gründer</div>
+      <div class="dj-f-name">MARIUS</div>
+      <div class="dj-f-tagline">Morning Shows · Pop · Charts</div>
+      <p class="dj-f-bio">Marius hält den Laden am Laufen. Als Head DJ sorgt er für den richtigen Flow — von der Moderation bis zum Tracklist. Sein Ding: breite Energie, gute Vibes und ein Mikrofon, das er nicht mehr loslässt.</p>
+      <div class="dj-f-chips">
+        <span class="dj-chip red">Head DJ</span>
+        <span class="dj-chip">Pop</span>
+        <span class="dj-chip">Charts</span>
+        <span class="dj-chip">Hip-Hop</span>
+      </div>
+      <div class="dj-f-show">
+        <div class="dj-f-show-dot"></div>
+        <div>
+          <div class="dj-f-show-label">Sendung</div>
+          <div class="dj-f-show-name">MORNING PULSE</div>
+          <div class="dj-f-show-time">Mo – Fr · 08:00 – 10:00</div>
+        </div>
+      </div>
+      <div class="dj-f-social">
+        <a href="https://discord.gg/BNMrRcNGj" target="_blank" class="dj-soc-btn" title="Discord"><i class="fa-brands fa-discord"></i></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOIN SLOT -->
+  <div class="dj-full" style="min-height:320px;">
+    <div class="dj-f-img" style="background:#0d0d0b;min-height:320px;">
+      <div style="width:100%;height:100%;min-height:320px;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;">
+          <div style="width:80px;height:80px;border-radius:50%;border:2px dashed rgba(232,32,10,.4);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+            <i class="fa-solid fa-plus" style="color:var(--red);font-size:1.4rem;"></i>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);">Freier Slot</div>
+        </div>
+      </div>
+    </div>
+    <div class="dj-f-info rev" style="background:#0e0c09;">
+      <div class="dj-f-role" style="color:rgba(232,32,10,.7);">Offen für Bewerbungen</div>
+      <div class="dj-f-name" style="color:#f0ede5;">DU <em style="font-style:normal;color:var(--red);">?</em></div>
+      <div class="dj-f-tagline" style="color:rgba(240,237,229,.3);">Dein Sound · Deine Show</div>
+      <p class="dj-f-bio" style="color:rgba(240,237,229,.45);">Du hast einen eigenen Sound und Lust auf eine eigene Sendung? Dann werde Teil von BeatZone FM. Kein Bewerbungsformular, kein Bullshit — einfach auf Discord kommen und vorstellen.</p>
+      <div class="join-btns" style="justify-content:flex-start;">
+        <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="btn-red">
+          <i class="fa-brands fa-discord"></i> Jetzt bewerben
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-wrap">
+    <div class="f-top">
+      <div>
+        <a href="index.html" class="f-logo">BEAT<em>ZONE</em> FM</a>
+        <p class="f-desc">Unabhängiges Webradio aus Deutschland. Für echte Musikliebhaber.</p>
+        <div class="f-soc">
+          <a href="https://discord.gg/BNMrRcNGj" target="_blank" rel="noopener" class="f-s"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-twitch"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Sender</h5>
+        <a href="index.html">Startseite</a>
+        <a href="index.html#shows">Programme</a>
+        <a href="djs.html">DJs</a>
+        <a href="about.html">Über uns</a>
+      </div>
+      <div class="f-col">
+        <h5>Mitmachen</h5>
+        <a href="about.html#mitmachen">DJ werden</a>
+        <a href="discord.html">Discord</a>
+        <a href="index.html#wunschbox">Grüße & Wünsche</a>
+      </div>
+      <div class="f-col">
+        <h5>Rechtliches</h5>
+        <a href="impressum.html">Impressum</a>
+        <a href="impressum.html#datenschutz">Datenschutz</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <div class="f-copy">All rights reserved by Galaxyflawa</div>
+      <div class="f-freq"><span class="f-live-dot"></span>On Air · Webradio</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});},{threshold:.05,rootMargin:'0px 0px 40px 0px'});
+document.querySelectorAll('.rev').forEach(el=>io.observe(el));
+setTimeout(()=>document.querySelectorAll('.rev').forEach(el=>el.classList.add('on')),200);
+</script>
+</body>
+</html>

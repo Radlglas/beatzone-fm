@@ -1156,12 +1156,16 @@ function sendWish(){
   const btn  = document.getElementById('w-btn');
 
   err.style.display='none'; ok.style.display='none';
-  if(!name){ err.style.display='block'; return; }
+  if(!name){ err.textContent='Bitte Namen eingeben.'; err.style.display='block'; return; }
+  if(!msg && !song){ err.textContent='Bitte eine Nachricht oder einen Songwunsch eingeben.'; err.style.display='block'; return; }
 
   btn.disabled=true; btn.style.opacity='.5';
-  fbdb.collection('wishes').add({
-    name, song, msg,
-    ts: firebase.firestore.FieldValue.serverTimestamp()
+  fbdb.collection('greetings').add({
+    senderName:  name,
+    message:     msg  || '',
+    songRequest: song || null,
+    isRead:      false,
+    createdAt:   firebase.firestore.FieldValue.serverTimestamp()
   }).then(()=>{
     document.getElementById('w-name').value='';
     document.getElementById('w-song').value='';

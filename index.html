@@ -821,6 +821,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
       <span class="pl-live-txt" id="pl-live-txt">LIVE</span>
     </div>
     <div class="pl-name">BEATZONE FM</div>
+    <div class="pl-listeners" id="pl-listeners"></div>
   </div>
 
   <!-- center: controls + waveform -->
@@ -829,7 +830,10 @@ document.querySelectorAll('a[href^="#"]').forEach(a=>{
     <button class="pl-play" id="pl-btn" onclick="toggleStream()" aria-label="Play/Pause">
       <i class="fa-solid fa-play" id="pl-icon"></i>
     </button>
-    <div class="pl-track" id="pl-track">Klicke Play zum Starten</div>
+    <div class="pl-track-wrap">
+      <div class="pl-track" id="pl-track">Klicke Play zum Starten</div>
+      <div class="pl-artist" id="pl-artist"></div>
+    </div>
   </div>
 
   <!-- right: volume -->
@@ -874,6 +878,11 @@ footer{padding-bottom:80px;}
   font-size:.95rem;letter-spacing:.06em;color:#f0ede5;
   white-space:nowrap;
 }
+.pl-listeners{
+  font-family:'Space Mono',monospace;font-size:.5rem;
+  letter-spacing:.1em;color:rgba(240,237,229,.35);
+  white-space:nowrap;
+}
 
 /* CENTER */
 .pl-center{
@@ -907,11 +916,19 @@ footer{padding-bottom:80px;}
 .pl-play.loading{animation:spin .7s linear infinite;}
 @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
 
+.pl-track-wrap{
+  display:flex;flex-direction:column;gap:2px;
+  overflow:hidden;max-width:280px;
+}
 .pl-track{
-  font-family:'Space Mono',monospace;font-size:.6rem;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:.82rem;
+  letter-spacing:.04em;color:rgba(240,237,229,.85);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.pl-artist{
+  font-family:'Space Mono',monospace;font-size:.52rem;
   letter-spacing:.08em;color:rgba(240,237,229,.4);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  max-width:300px;
 }
 
 /* RIGHT */
@@ -1001,6 +1018,43 @@ function toggleMute(){
   }
   setVol(vol.value);
 }
+
+/* Now Playing API */
+const NP_API = 'https://rp.cynoria.de/api/nowplaying/1';
+
+function fetchNowPlaying(){
+  fetch(NP_API)
+    .then(r => r.json())
+    .then(data => {
+      const np      = data.now_playing;
+      const song    = np?.song || {};
+      const title   = song.title  || '';
+      const artist  = song.artist || '';
+      const listeners = data.listeners?.current ?? 0;
+
+      // update track display
+      const trackEl  = document.getElementById('pl-track');
+      const artistEl = document.getElementById('pl-artist');
+      const listEl   = document.getElementById('pl-listeners');
+
+      if(trackEl){
+        if(title){
+          trackEl.textContent  = title;
+          if(artistEl) artistEl.textContent = artist;
+        }
+      }
+      if(listEl){
+        listEl.textContent = listeners === 1
+          ? '1 Hörer'
+          : listeners + ' Hörer';
+      }
+    })
+    .catch(() => {}); // silent fail — stream still works
+}
+
+// fetch on load + every 15s
+fetchNowPlaying();
+setInterval(fetchNowPlaying, 15000);
 
 /* build waveform bars */
 (function(){

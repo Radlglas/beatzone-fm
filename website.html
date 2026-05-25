@@ -713,6 +713,39 @@ footer{
   </div>
 </section>
 
+<!-- WUNSCHBOX -->
+<section id="wunschbox" style="background:var(--ink);padding:clamp(60px,10vw,120px) clamp(20px,5vw,64px);">
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:14px;text-align:center;">— Direkt zu den DJs —</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.02em;line-height:1;color:#f0ede5;text-align:center;margin-bottom:10px;">GRÜSSE &amp; <em style="color:var(--red);font-style:normal;">WÜNSCHE</em></div>
+    <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:rgba(240,237,229,.45);line-height:1.7;text-align:center;margin-bottom:40px;">Schick uns einen Gruß oder wünsch dir einen Song — wir spielen ihn live.</div>
+
+    <div id="wish-form" style="display:flex;flex-direction:column;gap:14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div>
+          <label style="display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,229,.35);margin-bottom:7px;">Dein Name *</label>
+          <input id="w-name" type="text" placeholder="z.B. Max" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#f0ede5;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"/>
+        </div>
+        <div>
+          <label style="display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,229,.35);margin-bottom:7px;">Wunschlied</label>
+          <input id="w-song" type="text" placeholder="Künstler — Titel" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#f0ede5;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"/>
+        </div>
+      </div>
+      <div>
+        <label style="display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,229,.35);margin-bottom:7px;">Dein Gruß</label>
+        <textarea id="w-msg" rows="3" placeholder="Hey BeatZone, macht weiter so! 🔥" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#f0ede5;outline:none;resize:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"></textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <button id="w-btn" onclick="sendWish()" style="display:inline-flex;align-items:center;gap:10px;padding:12px 28px;background:var(--red);border:none;border-radius:4px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;cursor:pointer;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          <i class="fa-solid fa-paper-plane" style="font-size:.75rem;"></i> Absenden
+        </button>
+        <div id="w-success" style="display:none;font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.1em;color:#4ade80;">✓ Gesendet — danke!</div>
+        <div id="w-err" style="display:none;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--red);">Bitte Namen eingeben.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- CTA -->
 <section id="cta">
   <div class="cta-ttl rev">TUNE <em>IN.</em></div>
@@ -1059,55 +1092,89 @@ setInterval(fetchNowPlaying, 15000);
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <script>
-(function(){
-  const firebaseConfig = {
-    apiKey: "AIzaSyCpt0otoJpzX_svBPFDdJqAubfLIm3Nf4o",
-    authDomain: "beatzone-fm.firebaseapp.com",
-    projectId: "beatzone-fm",
-    storageBucket: "beatzone-fm.firebasestorage.app",
-    messagingSenderId: "932395949542",
-    appId: "1:932395949542:web:9c00b89f38fb79cf4a8a27"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+const firebaseConfig = {
+  apiKey: "AIzaSyCpt0otoJpzX_svBPFDdJqAubfLIm3Nf4o",
+  authDomain: "beatzone-fm.firebaseapp.com",
+  projectId: "beatzone-fm",
+  storageBucket: "beatzone-fm.firebasestorage.app",
+  messagingSenderId: "932395949542",
+  appId: "1:932395949542:web:9c00b89f38fb79cf4a8a27"
+};
+firebase.initializeApp(firebaseConfig);
+const fbdb = firebase.firestore();
 
-  const TAG_LABELS = { live:'● Live', weekly:'Wöchentlich', daily:'Täglich', monthly:'Monatlich' };
-  const TAG_STYLE  = { live:'color:var(--red);background:rgba(232,32,10,.1);', weekly:'color:var(--mid);background:rgba(14,12,9,.06);', daily:'color:var(--mid);background:rgba(14,12,9,.06);', monthly:'color:var(--mid);background:rgba(14,12,9,.06);' };
+/* ── SHOWS ── */
+const TAG_LABELS = { live:'● Live', weekly:'Wöchentlich', daily:'Täglich', monthly:'Monatlich' };
+const TAG_STYLE  = {
+  live:    'color:var(--red);background:rgba(232,32,10,.1);',
+  weekly:  'color:var(--mid);background:rgba(14,12,9,.06);',
+  daily:   'color:var(--mid);background:rgba(14,12,9,.06);',
+  monthly: 'color:var(--mid);background:rgba(14,12,9,.06);'
+};
 
-  db.collection('shows').orderBy('order').onSnapshot(snapshot => {
-    const container = document.getElementById('shows-container');
-    if(!container) return;
-
-    if(snapshot.empty){
-      container.innerHTML = `
-        <div style="padding:60px 0;text-align:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
-          <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;">— Sendeplan —</div>
-          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;">SENDUNGEN FOLGEN IN KÜRZE</div>
-          <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--mid);line-height:1.7;max-width:380px;margin:0 auto;">Noch sind keine festen Sendungen eingetragen.<br>Schau bald wieder vorbei.</div>
-        </div>`;
-      return;
-    }
-
-    let html = '<div>';
-    let i = 1;
-    snapshot.forEach(doc => {
-      const d = doc.data();
-      const label = TAG_LABELS[d.type] || d.type;
-      const style = TAG_STYLE[d.type] || TAG_STYLE.weekly;
-      const delay = i === 1 ? '' : i === 2 ? ' d1' : ' d2';
-      html += `
-        <div class="show-line rev${delay}">
-          <div class="sh-num">${String(i).padStart(2,'0')}</div>
-          <div class="sh-name">${d.name}</div>
-          <div class="sh-host">${d.dj}&nbsp;·&nbsp;${d.time}</div>
-          <div class="sh-tag" style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px;${style}">${label}</div>
-        </div>`;
-      i++;
-    });
-    html += '</div>';
-    container.innerHTML = html;
+fbdb.collection('shows').orderBy('order').get().then(snapshot => {
+  const container = document.getElementById('shows-container');
+  if(!container) return;
+  if(snapshot.empty){
+    container.innerHTML = `
+      <div style="padding:60px 0;text-align:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
+        <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;">— Sendeplan —</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;">SENDUNGEN FOLGEN IN KÜRZE</div>
+        <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--mid);line-height:1.7;max-width:380px;margin:0 auto;">Noch sind keine festen Sendungen eingetragen.<br>Schau bald wieder vorbei.</div>
+      </div>`;
+    return;
+  }
+  let html = '<div>', i = 1;
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    const label = TAG_LABELS[d.type] || d.type;
+    const style = TAG_STYLE[d.type] || TAG_STYLE.weekly;
+    const delay = i===1?'':i===2?' d1':' d2';
+    html += `
+      <div class="show-line rev${delay}">
+        <div class="sh-num">${String(i).padStart(2,'0')}</div>
+        <div class="sh-name">${d.name}</div>
+        <div class="sh-host">${d.dj}&nbsp;·&nbsp;${d.time}</div>
+        <div class="sh-tag" style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px;${style}">${label}</div>
+      </div>`;
+    i++;
   });
-})();
+  html += '</div>';
+  container.innerHTML = html;
+}).catch(()=>{
+  const c = document.getElementById('shows-container');
+  if(c) c.innerHTML = '<div style="padding:40px 0;text-align:center;color:var(--mid);font-size:.8rem;">Sendeplan konnte nicht geladen werden.</div>';
+});
+
+/* ── WÜNSCHE ── */
+function sendWish(){
+  const name = document.getElementById('w-name').value.trim();
+  const song = document.getElementById('w-song').value.trim();
+  const msg  = document.getElementById('w-msg').value.trim();
+  const err  = document.getElementById('w-err');
+  const ok   = document.getElementById('w-success');
+  const btn  = document.getElementById('w-btn');
+
+  err.style.display='none'; ok.style.display='none';
+  if(!name){ err.style.display='block'; return; }
+
+  btn.disabled=true; btn.style.opacity='.5';
+  fbdb.collection('wishes').add({
+    name, song, msg,
+    ts: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(()=>{
+    document.getElementById('w-name').value='';
+    document.getElementById('w-song').value='';
+    document.getElementById('w-msg').value='';
+    ok.style.display='block';
+    btn.disabled=false; btn.style.opacity='1';
+    setTimeout(()=>ok.style.display='none', 4000);
+  }).catch(()=>{
+    btn.disabled=false; btn.style.opacity='1';
+    err.textContent='Fehler — bitte nochmal versuchen.';
+    err.style.display='block';
+  });
+}
 </script>
 </body>
 </html>

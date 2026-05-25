@@ -1,0 +1,10 @@
+node_modules/
+temporary screenshots/
+*.zip
+discord-bot/
+beatzone-fm-bot/
+serve.mjs
+screenshot.mjs
+music-downloader.html
+index-public.html
+CLAUDE.md

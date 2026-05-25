@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BEATZONE FM</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;0,900;1,900&family=Space+Mono:wght@400;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --cream: #f5f1e8;
+  --cream2:#ede9df;
+  --ink:   #0e0c09;
+  --red:   #e8200a;
+  --red-d: rgba(232,32,10,0.07);
+  --mid:   #857f70;
+  --faint: #ccc7bc;
+  --rule:  rgba(14,12,9,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Barlow',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════
+   GRAIN
+═══════════════════════════════ */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:0.04;mix-blend-mode:multiply;
+}
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(20px,5vw,64px);
+  background:rgba(245,241,232,0.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--rule);
+}
+.n-logo{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;font-size:1.25rem;letter-spacing:0.05em;
+  color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:9px;
+}
+.n-signal{
+  display:flex;align-items:center;gap:3px;
+  height:16px;
+}
+.n-bar{
+  width:3px;border-radius:1px;background:var(--red);
+  animation:signal var(--d,.5s) var(--del,0s) ease-in-out infinite alternate;
+}
+@keyframes signal{from{height:4px;}to{height:var(--h,14px);}}
+
+.n-links{display:flex;gap:2px;}
+.n-a{
+  padding:6px 14px;border-radius:3px;
+  font-size:0.82rem;font-weight:500;color:var(--mid);
+  text-decoration:none;transition:color .15s,background .15s;
+}
+.n-a:hover{color:var(--ink);background:rgba(14,12,9,.05);}
+
+.n-cta{
+  padding:7px 20px;background:var(--ink);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--cream);text-decoration:none;cursor:pointer;
+  transition:opacity .2s,transform .12s;
+}
+.n-cta:hover{opacity:.85;}
+.n-cta:active{transform:scale(.97);}
+
+/* ═══════════════════════════════
+   HERO — dark section
+═══════════════════════════════ */
+#hero{
+  background:var(--ink);
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:54px clamp(20px,5vw,64px) clamp(48px,6vw,80px);
+  position:relative;overflow:hidden;
+}
+
+/* subtle red bloom bottom-left */
+#hero::before{
+  content:'';position:absolute;
+  bottom:-10%;left:-5%;
+  width:60vw;height:60vh;
+  background:radial-gradient(ellipse,rgba(232,32,10,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+.h-eyebrow{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Space Mono',monospace;
+  font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--red);margin-bottom:clamp(24px,4vh,44px);
+  animation:fadeUp .5s ease both;
+}
+.h-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--red);
+  animation:pop 1.3s ease-in-out infinite;
+}
+@keyframes pop{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(232,32,10,.4);}60%{opacity:.3;box-shadow:0 0 0 7px rgba(232,32,10,0);}}
+
+.h-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:900;
+  font-size:clamp(4.5rem,18vw,17rem);
+  line-height:.87;
+  letter-spacing:-.02em;
+  color:var(--cream);
+  animation:fadeUp .6s .06s ease both;
+}
+.h-name .h-hollow{
+  -webkit-text-stroke:2px var(--cream);
+  color:transparent;
+}
+.h-name .h-red{color:var(--red);}
+
+.h-rule{
+  width:100%;height:1px;
+  background:rgba(245,241,232,.1);
+  margin:clamp(28px,4vh,48px) 0;
+  animation:fadeIn .6s .12s ease both;
+}
+
+.h-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:20px;
+  animation:fadeUp .6s .18s ease both;
+}
+.h-meta{
+  font-family:'Space Mono',monospace;
+  font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(245,241,232,.35);
+  line-height:1.9;
+}
+.h-meta strong{color:var(--cream);font-weight:700;}
+
+.h-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-red{
+  display:flex;align-items:center;gap:9px;
+  padding:13px 26px;background:var(--red);border:none;border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.92rem;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;text-decoration:none;cursor:pointer;
+  transition:opacity .2s,transform .12s;
+}
+.btn-red:hover{opacity:.88;transform:translateY(-1px);}
+.btn-ghost-light{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 22px;border:1px solid rgba(245,241,232,.2);border-radius:3px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:.88rem;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(245,241,232,.5);text-decoration:none;cursor:pointer;
+  transition:color .15s,border-color .15s;
+}
+.btn-ghost-light:hover{color:var(--cream);border-color:rgba(245,241,232,.4);}
+
+/* ═══════════════════════════════
+   TICKER
+═══════════════════════════════ */
+.ticker{
+  height:38px;background:var(--red);
+  display:flex;align-items:center;overflow:hidden;
+}
+.t-lbl{
+  flex-shrink:0;padding:0 18px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;white-space:nowrap;
+  border-right:1px solid rgba(255,255,255,.25);
+}
+.t-scroll{flex:1;overflow:hidden;}
+.t-inner{
+  display:inline-flex;align-items:center;gap:0;white-space:nowrap;
+  font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.09em;
+  color:rgba(255,255,255,.75);
+  animation:tick 22s linear infinite;
+}
+.t-sep{padding:0 18px;opacity:.3;}
+@keyframes tick{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ═══════════════════════════════
+   STATS — light section
+═══════════════════════════════ */
+.stats-strip{
+  border-bottom:1px solid var(--rule);
+}
+.stats-inner{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);
+}
+.stat-cell{
+  padding:36px clamp(20px,4vw,52px);
+  border-right:1px solid var(--rule);
+  transition:background .2s;
+  position:relative;
+}
+.stat-cell:last-child{border-right:none;}
+.stat-cell:hover{background:rgba(14,12,9,.03);}
+.stat-cell::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--red);transform:scaleX(0);transform-origin:left;
+  transition:transform .3s ease;
+}
+.stat-cell:hover::after{transform:scaleX(1);}
+.stat-n{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2rem,4.5vw,3.4rem);letter-spacing:-.02em;
+  line-height:1;margin-bottom:6px;color:var(--ink);
+}
+.stat-cell:first-child .stat-n{color:var(--red);}
+.stat-l{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--mid);
+}
+
+/* ═══════════════════════════════
+   PROGRAMMES — light section
+═══════════════════════════════ */
+#shows{
+  padding:clamp(60px,7vw,96px) clamp(20px,5vw,64px);
+  max-width:1280px;margin:0 auto;
+  border-bottom:1px solid var(--rule);
+}
+.sec-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:40px;flex-wrap:wrap;gap:12px;
+}
+.sec-ttl{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.01em;line-height:1;
+  color:var(--ink);
+}
+.sec-ttl em{font-style:normal;color:var(--red);}
+.sec-count{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--faint);
+  padding-bottom:6px;
+}
+
+.show-line{
+  display:grid;grid-template-columns:52px 1fr max-content max-content;
+  align-items:center;
+  padding:20px 0;
+  border-top:1px solid var(--rule);
+  cursor:pointer;gap:0;
+  transition:background .15s;
+  position:relative;
+}
+.show-line::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:var(--red);transition:width .25s ease;
+}
+.show-line:hover::before{width:3px;}
+.show-line:last-child{border-bottom:1px solid var(--rule);}
+.show-line:hover{background:var(--red-d);}
+.show-line:hover .sh-num{color:var(--red);}
+.show-line:hover .sh-name{color:var(--red);}
+
+.sh-num{
+  font-family:'Space Mono',monospace;font-size:.65rem;font-weight:700;
+  letter-spacing:.1em;color:var(--faint);
+  transition:color .15s;padding-left:16px;
+}
+.sh-name{
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:1.3rem;letter-spacing:.02em;color:var(--ink);
+  transition:color .15s;
+}
+.sh-host{
+  font-family:'Space Mono',monospace;font-size:.58rem;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--mid);
+  padding-right:28px;text-align:right;
+}
+.sh-tag{
+  padding:3px 10px;border-radius:2px;
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  margin-right:16px;
+}
+.sh-tag.live{background:var(--red-d);color:var(--red);}
+.sh-tag.wk{border:1px solid var(--rule);color:var(--mid);}
+
+/* ═══════════════════════════════
+   DJs — dark section, inverted
+═══════════════════════════════ */
+#djs{background:var(--ink);border-top:1px solid rgba(255,255,255,.04);}
+.djs-wrap{
+  max-width:1280px;margin:0 auto;
+  padding:clamp(60px,7vw,96px) clamp(20px,5vw,64px);
+}
+.sec-ttl-light{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2.2rem,5vw,4rem);letter-spacing:-.01em;line-height:1;
+  color:var(--cream);margin-bottom:48px;
+}
+.sec-ttl-light em{font-style:normal;color:var(--red);}
+
+.dj-cards{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.dj-c{
+  background:#111;
+  padding:clamp(28px,4vw,44px);
+  cursor:pointer;position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.04);
+  transition:background .2s;
+}
+.dj-c:hover{background:#161614;}
+.dj-c::after{
+  content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+  background:var(--red);transition:width .35s cubic-bezier(.25,1,.5,1);
+}
+.dj-c:hover::after{width:100%;}
+.dj-idx{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:#2a2924;margin-bottom:20px;
+  transition:color .2s;
+}
+.dj-c:hover .dj-idx{color:rgba(232,32,10,.4);}
+.dj-nm{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(1.8rem,4.5vw,4rem);letter-spacing:-.01em;line-height:1;
+  color:var(--cream);margin-bottom:6px;transition:color .2s;
+}
+.dj-c:hover .dj-nm{color:var(--red);}
+.dj-rl{
+  font-family:'Space Mono',monospace;font-size:.58rem;
+  letter-spacing:.16em;text-transform:uppercase;color:#333;
+  margin-bottom:28px;
+}
+.dj-data{
+  display:flex;gap:24px;
+  padding-top:20px;border-top:1px solid rgba(255,255,255,.05);
+}
+.dd-v{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.35rem;letter-spacing:.02em;line-height:1;
+  color:var(--cream);
+}
+.dd-k{
+  font-family:'Space Mono',monospace;font-size:.52rem;
+  letter-spacing:.14em;text-transform:uppercase;color:#2f2d28;
+  margin-top:3px;
+}
+
+/* empty slot */
+.dj-c.slot{opacity:.4;}
+
+/* ═══════════════════════════════
+   ABOUT — light
+═══════════════════════════════ */
+#about{
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  padding:clamp(70px,9vw,120px) clamp(20px,5vw,64px);
+}
+.about-wrap{max-width:1280px;margin:0 auto;}
+.about-grid{display:grid;grid-template-columns:5fr 4fr;gap:clamp(40px,7vw,100px);align-items:start;}
+.about-hl{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(2rem,4.5vw,3.8rem);letter-spacing:-.02em;line-height:1.05;
+  color:var(--ink);margin-bottom:24px;
+}
+.about-hl em{font-style:normal;color:var(--red);}
+.about-p{font-size:.9rem;color:var(--mid);line-height:1.85;margin-bottom:28px;}
+.about-cta{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:'Space Mono',monospace;font-size:.62rem;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink);
+  padding-bottom:2px;transition:gap .2s,color .15s;
+}
+.about-cta:hover{gap:15px;color:var(--red);border-color:var(--red);}
+
+.about-facts{display:flex;flex-direction:column;}
+.af{
+  padding:22px 0;border-bottom:1px solid var(--rule);
+  display:grid;grid-template-columns:36px 1fr;gap:16px;align-items:start;
+}
+.af:first-child{border-top:1px solid var(--rule);}
+.af-n{
+  font-family:'Space Mono',monospace;font-size:.6rem;font-weight:700;
+  color:var(--red);letter-spacing:.1em;padding-top:2px;
+}
+.af-t{
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:1.05rem;letter-spacing:.02em;color:var(--ink);margin-bottom:3px;
+}
+.af-d{font-size:.82rem;color:var(--mid);line-height:1.65;}
+
+/* ═══════════════════════════════
+   CTA — dark
+═══════════════════════════════ */
+#cta{
+  background:var(--ink);
+  padding:clamp(80px,10vw,130px) clamp(20px,5vw,64px);
+  text-align:center;position:relative;overflow:hidden;
+}
+#cta::before{
+  content:'';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:50vw;height:50vh;
+  background:radial-gradient(ellipse,rgba(232,32,10,.05) 0%,transparent 70%);
+  pointer-events:none;
+}
+.cta-ttl{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:clamp(3rem,8vw,7rem);letter-spacing:-.02em;line-height:.9;
+  color:var(--cream);margin-bottom:12px;
+  position:relative;z-index:1;
+}
+.cta-ttl em{font-style:normal;color:var(--red);}
+.cta-sub{
+  font-size:.88rem;color:rgba(245,241,232,.35);
+  line-height:1.8;margin:0 auto 36px;max-width:400px;
+  position:relative;z-index:1;
+}
+.cta-row{
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  flex-wrap:wrap;position:relative;z-index:1;
+}
+
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+footer{
+  background:var(--cream2);
+  border-top:1px solid var(--rule);
+}
+.f-wrap{max-width:1280px;margin:0 auto;padding:44px clamp(20px,5vw,64px) 28px;}
+.f-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:40px;margin-bottom:36px;
+}
+.f-logo{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:1.5rem;letter-spacing:.04em;color:var(--ink);
+  text-decoration:none;display:block;margin-bottom:10px;
+}
+.f-logo em{font-style:normal;color:var(--red);}
+.f-desc{font-size:.82rem;color:var(--mid);line-height:1.75;margin-bottom:16px;max-width:260px;}
+.f-soc{display:flex;gap:6px;}
+.f-s{
+  width:32px;height:32px;border-radius:3px;
+  border:1px solid var(--rule);background:var(--cream);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--mid);font-size:.78rem;text-decoration:none;
+  transition:all .15s;
+}
+.f-s:hover{color:var(--red);border-color:var(--red);}
+.f-col h5{
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;
+  font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:12px;
+}
+.f-col a{
+  display:block;font-size:.82rem;color:var(--mid);
+  text-decoration:none;margin-bottom:8px;transition:color .15s;
+}
+.f-col a:hover{color:var(--ink);}
+.f-bot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:18px;border-top:1px solid var(--rule);
+  flex-wrap:wrap;gap:10px;
+}
+.f-copy{
+  font-family:'Space Mono',monospace;font-size:.56rem;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--faint);
+}
+.f-freq{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Space Mono',monospace;font-size:.56rem;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--faint);
+}
+.f-live-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--red);
+  animation:pop 1.3s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════
+   TRANSITIONS
+═══════════════════════════════ */
+.rev{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
+.rev.d1{transition-delay:.07s}.rev.d2{transition-delay:.14s}
+.rev.d3{transition-delay:.21s}.rev.d4{transition-delay:.28s}
+.rev.on{opacity:1;transform:translateY(0);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media(max-width:960px){
+  .about-grid{grid-template-columns:1fr;}
+  .f-top{grid-template-columns:1fr 1fr;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .stat-cell:nth-child(2){border-right:none;}
+  .stat-cell{border-bottom:1px solid var(--rule);}
+  .stat-cell:nth-child(3){border-bottom:none;grid-column:1/-1;}
+  .n-links{display:none;}
+}
+@media(max-width:640px){
+  .dj-cards{grid-template-columns:1fr;}
+  .f-top{grid-template-columns:1fr;}
+  .stats-inner{grid-template-columns:1fr;}
+  .stat-cell{border-right:none!important;border-bottom:1px solid var(--rule);}
+  .stat-cell:last-child{border-bottom:none;}
+  .show-line{grid-template-columns:40px 1fr max-content;}
+  .sh-host{display:none;}
+  .h-btns{flex-direction:column;width:100%;}
+  .btn-red,.btn-ghost-light{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="n-logo">
+    <div class="n-signal">
+      <div class="n-bar" style="--d:.4s;--del:0s;--h:6px;"></div>
+      <div class="n-bar" style="--d:.5s;--del:.08s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.45s;--del:.16s;--h:14px;"></div>
+      <div class="n-bar" style="--d:.55s;--del:.06s;--h:10px;"></div>
+      <div class="n-bar" style="--d:.38s;--del:.22s;--h:7px;"></div>
+    </div>
+    BEATZONE FM
+  </a>
+  <div class="n-links">
+    <a href="#shows" class="n-a">Programme</a>
+    <a href="#djs" class="n-a">DJs</a>
+    <a href="#about" class="n-a">Über uns</a>
+  </div>
+  <a href="#" class="n-cta">Live hören</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="h-eyebrow">
+    <span class="h-dot"></span>
+    On Air — Webradio
+  </div>
+
+  <div class="h-name">
+    BEAT<span class="h-hollow">ZONE</span><br>
+    <span class="h-red">FM</span>
+  </div>
+
+  <div class="h-rule"></div>
+
+  <div class="h-foot">
+    <div class="h-meta">
+      <strong>192 kbps</strong> &nbsp;·&nbsp; MP3<br>
+      Webradio &nbsp;·&nbsp; 24 / 7
+    </div>
+    <div class="h-btns">
+      <a href="#" class="btn-red">
+        <i class="fa-solid fa-play" style="font-size:.7rem;"></i>
+        Jetzt hören
+      </a>
+      <a href="#shows" class="btn-ghost-light">Programm</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="t-lbl">Jetzt läuft</div>
+  <div class="t-scroll">
+    <div class="t-inner" id="ticker-el"></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stats-inner">
+    <div class="stat-cell rev">
+      <div class="stat-n" id="listener-n">2</div>
+      <div class="stat-l">Live-Zuhörer</div>
+    </div>
+    <div class="stat-cell rev d1">
+      <div class="stat-n">6</div>
+      <div class="stat-l">Sendungen</div>
+    </div>
+    <div class="stat-cell rev d2">
+      <div class="stat-n">24/7</div>
+      <div class="stat-l">On Air</div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOWS -->
+<section id="shows">
+  <div class="sec-head rev">
+    <div class="sec-ttl">UNSERE <em>PROGRAMME</em></div>
+    <div class="sec-count">06 Sendungen</div>
+  </div>
+
+  <div>
+    <div class="show-line rev">
+      <div class="sh-num">01</div>
+      <div class="sh-name">MORNING BEATS</div>
+      <div class="sh-host">Marius &nbsp;·&nbsp; Mo–Fr 07–10</div>
+      <div class="sh-tag live">● Live</div>
+    </div>
+    <div class="show-line rev d1">
+      <div class="sh-num">02</div>
+      <div class="sh-name">BASS KITCHEN</div>
+      <div class="sh-host">Galaxyflawa &nbsp;·&nbsp; Sa 20–23</div>
+      <div class="sh-tag wk">Wöchentlich</div>
+    </div>
+    <div class="show-line rev d2">
+      <div class="sh-num">03</div>
+      <div class="sh-name">FREESTYLE HOUR</div>
+      <div class="sh-host">Marius &nbsp;·&nbsp; Täglich 14–16</div>
+      <div class="sh-tag wk">Täglich</div>
+    </div>
+    <div class="show-line rev">
+      <div class="sh-num">04</div>
+      <div class="sh-name">LATE NIGHT FM</div>
+      <div class="sh-host">Galaxyflawa &nbsp;·&nbsp; Mi+Fr 22–01</div>
+      <div class="sh-tag wk">Mi + Fr</div>
+    </div>
+    <div class="show-line rev d1">
+      <div class="sh-num">05</div>
+      <div class="sh-name">CHILL SESSIONS</div>
+      <div class="sh-host">Marius &nbsp;·&nbsp; So 12–15</div>
+      <div class="sh-tag wk">Sonntag</div>
+    </div>
+    <div class="show-line rev d2">
+      <div class="sh-num">06</div>
+      <div class="sh-name">THROWBACK SESSIONS</div>
+      <div class="sh-host">Galaxyflawa &nbsp;·&nbsp; Letzter Sa 18–21</div>
+      <div class="sh-tag wk">Monatlich</div>
+    </div>
+  </div>
+</section>
+
+<!-- DJs -->
+<section id="djs">
+  <div class="djs-wrap">
+    <div class="sec-ttl-light rev">DAS <em>TEAM</em></div>
+    <div class="dj-cards">
+
+      <div class="dj-c rev">
+        <div class="dj-idx">01 — Owner</div>
+        <div class="dj-nm">MARIUS</div>
+        <div class="dj-rl">Head DJ · Morning Shows · Gründer</div>
+        <div class="dj-data">
+          <div>
+            <div class="dd-v" style="color:var(--red);">3.25h</div>
+            <div class="dd-k">Diesen Monat</div>
+          </div>
+          <div>
+            <div class="dd-v">5</div>
+            <div class="dd-k">Sendungen</div>
+          </div>
+          <div>
+            <div class="dd-v" style="color:var(--red);">ON AIR</div>
+            <div class="dd-k">Status</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dj-c rev d1">
+        <div class="dj-idx">02 — Owner</div>
+        <div class="dj-nm">GALAXYFLAWA</div>
+        <div class="dj-rl">DJ · Nightshows · Gründer</div>
+        <div class="dj-data">
+          <div>
+            <div class="dd-v" style="color:var(--red);">1.50h</div>
+            <div class="dd-k">Diesen Monat</div>
+          </div>
+          <div>
+            <div class="dd-v">3</div>
+            <div class="dd-k">Sendungen</div>
+          </div>
+          <div>
+            <div class="dd-v">BEREIT</div>
+            <div class="dd-k">Status</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dj-c rev d2" style="display:flex;flex-direction:column;justify-content:center;align-items:flex-start;background:#0d0d0b;border:1px dashed rgba(232,32,10,0.25);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:18px;">Du willst mitmachen?</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.6rem,3.5vw,2.8rem);letter-spacing:-.01em;line-height:1;color:#f0ede5;margin-bottom:10px;">WERDE TEIL<br>DES TEAMS</div>
+        <div style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#333;margin-bottom:28px;line-height:1.7;">Eigene Sendung · Eigener Sound<br>Eigene Community</div>
+        <a href="#" style="display:inline-flex;align-items:center;gap:10px;padding:11px 22px;background:var(--red);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:#fff;text-decoration:none;transition:opacity .2s;" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">
+          <i class="fa-brands fa-discord"></i> Discord beitreten
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div class="about-grid">
+      <div>
+        <div class="about-hl rev">
+          Wir sind <em>neu.</em><br>
+          Wir sind <em>live.</em><br>
+          Wir sind BeatZone.
+        </div>
+        <p class="about-p rev d1">
+          BeatZone FM ist ein unabhängiges Webradio — frisch gegründet, kein Bullshit, nur Musik. Echte DJs live, und wenn kein DJ on air ist, läuft unser Auto DJ — damit nie Stille entsteht.
+        </p>
+        <a href="#" class="about-cta rev d2">
+          Discord beitreten
+          <i class="fa-solid fa-arrow-right" style="font-size:.65rem;"></i>
+        </a>
+      </div>
+      <div class="about-facts">
+        <div class="af rev d1">
+          <div class="af-n">01</div>
+          <div>
+            <div class="af-t">24 / 7 Live-Stream</div>
+            <div class="af-d">Immer on air. Läuft kein DJ live, übernimmt unser Auto DJ — so ist BeatZone FM niemals still.</div>
+          </div>
+        </div>
+        <div class="af rev d2">
+          <div class="af-n">02</div>
+          <div>
+            <div class="af-t">Handgepickte Musik</div>
+            <div class="af-d">Jeder Track kommt von einem echten DJ. Geschmack schlägt Algorithmus.</div>
+          </div>
+        </div>
+        <div class="af rev d3">
+          <div class="af-n">03</div>
+          <div>
+            <div class="af-t">Community First</div>
+            <div class="af-d">Wunschlisten, Shoutouts, Discord. Du bist kein Zuhörer — du bist Teil davon.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-ttl rev">TUNE <em>IN.</em></div>
+  <p class="cta-sub rev d1">Kein Account. Kein Abo. Einfach Play.</p>
+  <div class="cta-row">
+    <a href="#" class="btn-red rev d2">
+      <i class="fa-solid fa-play" style="font-size:.7rem;"></i>
+      Jetzt live hören
+    </a>
+    <a href="#" class="btn-ghost-light rev d3">
+      <i class="fa-brands fa-discord"></i>
+      Discord
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-wrap">
+    <div class="f-top">
+      <div>
+        <a href="#" class="f-logo">BEAT<em>ZONE</em> FM</a>
+        <p class="f-desc">Unabhängiges Webradio aus Deutschland. Für echte Musikliebhaber.</p>
+        <div class="f-soc">
+          <a href="#" class="f-s"><i class="fa-brands fa-discord"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-twitch"></i></a>
+          <a href="#" class="f-s"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="f-col">
+        <h5>Sender</h5>
+        <a href="#">Startseite</a>
+        <a href="#shows">Programme</a>
+        <a href="#djs">DJs</a>
+        <a href="#about">Über uns</a>
+      </div>
+      <div class="f-col">
+        <h5>Mitmachen</h5>
+        <a href="#">DJ werden</a>
+        <a href="#">Discord</a>
+        <a href="#">Wunschliste</a>
+        <a href="index.html">Studio Panel</a>
+      </div>
+      <div class="f-col">
+        <h5>Rechtliches</h5>
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+        <a href="#">Kontakt</a>
+      </div>
+    </div>
+    <div class="f-bot">
+      <div class="f-copy">All rights reserved by Galaxyflawa</div>
+      <div class="f-freq">
+        <span class="f-live-dot"></span>
+        On Air · Webradio
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* TICKER */
+const tracks=['Midnight Frequencies — KORD & Solène','Neon Drift — Arcade Hearts','Gravity Loop — Yuki & The Machines','After Hours — Pulsewave','Signal Lost — ELOH','Deep Current — Marius'];
+(function(){
+  const el=document.getElementById('ticker-el');
+  const all=[...tracks,...tracks];
+  all.forEach((s,i)=>{
+    const sp=document.createElement('span');sp.textContent=s;el.appendChild(sp);
+    if(i<all.length-1){const sep=document.createElement('span');sep.className='t-sep';sep.textContent=' · ';el.appendChild(sep);}
+  });
+})();
+
+/* LISTENER COUNT */
+setInterval(()=>{
+  const el=document.getElementById('listener-n');
+  if(el)el.textContent=Math.max(1,2+Math.round((Math.random()-.5)*4));
+},5000);
+
+/* SCROLL REVEAL */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:.05,rootMargin:'0px 0px 40px 0px'});
+const revs=document.querySelectorAll('.rev');
+revs.forEach(el=>io.observe(el));
+setTimeout(()=>revs.forEach(el=>el.classList.add('on')),300);
+
+/* SMOOTH SCROLL */
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
+/* SMOOTH SCROLL already above */
+</script>
+
+<!-- ═══════════════════════════════
+     STICKY PLAYER
+═══════════════════════════════ -->
+<div id="player">
+  <!-- left: logo + live -->
+  <div class="pl-left">
+    <div class="pl-live">
+      <span class="pl-dot" id="pl-dot"></span>
+      <span class="pl-live-txt" id="pl-live-txt">LIVE</span>
+    </div>
+    <div class="pl-name">BEATZONE FM</div>
+  </div>
+
+  <!-- center: controls + waveform -->
+  <div class="pl-center">
+    <div class="pl-wave" id="pl-wave"></div>
+    <button class="pl-play" id="pl-btn" onclick="toggleStream()" aria-label="Play/Pause">
+      <i class="fa-solid fa-play" id="pl-icon"></i>
+    </button>
+    <div class="pl-track" id="pl-track">Klicke Play zum Starten</div>
+  </div>
+
+  <!-- right: volume -->
+  <div class="pl-right">
+    <i class="fa-solid fa-volume-high pl-vol-icon" id="pl-vol-icon" onclick="toggleMute()"></i>
+    <input type="range" class="pl-vol" id="pl-vol" min="0" max="1" step="0.05" value="0.8" oninput="setVol(this.value)"/>
+  </div>
+</div>
+
+<style>
+#player{
+  position:fixed;bottom:0;left:0;right:0;z-index:300;
+  height:64px;
+  background:var(--ink);
+  border-top:1px solid rgba(255,255,255,.08);
+  display:flex;align-items:center;
+  padding:0 clamp(16px,4vw,48px);
+  gap:20px;
+  box-shadow:0 -8px 32px rgba(0,0,0,.4);
+}
+/* push footer up so player doesn't cover it */
+footer{padding-bottom:80px;}
+
+/* LEFT */
+.pl-left{display:flex;align-items:center;gap:12px;min-width:160px;}
+.pl-live{
+  display:flex;align-items:center;gap:6px;
+  padding:3px 9px;border-radius:3px;
+  background:rgba(232,32,10,.12);border:1px solid rgba(232,32,10,.3);
+}
+.pl-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--red);
+}
+.pl-dot.playing{animation:pop 1.2s ease-in-out infinite;}
+.pl-live-txt{
+  font-family:'Space Mono',monospace;font-size:.55rem;
+  font-weight:700;letter-spacing:.18em;color:var(--red);
+}
+.pl-name{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:.95rem;letter-spacing:.06em;color:#f0ede5;
+  white-space:nowrap;
+}
+
+/* CENTER */
+.pl-center{
+  flex:1;display:flex;align-items:center;
+  justify-content:center;gap:16px;
+  overflow:hidden;
+}
+.pl-wave{
+  display:flex;align-items:center;gap:2px;height:28px;
+  opacity:0;transition:opacity .3s;
+}
+.pl-wave.on{opacity:1;}
+.pw{
+  width:2px;border-radius:1px;
+  background:var(--red);
+  animation:wave var(--d,.5s) var(--dl,0s) ease-in-out infinite alternate;
+}
+@keyframes wave{from{height:3px;}to{height:var(--h,18px);}}
+
+.pl-play{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--red);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.9rem;
+  box-shadow:0 0 20px rgba(232,32,10,.4);
+  transition:opacity .2s,transform .12s;
+  flex-shrink:0;
+}
+.pl-play:hover{opacity:.88;}
+.pl-play:active{transform:scale(.95);}
+.pl-play.loading{animation:spin .7s linear infinite;}
+@keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.pl-track{
+  font-family:'Space Mono',monospace;font-size:.6rem;
+  letter-spacing:.08em;color:rgba(240,237,229,.4);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:300px;
+}
+
+/* RIGHT */
+.pl-right{
+  display:flex;align-items:center;gap:10px;
+  min-width:120px;justify-content:flex-end;
+}
+.pl-vol-icon{
+  font-size:.8rem;color:rgba(240,237,229,.4);cursor:pointer;
+  transition:color .15s;flex-shrink:0;
+}
+.pl-vol-icon:hover{color:#f0ede5;}
+.pl-vol{
+  -webkit-appearance:none;appearance:none;
+  width:80px;height:3px;border-radius:2px;
+  background:rgba(255,255,255,.12);outline:none;cursor:pointer;
+}
+.pl-vol::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;
+  border-radius:50%;background:var(--red);cursor:pointer;
+  box-shadow:0 0 6px rgba(232,32,10,.5);
+}
+
+@media(max-width:600px){
+  .pl-left{min-width:auto;}
+  .pl-name{display:none;}
+  .pl-track{display:none;}
+  .pl-vol{width:52px;}
+  .pl-right{min-width:80px;}
+  .pl-wave{display:none;}
+}
+</style>
+
+<script>
+const STREAM = 'https://rp.cynoria.de/listen/beatzonefm/radio.mp3';
+let audio = null;
+let isPlaying = false;
+
+function toggleStream(){
+  if(!audio){
+    audio = new Audio(STREAM);
+    audio.volume = parseFloat(document.getElementById('pl-vol').value);
+  }
+  if(!isPlaying){
+    // loading state
+    const btn = document.getElementById('pl-btn');
+    const icon = document.getElementById('pl-icon');
+    btn.classList.add('loading');
+    icon.className = 'fa-solid fa-circle-notch';
+    document.getElementById('pl-track').textContent = 'Verbinde…';
+
+    audio.play().then(()=>{
+      isPlaying = true;
+      btn.classList.remove('loading');
+      icon.className = 'fa-solid fa-pause';
+      document.getElementById('pl-dot').classList.add('playing');
+      document.getElementById('pl-track').textContent = 'BeatZone FM — Live Stream';
+      document.getElementById('pl-wave').classList.add('on');
+    }).catch(()=>{
+      btn.classList.remove('loading');
+      icon.className = 'fa-solid fa-play';
+      document.getElementById('pl-track').textContent = 'Fehler — nochmal versuchen';
+    });
+  } else {
+    audio.pause();
+    isPlaying = false;
+    document.getElementById('pl-icon').className = 'fa-solid fa-play';
+    document.getElementById('pl-dot').classList.remove('playing');
+    document.getElementById('pl-track').textContent = 'Pausiert';
+    document.getElementById('pl-wave').classList.remove('on');
+  }
+}
+
+function setVol(v){
+  if(audio) audio.volume = parseFloat(v);
+  const icon = document.getElementById('pl-vol-icon');
+  icon.className = v == 0 ? 'fa-solid fa-volume-xmark pl-vol-icon' : 'fa-solid fa-volume-high pl-vol-icon';
+}
+
+function toggleMute(){
+  const vol = document.getElementById('pl-vol');
+  if(vol.value > 0){
+    vol.dataset.prev = vol.value;
+    vol.value = 0;
+  } else {
+    vol.value = vol.dataset.prev || 0.8;
+  }
+  setVol(vol.value);
+}
+
+/* build waveform bars */
+(function(){
+  const w = document.getElementById('pl-wave');
+  for(let i=0;i<18;i++){
+    const b=document.createElement('div');
+    b.className='pw';
+    b.style.setProperty('--h',(6+Math.random()*18)+'px');
+    b.style.setProperty('--d',(0.3+Math.random()*.5).toFixed(2)+'s');
+    b.style.setProperty('--dl',(Math.random()*.3).toFixed(2)+'s');
+    w.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>

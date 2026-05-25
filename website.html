@@ -610,10 +610,10 @@ footer{
   <div class="sec-head rev">
     <div class="sec-ttl">UNSERE <em>PROGRAMME</em></div>
   </div>
-  <div style="padding:60px 0;text-align:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
-    <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;">— Sendeplan —</div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;">SENDUNGEN FOLGEN IN KÜRZE</div>
-    <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--mid);line-height:1.7;max-width:380px;margin:0 auto;">Noch sind keine festen Sendungen eingetragen.<br>Schau bald wieder vorbei — oder trag dich ein.</div>
+  <div id="shows-container">
+    <div id="shows-loading" style="padding:60px 0;text-align:center;border-top:1px solid var(--rule);">
+      <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);">Lädt Sendeplan…</div>
+    </div>
   </div>
 </section>
 
@@ -1013,6 +1013,61 @@ function toggleMute(){
     b.style.setProperty('--dl',(Math.random()*.3).toFixed(2)+'s');
     w.appendChild(b);
   }
+})();
+</script>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  const firebaseConfig = {
+    apiKey: "AIzaSyCpt0otoJpzX_svBPFDdJqAubfLIm3Nf4o",
+    authDomain: "beatzone-fm.firebaseapp.com",
+    projectId: "beatzone-fm",
+    storageBucket: "beatzone-fm.firebasestorage.app",
+    messagingSenderId: "932395949542",
+    appId: "1:932395949542:web:9c00b89f38fb79cf4a8a27"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  const TAG_LABELS = { live:'● Live', weekly:'Wöchentlich', daily:'Täglich', monthly:'Monatlich' };
+  const TAG_STYLE  = { live:'color:var(--red);background:rgba(232,32,10,.1);', weekly:'color:var(--mid);background:rgba(14,12,9,.06);', daily:'color:var(--mid);background:rgba(14,12,9,.06);', monthly:'color:var(--mid);background:rgba(14,12,9,.06);' };
+
+  db.collection('shows').orderBy('order').onSnapshot(snapshot => {
+    const container = document.getElementById('shows-container');
+    if(!container) return;
+
+    if(snapshot.empty){
+      container.innerHTML = `
+        <div style="padding:60px 0;text-align:center;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);">
+          <div style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--mid);margin-bottom:14px;">— Sendeplan —</div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:-.01em;color:var(--ink);margin-bottom:10px;">SENDUNGEN FOLGEN IN KÜRZE</div>
+          <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:var(--mid);line-height:1.7;max-width:380px;margin:0 auto;">Noch sind keine festen Sendungen eingetragen.<br>Schau bald wieder vorbei.</div>
+        </div>`;
+      return;
+    }
+
+    let html = '<div>';
+    let i = 1;
+    snapshot.forEach(doc => {
+      const d = doc.data();
+      const label = TAG_LABELS[d.type] || d.type;
+      const style = TAG_STYLE[d.type] || TAG_STYLE.weekly;
+      const delay = i === 1 ? '' : i === 2 ? ' d1' : ' d2';
+      html += `
+        <div class="show-line rev${delay}">
+          <div class="sh-num">${String(i).padStart(2,'0')}</div>
+          <div class="sh-name">${d.name}</div>
+          <div class="sh-host">${d.dj}&nbsp;·&nbsp;${d.time}</div>
+          <div class="sh-tag" style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:2px;${style}">${label}</div>
+        </div>`;
+      i++;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  });
 })();
 </script>
 </body>

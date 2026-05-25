@@ -720,13 +720,20 @@ footer{
     <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.02em;line-height:1;color:#f0ede5;text-align:center;margin-bottom:10px;">GRÜSSE &amp; <em style="color:var(--red);font-style:normal;">WÜNSCHE</em></div>
     <div style="font-family:'Barlow',sans-serif;font-size:.88rem;color:rgba(240,237,229,.45);line-height:1.7;text-align:center;margin-bottom:40px;">Schick uns einen Gruß oder wünsch dir einen Song — wir spielen ihn live.</div>
 
+    <!-- Geschlossen-Zustand (nur sichtbar wenn DJ die Box deaktiviert hat) -->
+    <div id="wish-closed" style="display:none;text-align:center;padding:40px 24px;border:1px solid rgba(255,255,255,.08);border-radius:8px;">
+      <div style="font-size:2rem;margin-bottom:14px;">🔒</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:.04em;color:#f0ede5;margin-bottom:8px;">Wunschbox geschlossen</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:.85rem;color:rgba(240,237,229,.4);line-height:1.7;">Momentan nehmen wir keine Grüße entgegen.<br>Schau später wieder vorbei!</div>
+    </div>
+
     <div id="wish-form" style="display:flex;flex-direction:column;gap:14px;">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
         <div>
           <label style="display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,229,.35);margin-bottom:7px;">Dein Name *</label>
           <input id="w-name" type="text" placeholder="z.B. Max" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#f0ede5;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"/>
         </div>
-        <div>
+        <div id="w-song-wrap">
           <label style="display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:rgba(240,237,229,.35);margin-bottom:7px;">Wunschlied</label>
           <input id="w-song" type="text" placeholder="Künstler — Titel" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:10px 14px;font-family:'Barlow',sans-serif;font-size:.88rem;color:#f0ede5;outline:none;transition:border-color .15s;" onfocus="this.style.borderColor='var(--red)'" onblur="this.style.borderColor='rgba(255,255,255,.1)'"/>
         </div>
@@ -1145,6 +1152,29 @@ fbdb.collection('shows').orderBy('order').get().then(snapshot => {
   const c = document.getElementById('shows-container');
   if(c) c.innerHTML = '<div style="padding:40px 0;text-align:center;color:var(--mid);font-size:.8rem;">Sendeplan konnte nicht geladen werden.</div>';
 });
+
+/* ── WUNSCHBOX: Status aus Firebase laden ── */
+(function loadWishboxStatus(){
+  fbdb.collection('settings').doc('studio').get().then(function(snap){
+    var greetingsOpen    = true;
+    var songRequestsOpen = true;
+    if(snap.exists){
+      var d = snap.data();
+      greetingsOpen    = d.greetingsOpen    !== false;
+      songRequestsOpen = d.songRequestsOpen !== false;
+    }
+    if(!greetingsOpen){
+      document.getElementById('wish-form').style.display   = 'none';
+      document.getElementById('wish-closed').style.display = 'block';
+    }
+    if(!songRequestsOpen){
+      var sw = document.getElementById('w-song-wrap');
+      if(sw) sw.style.display = 'none';
+    }
+  }).catch(function(){
+    // Bei Fehler: Box offen anzeigen (fail-open)
+  });
+})();
 
 /* ── WÜNSCHE ── */
 function sendWish(){

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>RadioFlare</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ══ TITLE BAR ═══════════════════════════════════════════════════════ -->
+<div id="titlebar">
+  <div id="logo-area"><div class="logo-gem"></div><span>RadioFlare</span></div>
+  <div id="on-air"><div class="dot"></div><span id="oa-t">OFF AIR</span></div>
+  <div id="stn">—</div>
+  <button id="btn-wizard" title="Radio-Profil bearbeiten" style="-webkit-app-region:no-drag;padding:2px 8px;background:rgba(255,106,0,.08);border:1px solid rgba(255,106,0,.2);color:var(--acc);border-radius:10px;cursor:pointer;font-size:9px;font-weight:700;transition:all .12s" onmouseenter="this.style.background='rgba(255,106,0,.18)'" onmouseleave="this.style.background='rgba(255,106,0,.08)'">✎ Profil</button>
+  <div class="tgap"></div>
+  <div id="mode-sw">
+    <button class="mbtn on" data-m="dj">DJ / Live</button>
+    <button class="mbtn" data-m="auto">Automation</button>
+  </div>
+  <button id="btn-cfg">⚙ Einstellungen</button>
+  <div id="clk" class="mono">00:00:00</div>
+  <div id="wc">
+    <button class="wc" id="wc-min">─</button>
+    <button class="wc" id="wc-max">□</button>
+    <button class="wc x" id="wc-cls">✕</button>
+  </div>
+</div>
+
+<!-- ══ MASTER BAR ══════════════════════════════════════════════════════ -->
+<div id="master-bar">
+  <div class="mctl"><span class="lbl">Master</span>
+    <input type="range" class="mini-sl" id="mvol" min="0" max="100" value="80">
+    <span class="mini-v" id="mv-v">80%</span>
+  </div>
+  <div class="mctl"><span class="lbl">Phones</span>
+    <input type="range" class="mini-sl" id="pvol" min="0" max="100" value="70">
+    <span class="mini-v" id="pv-v">70%</span>
+  </div>
+  <div class="mctl mvu-wrap">
+    <span class="lbl">L</span>
+    <div class="mvu-bar"><div class="mvu-fill" id="mu-l"></div></div>
+    <span class="lbl">R</span>
+    <div class="mvu-bar"><div class="mvu-fill" id="mu-r"></div></div>
+  </div>
+  <div class="tgap"></div>
+  <span class="lbl">XFade</span>
+  <input type="range" class="mini-sl" id="adj-xf" min="2" max="30" value="8" style="width:50px">
+  <span class="mini-v" id="axf-v">8s</span>
+  <button class="adj-pill" id="adj-pill">AUTO-DJ: AUS</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════
+     DJ / LIVE MODE
+     ════════════════════════════════════════════════════════════════════ -->
+<div id="dj" class="mview on">
+
+  <!-- ══ WAVEFORM ROW ════════════════════════════════════════════════ -->
+  <div id="wf-row">
+    <div class="wf-deck a">
+      <canvas class="wf-main" id="wf-0" height="72"></canvas>
+      <canvas class="wf-ov"   id="wfov-0" height="16"></canvas>
+    </div>
+    <div class="wf-sep"><div class="wf-sep-dot"></div></div>
+    <div class="wf-deck b">
+      <canvas class="wf-main" id="wf-1" height="72"></canvas>
+      <canvas class="wf-ov"   id="wfov-1" height="16"></canvas>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ROW ════════════════════════════════════════════════════ -->
+  <div id="main-row">
+
+    <!-- ─── FX LEFT (Deck A) ─────────────────────────────────────── -->
+    <div class="fx-side l">
+      <div class="fx-side-hdr">FX — DECK A</div>
+
+      <div style="padding:4px">
+        <!-- FX slots -->
+        <div class="fx-slot">
+          <div class="fx-on" id="fx-0-0" data-d="0" data-s="0" title="Echo an/aus"></div>
+          <div class="fx-slot-name">Echo <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-0-0" min="0" max="100" value="40">
+
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-0-1" data-d="0" data-s="1"></div>
+          <div class="fx-slot-name">Reverb <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-0-1" min="0" max="100" value="30">
+
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-0-2" data-d="0" data-s="2"></div>
+          <div class="fx-slot-name">Flanger <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-0-2" min="0" max="100" value="30">
+
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-0-3" data-d="0" data-s="3"></div>
+          <div class="fx-slot-name">Filter <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-0-3" min="0" max="100" value="30">
+      </div>
+
+      <!-- STEMS -->
+      <div class="stems-section">
+        <div class="stems-hdr"><span>STEMS A</span></div>
+        <div class="stems-grid">
+          <button class="stem-btn vocal"  id="st-0-v" data-d="0" data-stem="vocal">Vocal</button>
+          <button class="stem-btn instru" id="st-0-i" data-d="0" data-stem="instru">Instru</button>
+          <button class="stem-btn bass"   id="st-0-b" data-d="0" data-stem="bass">Bass</button>
+          <button class="stem-btn"        id="st-0-a" data-d="0" data-stem="acap">Acapella</button>
+        </div>
+        <div class="stems-grid">
+          <button class="stem-btn kick" id="st-0-k" data-d="0" data-stem="kick">Kick</button>
+          <button class="stem-btn"      id="st-0-h" data-d="0" data-stem="hihat">HiHat</button>
+          <button class="stem-btn"      id="st-0-s" data-d="0" data-stem="snare">Snare</button>
+          <button class="stem-btn"      id="st-0-x" data-d="0" data-stem="all">ALL</button>
+        </div>
+      </div>
+
+      <!-- Sampler Pads A (6) -->
+      <div class="pads-section" id="pads-a">
+        <!-- filled by JS: pads 0-5 -->
+      </div>
+    </div>
+
+    <!-- ─── DECK A ────────────────────────────────────────────────── -->
+    <div class="deck" id="deck-0" data-d="0"
+         ondragover="event.preventDefault();this.classList.add('dov')"
+         ondragleave="this.classList.remove('dov')"
+         ondrop="App.dropDeck(event,0)">
+
+      <div class="dk-head">
+        <span class="dk-id">A</span>
+        <div class="dk-info">
+          <div class="dk-title" id="d0-title">— Kein Track —</div>
+          <div class="dk-artist" id="d0-artist"></div>
+        </div>
+        <button class="btn-ld" onclick="App.openFileDeck(0)">📂 Load</button>
+      </div>
+
+      <div class="dk-disp">
+        <div class="dk-tb">
+          <div class="lbl" style="font-size:7px">Elapsed</div>
+          <div class="dk-time" id="d0-el">0:00.0</div>
+        </div>
+        <div class="dk-bpm-blk">
+          <div class="lbl" style="font-size:7px">BPM</div>
+          <div class="dk-bpm" id="d0-bpm">—</div>
+          <div class="dk-key" id="d0-key"></div>
+        </div>
+        <div class="dk-tb r">
+          <div class="lbl" style="font-size:7px">Remain</div>
+          <div class="dk-rem" id="d0-rem">-0:00.0</div>
+        </div>
+      </div>
+
+      <!-- Jog wheel + pitch slider -->
+      <div class="dk-jog-row">
+        <canvas class="jog-canvas" id="jog-0" title="Ziehen = Scratch | Klick = CUE"></canvas>
+        <div class="pitch-strip">
+          <span class="lbl" style="font-size:7px">Tempo</span>
+          <input type="range" class="pitch-sl-v" id="d0-pt" min="-16" max="16" value="0" step="0.1">
+          <span class="pitch-v" id="d0-pt-v">0.0%</span>
+        </div>
+      </div>
+
+      <div class="dk-transport">
+        <button class="tb cue"  id="d0-cue"  onclick="App.deckCue(0)">CUE</button>
+        <button class="tb play" id="d0-play" onclick="App.deckPlay(0)">▶</button>
+        <button class="tb sync" id="d0-sync" onclick="App.deckSync(0)">SYNC</button>
+        <button class="tb lp"   id="d0-lpb"  onclick="App.loopToggle(0)">LOOP</button>
+        <div style="flex:1"></div>
+        <button class="tb" onclick="App.deckZoomIn(0)"  style="min-width:22px">+</button>
+        <button class="tb" onclick="App.deckZoomOut(0)" style="min-width:22px">−</button>
+      </div>
+
+      <div class="dk-loops">
+        <button class="lb" onclick="App.loopIn(0)">IN</button>
+        <button class="lb" onclick="App.loopOut(0)">OUT</button>
+        <select class="l-sz" id="d0-ls">
+          <option value="0.25">1/16</option><option value="0.5">1/8</option>
+          <option value="1">1/4</option><option value="2">1/2</option>
+          <option value="4" selected>1 Bar</option><option value="8">2 Bar</option>
+          <option value="16">4 Bar</option><option value="32">8 Bar</option>
+        </select>
+        <button class="lb" onclick="App.loopSet(0)">SET</button>
+        <button class="lb" id="d0-lb" onclick="App.loopToggle(0)">LOOP</button>
+        <div style="flex:1"></div>
+        <button class="lb" onclick="App.loopClear(0)">CLR</button>
+      </div>
+
+      <div class="dk-hc" id="d0-hc"></div>
+    </div>
+
+    <!-- ─── MIXER ────────────────────────────────────────────────── -->
+    <div id="mixer">
+      <div class="mix-hdr">M I X E R</div>
+
+      <!-- EQ Knobs: HIHAT / MEL-VOX / KICK + GAIN + FILTER -->
+      <div class="mix-eq">
+        <!-- CH A -->
+        <div class="mix-eq-col">
+          <span class="lbl" style="font-size:7px">CH A</span>
+          <div class="kw"><canvas id="eq-0-h" width="38" height="38"></canvas><span class="lbl" style="color:#FFD700">HIHAT</span></div>
+          <div class="kw"><canvas id="eq-0-m" width="38" height="38"></canvas><span class="lbl">MEL/VOX</span></div>
+          <div class="kw"><canvas id="eq-0-l" width="38" height="38"></canvas><span class="lbl" style="color:#FF6A00">KICK</span></div>
+          <div style="display:flex;gap:4px">
+            <div class="kw"><canvas id="gn-0" width="32" height="32"></canvas><span class="lbl">GAIN</span></div>
+            <div class="kw"><canvas id="fl-0" width="32" height="32"></canvas><span class="lbl">FILTER</span></div>
+          </div>
+        </div>
+        <!-- CH B -->
+        <div class="mix-eq-col b">
+          <span class="lbl" style="font-size:7px">CH B</span>
+          <div class="kw"><canvas id="eq-1-h" width="38" height="38"></canvas><span class="lbl" style="color:#FFD700">HIHAT</span></div>
+          <div class="kw"><canvas id="eq-1-m" width="38" height="38"></canvas><span class="lbl">MEL/VOX</span></div>
+          <div class="kw"><canvas id="eq-1-l" width="38" height="38"></canvas><span class="lbl" style="color:#FF6A00">KICK</span></div>
+          <div style="display:flex;gap:4px">
+            <div class="kw"><canvas id="gn-1" width="32" height="32"></canvas><span class="lbl">GAIN</span></div>
+            <div class="kw"><canvas id="fl-1" width="32" height="32"></canvas><span class="lbl">FILTER</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CH Faders + VU -->
+      <div class="mix-ch">
+        <div class="mix-ch-col">
+          <span class="mix-ch-lbl">A</span>
+          <div style="display:flex;gap:3px">
+            <canvas class="vu-c" id="vu-0-l" width="8" height="72"></canvas>
+            <canvas class="vu-c" id="vu-0-r" width="8" height="72"></canvas>
+          </div>
+          <div class="fader-wrap" id="fw-0">
+            <div class="fader-track" id="ft-0">
+              <div class="fader-fill"  id="ff-0" style="height:85%"></div>
+              <div class="fader-thumb" id="fth-0" style="bottom:calc(85% - 4px)"></div>
+            </div>
+          </div>
+          <button class="pfl" id="pfl-0" onclick="App.toggleCue(0)">PFL</button>
+        </div>
+        <div class="mix-ch-col b">
+          <span class="mix-ch-lbl">B</span>
+          <div style="display:flex;gap:3px">
+            <canvas class="vu-c" id="vu-1-l" width="8" height="72"></canvas>
+            <canvas class="vu-c" id="vu-1-r" width="8" height="72"></canvas>
+          </div>
+          <div class="fader-wrap" id="fw-1">
+            <div class="fader-track" id="ft-1">
+              <div class="fader-fill"  id="ff-1" style="height:85%"></div>
+              <div class="fader-thumb" id="fth-1" style="bottom:calc(85% - 4px)"></div>
+            </div>
+          </div>
+          <button class="pfl" id="pfl-1" onclick="App.toggleCue(1)">PFL</button>
+        </div>
+      </div>
+
+      <!-- Crossfader -->
+      <div class="mix-xf">
+        <span class="lbl">CROSSFADER</span>
+        <input type="range" class="xf" id="xf" min="0" max="100" value="50">
+        <div class="xf-lbr"><span class="lbl">A</span><span class="lbl">B</span></div>
+      </div>
+    </div>
+
+    <!-- ─── DECK B ────────────────────────────────────────────────── -->
+    <div class="deck" id="deck-1" data-d="1"
+         ondragover="event.preventDefault();this.classList.add('dov')"
+         ondragleave="this.classList.remove('dov')"
+         ondrop="App.dropDeck(event,1)">
+
+      <div class="dk-head">
+        <button class="btn-ld" onclick="App.openFileDeck(1)">📂 Load</button>
+        <div class="dk-info" style="text-align:right">
+          <div class="dk-title" id="d1-title">— Kein Track —</div>
+          <div class="dk-artist" id="d1-artist"></div>
+        </div>
+        <span class="dk-id">B</span>
+      </div>
+
+      <div class="dk-disp">
+        <div class="dk-tb">
+          <div class="lbl" style="font-size:7px">Elapsed</div>
+          <div class="dk-time" id="d1-el">0:00.0</div>
+        </div>
+        <div class="dk-bpm-blk">
+          <div class="lbl" style="font-size:7px">BPM</div>
+          <div class="dk-bpm" id="d1-bpm">—</div>
+          <div class="dk-key" id="d1-key"></div>
+        </div>
+        <div class="dk-tb r">
+          <div class="lbl" style="font-size:7px">Remain</div>
+          <div class="dk-rem" id="d1-rem">-0:00.0</div>
+        </div>
+      </div>
+
+      <div class="dk-jog-row">
+        <canvas class="jog-canvas" id="jog-1"></canvas>
+        <div class="pitch-strip">
+          <span class="lbl" style="font-size:7px">Tempo</span>
+          <input type="range" class="pitch-sl-v" id="d1-pt" min="-16" max="16" value="0" step="0.1">
+          <span class="pitch-v" id="d1-pt-v">0.0%</span>
+        </div>
+      </div>
+
+      <div class="dk-transport">
+        <button class="tb cue"  id="d1-cue"  onclick="App.deckCue(1)">CUE</button>
+        <button class="tb play" id="d1-play" onclick="App.deckPlay(1)">▶</button>
+        <button class="tb sync" id="d1-sync" onclick="App.deckSync(1)">SYNC</button>
+        <button class="tb lp"   id="d1-lpb"  onclick="App.loopToggle(1)">LOOP</button>
+        <div style="flex:1"></div>
+        <button class="tb" onclick="App.deckZoomIn(1)" style="min-width:22px">+</button>
+        <button class="tb" onclick="App.deckZoomOut(1)" style="min-width:22px">−</button>
+      </div>
+
+      <div class="dk-loops">
+        <button class="lb" onclick="App.loopIn(1)">IN</button>
+        <button class="lb" onclick="App.loopOut(1)">OUT</button>
+        <select class="l-sz" id="d1-ls">
+          <option value="0.25">1/16</option><option value="0.5">1/8</option>
+          <option value="1">1/4</option><option value="2">1/2</option>
+          <option value="4" selected>1 Bar</option><option value="8">2 Bar</option>
+          <option value="16">4 Bar</option><option value="32">8 Bar</option>
+        </select>
+        <button class="lb" onclick="App.loopSet(1)">SET</button>
+        <button class="lb" id="d1-lb" onclick="App.loopToggle(1)">LOOP</button>
+        <div style="flex:1"></div>
+        <button class="lb" onclick="App.loopClear(1)">CLR</button>
+      </div>
+
+      <div class="dk-hc" id="d1-hc"></div>
+    </div>
+
+    <!-- ─── FX RIGHT (Deck B) ─────────────────────────────────────── -->
+    <div class="fx-side r">
+      <div class="fx-side-hdr">FX — DECK B</div>
+      <div style="padding:4px">
+        <div class="fx-slot">
+          <div class="fx-on" id="fx-1-0" data-d="1" data-s="0"></div>
+          <div class="fx-slot-name">Echo <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-1-0" min="0" max="100" value="40">
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-1-1" data-d="1" data-s="1"></div>
+          <div class="fx-slot-name">Reverb <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-1-1" min="0" max="100" value="30">
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-1-2" data-d="1" data-s="2"></div>
+          <div class="fx-slot-name">Flanger <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-1-2" min="0" max="100" value="30">
+        <div class="fx-slot" style="margin-top:4px">
+          <div class="fx-on" id="fx-1-3" data-d="1" data-s="3"></div>
+          <div class="fx-slot-name">Filter <span style="font-size:9px">▾</span></div>
+        </div>
+        <input type="range" class="fx-wet-sl" id="fxw-1-3" min="0" max="100" value="30">
+      </div>
+
+      <div class="stems-section">
+        <div class="stems-hdr"><span>STEMS B</span></div>
+        <div class="stems-grid">
+          <button class="stem-btn vocal"  id="st-1-v" data-d="1" data-stem="vocal">Vocal</button>
+          <button class="stem-btn instru" id="st-1-i" data-d="1" data-stem="instru">Instru</button>
+          <button class="stem-btn bass"   id="st-1-b" data-d="1" data-stem="bass">Bass</button>
+          <button class="stem-btn"        id="st-1-a" data-d="1" data-stem="acap">Acapella</button>
+        </div>
+        <div class="stems-grid">
+          <button class="stem-btn kick" id="st-1-k" data-d="1" data-stem="kick">Kick</button>
+          <button class="stem-btn"      id="st-1-h" data-d="1" data-stem="hihat">HiHat</button>
+          <button class="stem-btn"      id="st-1-s" data-d="1" data-stem="snare">Snare</button>
+          <button class="stem-btn"      id="st-1-x" data-d="1" data-stem="all">ALL</button>
+        </div>
+      </div>
+
+      <div class="pads-section" id="pads-b">
+        <!-- pads 8-13 -->
+      </div>
+    </div>
+
+  </div><!-- /#main-row -->
+
+  <!-- ══ LIBRARY — 3-panel ════════════════════════════════════════════ -->
+  <div id="lib">
+
+    <!-- Folder tree -->
+    <div id="folder-tree">
+      <div class="tree-hdr">
+        <span>Ordner</span>
+        <button class="sbtn" onclick="App.addFolder()" style="font-size:7px;padding:1px 6px">+ Ordner</button>
+      </div>
+      <div id="folder-list">
+        <div class="folder-item" onclick="App.showAllTracks()" id="fi-all">
+          <span class="fi-icon">🎵</span>
+          <span class="fi-name">Alle Tracks</span>
+          <span class="fi-count" id="fi-all-ct">0</span>
+        </div>
+        <div class="folder-item" onclick="App.showHistory()">
+          <span class="fi-icon">🕐</span>
+          <span class="fi-name">Verlauf</span>
+        </div>
+        <div class="folder-item" onclick="App.showQueue()">
+          <span class="fi-icon">📋</span>
+          <span class="fi-name">Warteschlange</span>
+        </div>
+        <div id="folder-items"></div>
+      </div>
+    </div>
+
+    <!-- Track list -->
+    <div id="track-panel">
+      <div id="lib-bar">
+        <div style="display:flex;gap:3px">
+          <button class="ltab on" data-lb="tracks">Tracks</button>
+          <button class="ltab" data-lb="hist">Verlauf</button>
+          <button class="ltab" data-lb="queue">Queue</button>
+          <button class="ltab" data-lb="req">Wünsche</button>
+        </div>
+        <button class="lib-btn" onclick="App.openFolder()">📁 Ordner</button>
+        <button class="lib-btn" onclick="App.openFiles()">🎵 Dateien</button>
+        <input id="lib-search" placeholder="🔍 Titel, Artist, Album, Genre…">
+        <span class="lib-st" id="lib-st">Bereit</span>
+        <button class="lib-btn" onclick="App.exportLog()" title="Log exportieren">⬇</button>
+      </div>
+
+      <div class="lview on" id="lv-tracks">
+        <div id="tw">
+          <table id="tbl">
+            <thead><tr>
+              <th class="ct" data-s="title">Titel</th>
+              <th class="ca" data-s="artist">Artist</th>
+              <th class="cal" data-s="album">Album</th>
+              <th class="cb" data-s="bpm">BPM</th>
+              <th class="ck" data-s="key">Key</th>
+              <th class="cd" data-s="duration">Dauer</th>
+              <th class="cg" data-s="genre">Genre</th>
+            </tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="lview" id="lv-hist">
+        <div class="h-list" id="hist-list"></div>
+      </div>
+
+      <div class="lview" id="lv-queue">
+        <div class="stbar"><span class="lbl">Wiedergabeliste</span><span class="lib-st" id="q-st">0</span><button class="sbtn" style="margin-left:auto" onclick="App.addQueueFromLib()">+ Aus Bibliothek</button></div>
+        <div class="q-list" id="q-list"></div>
+      </div>
+
+      <div class="lview" id="lv-req">
+        <div class="req-bar">
+          <input class="sinput" id="req-nm" placeholder="Hörer-Name" style="max-width:100px">
+          <input class="sinput" id="req-q" placeholder="Track suchen…">
+          <button class="sbtn pri" onclick="App.addReq()">+ Wunsch</button>
+        </div>
+        <div class="q-list" id="req-list"></div>
+      </div>
+    </div>
+
+    <!-- Automix Panel -->
+    <div id="automix">
+      <div class="am-hdr">
+        <span>AUTOMIX</span>
+        <button class="toggle-btn" id="adj-btn" onclick="App.toggleAutoDJ()">STARTEN</button>
+      </div>
+      <div class="am-info">
+        <div class="am-row"><span class="lbl">Status</span><span class="acc" id="am-st" style="font-size:9px;font-weight:700">Gestoppt</span></div>
+        <div class="am-row"><span class="lbl">Nächster</span></div>
+        <div class="am-next" id="am-next">— kein Track —</div>
+        <div class="am-row" style="margin-top:2px">
+          <span class="lbl">Crossfade</span>
+          <span class="mono acc" id="am-xf" style="font-size:9px">8s</span>
+        </div>
+      </div>
+      <div class="req-bar">
+        <button class="sbtn" style="flex:1" onclick="App.addQueueFromLib()">+ Track hinzufügen</button>
+      </div>
+      <div class="q-list" id="am-q"></div>
+    </div>
+
+  </div><!-- /#lib -->
+
+</div><!-- /#dj -->
+
+<!-- ════════════════════════════════════════════════════════════════════
+     AUTOMATION MODE
+     ════════════════════════════════════════════════════════════════════ -->
+<div id="auto" class="mview">
+  <div id="auto-side">
+    <div class="fx-side-hdr" style="background:var(--bg);border-bottom:1px solid var(--brd)">AUTO-DJ</div>
+    <div class="adj-ctl">
+      <div class="adj-row"><span>Auto-DJ</span><button class="toggle-btn" id="adj-btn2" onclick="App.toggleAutoDJ()">STARTEN</button></div>
+      <div class="adj-row"><span>Crossfade</span><span class="mono acc" id="adj-xf-i" style="font-size:9px">8s</span></div>
+      <div class="adj-row"><span>Nächster</span><span class="mono acc" id="adj-next" style="font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px">—</span></div>
+      <button class="sbtn" style="width:100%;margin-top:3px" onclick="App.addQueueFromLib()">+ Track hinzufügen</button>
+    </div>
+    <div class="q-list" id="adj-q"></div>
+  </div>
+  <div id="auto-main">
+    <div id="auto-tabs">
+      <button class="atab on" data-ap="sched">Sendeplan</button>
+      <button class="atab" data-ap="cw">Clockwheel</button>
+      <button class="atab" data-ap="log">Protokoll</button>
+    </div>
+    <div class="apanel on" id="ap-sched">
+      <div class="stbar">
+        <input type="time" class="sinput" id="ev-t" value="08:00" style="width:80px">
+        <select class="sinput" id="ev-ty" style="width:80px">
+          <option value="track">Track</option><option value="jingle">Jingle</option>
+          <option value="ad">Werbung</option><option value="show">Show</option>
+        </select>
+        <input class="sinput" id="ev-d" placeholder="Track / Datei…" style="flex:1">
+        <select class="sinput" id="ev-r" style="width:80px">
+          <option value="none">Einmalig</option><option value="daily">Täglich</option><option value="weekly">Wöchentlich</option>
+        </select>
+        <button class="sbtn pri" onclick="App.addSchedEv()">+ Hinzufügen</button>
+        <button class="sbtn" id="sched-btn" onclick="App.toggleSched()">▶ Starten</button>
+      </div>
+      <div class="ev-list" id="ev-list"></div>
+    </div>
+    <div class="apanel" id="ap-cw">
+      <div class="stbar">
+        <span class="lbl">Clockwheel</span>
+        <button class="sbtn pri" onclick="App.cwAdd('music')">+ Musik</button>
+        <button class="sbtn" onclick="App.cwAdd('jingle')">+ Jingle</button>
+        <button class="sbtn" onclick="App.cwAdd('ad')">+ Werbung</button>
+        <button class="sbtn" style="color:var(--red)" onclick="App.cwClear()">Leeren</button>
+      </div>
+      <div id="cw-list" style="flex:1;overflow-y:auto;padding:5px"></div>
+    </div>
+    <div class="apanel" id="ap-log">
+      <div class="stbar">
+        <span class="lbl">Sendeprotokoll</span>
+        <span class="lib-st" id="log-cnt">0</span>
+        <button class="sbtn" style="margin-left:auto" onclick="App.exportLog()">⬇ Export</button>
+      </div>
+      <div class="log-list" id="log-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Context menu -->
+<div id="ctx">
+  <div class="ci" onclick="App.ctx('d0')">▶ Deck A laden</div>
+  <div class="ci" onclick="App.ctx('d1')">▶ Deck B laden</div>
+  <div class="csep"></div>
+  <div class="ci" onclick="App.ctx('q')">+ Warteschlange</div>
+  <div class="ci" onclick="App.ctx('req')">♥ Wunsch</div>
+  <div class="csep"></div>
+  <div class="ci" onclick="App.ctx('info')">ℹ Track-Info</div>
+</div>
+
+<!-- ══ SETTINGS ═════════════════════════════════════════════════════════ -->
+<div id="cfg-ov">
+  <div id="cfg-dlg">
+    <div id="cfg-hdr"><h2>⚙ Einstellungen</h2><button id="cfg-x" onclick="App.closeCfg()">✕</button></div>
+    <div id="cfg-tabs">
+      <button class="ctab on" data-ct="stream">Streaming</button>
+      <button class="ctab" data-ct="station">Station</button>
+      <button class="ctab" data-ct="audio">Audio</button>
+    </div>
+    <div id="cfg-body">
+      <div class="csec on" id="ct-stream">
+        <div class="ptabs">
+          <button class="ptab on" data-p="0">Profil 1</button>
+          <button class="ptab" data-p="1">Profil 2</button>
+          <button class="ptab" data-p="2">Profil 3</button>
+        </div>
+        <div class="st-st">
+          <div class="st-dot" id="st-dot"></div>
+          <span class="st-txt" id="st-txt">Nicht verbunden</span>
+          <button class="sbtn" id="st-btn" onclick="App.toggleStream()">Verbinden</button>
+        </div>
+        <h3>Server</h3>
+        <div class="fg">
+          <div class="ff"><label>Protokoll</label><select id="c-proto"><option value="icecast2">Icecast 2</option><option value="shoutcast">Shoutcast</option></select></div>
+          <div class="ff"><label>Host</label><input id="c-host" placeholder="stream.meinradio.de"></div>
+          <div class="ff"><label>Port</label><input type="number" id="c-port" value="8000"></div>
+          <div class="ff"><label>Mountpoint</label><input id="c-mnt" placeholder="/stream"></div>
+          <div class="ff"><label>Benutzername</label><input id="c-user" placeholder="source"></div>
+          <div class="ff"><label>Passwort</label><input type="password" id="c-pass"></div>
+        </div>
+        <h3>Format</h3>
+        <div class="fg">
+          <div class="ff"><label>Format</label><select id="c-fmt"><option value="mp3">MP3</option><option value="ogg">Ogg/Opus</option></select></div>
+          <div class="ff"><label>Bitrate</label><select id="c-br"><option value="64">64 kbps</option><option value="96">96 kbps</option><option value="128" selected>128 kbps</option><option value="192">192 kbps</option><option value="320">320 kbps</option></select></div>
+          <div class="ff"><label>Kanäle</label><select id="c-ch"><option value="2" selected>Stereo</option><option value="1">Mono</option></select></div>
+        </div>
+      </div>
+      <div class="csec" id="ct-station">
+        <h3>Station</h3>
+        <div class="fg">
+          <div class="ff full"><label>Stationsname</label><input id="c-sn" placeholder="Mein Radio"></div>
+          <div class="ff full"><label>Beschreibung</label><input id="c-desc"></div>
+          <div class="ff"><label>Genre</label><input id="c-genre" placeholder="Pop, Rock…"></div>
+          <div class="ff"><label>Webseite</label><input id="c-web" placeholder="https://…"></div>
+        </div>
+      </div>
+      <div class="csec" id="ct-audio">
+        <h3>Audio</h3>
+        <div class="fg">
+          <div class="ff"><label>Crossfade (s)</label><input type="number" id="c-xf" value="8" min="2" max="60"></div>
+          <div class="ff"><label>Pitch-Range</label><select id="c-pr"><option value="8">±8%</option><option value="16" selected>±16%</option><option value="32">±32%</option></select></div>
+        </div>
+      </div>
+    </div>
+    <div id="cfg-footer">
+      <button class="sbtn" onclick="App.closeCfg()">Abbrechen</button>
+      <button class="sbtn pri" onclick="App.saveCfg()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script>
+try { const s=document.createElement('script'); s.src='../node_modules/lamejs/src/js/lame.all.js'; document.head.appendChild(s); } catch(_){}
+</script>
+<script type="module" src="js/renderer.js"></script>
+</body>
+</html>

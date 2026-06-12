@@ -28,6 +28,16 @@ contextBridge.exposeInMainWorld('radioAPI', {
   sendAudioChunk:   (buf) => ipcRenderer.send('stream-audio-chunk', buf),
   onStreamStatus:   (cb)  => ipcRenderer.on('stream-status-push', (_, d) => cb(d)),
 
+  // Auth / User Management
+  authHasUsers:      ()     => ipcRenderer.invoke('auth-has-users'),
+  authSetup:         (data) => ipcRenderer.invoke('auth-setup', data),
+  authLogin:         (data) => ipcRenderer.invoke('auth-login', data),
+  authGetUsers:      ()     => ipcRenderer.invoke('auth-get-users'),
+  authCreateUser:    (data) => ipcRenderer.invoke('auth-create-user', data),
+  authDeleteUser:    (data) => ipcRenderer.invoke('auth-delete-user', data),
+  authChangePassword:(data) => ipcRenderer.invoke('auth-change-password', data),
+  authGetStation:    ()     => ipcRenderer.invoke('auth-get-station'),
+
   // Log
   saveLog: (csv) => ipcRenderer.invoke('save-log', csv),
 

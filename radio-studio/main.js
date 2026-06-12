@@ -36,13 +36,20 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      webSecurity: false
+      webSecurity: false,
+      sandbox: false
     }
   });
 
   mainWindow.loadFile(path.join(__dirname, 'src', 'index.html'));
 
-  mainWindow.once('ready-to-show', () => mainWindow.show());
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+    mainWindow.maximize();
+    if (process.env.NODE_ENV === 'development') {
+      mainWindow.webContents.openDevTools({ mode: 'detach' });
+    }
+  });
 
   mainWindow.on('closed', () => {
     if (streamingSocket) streamingSocket.destroy();
@@ -248,6 +255,77 @@ ipcMain.handle('stream-status', () => ({ connected: isStreaming }));
 ipcMain.on('stream-audio-chunk', (_, chunk) => {
   if (!streamingSocket || !isStreaming) return;
   try { streamingSocket.write(Buffer.from(chunk)); } catch (_) {}
+});
+
+// ── Auth / User Management ────────────────────────────────────────────────────
+const crypto = require('crypto');
+
+function hashPassword(password, salt) {
+  return crypto.createHmac('sha256', salt).update(password).digest('hex');
+}
+
+ipcMain.handle('auth-setup', (_, { stationName, username, password }) => {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = hashPassword(password, salt);
+  const adminUser = { id: '1', username, displayName: username, role: 'admin', salt, hash };
+  store.set('station.name', stationName);
+  store.set('users', [adminUser]);
+  return { success: true };
+});
+
+ipcMain.handle('auth-login', (_, { username, password }) => {
+  const users = store.get('users', []);
+  const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+  if (!user) return { success: false, error: 'Benutzer nicht gefunden' };
+  const hash = hashPassword(password, user.salt);
+  if (hash !== user.hash) return { success: false, error: 'Falsches Passwort' };
+  return { success: true, user: { id: user.id, username: user.username, displayName: user.displayName, role: user.role } };
+});
+
+ipcMain.handle('auth-get-users', () => {
+  const users = store.get('users', []);
+  return users.map(u => ({ id: u.id, username: u.username, displayName: u.displayName, role: u.role }));
+});
+
+ipcMain.handle('auth-create-user', (_, { username, password, displayName, role }) => {
+  const users = store.get('users', []);
+  if (users.find(u => u.username.toLowerCase() === username.toLowerCase()))
+    return { success: false, error: 'Benutzername bereits vergeben' };
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = hashPassword(password, salt);
+  const id = Date.now().toString();
+  users.push({ id, username, displayName: displayName || username, role: role || 'moderator', salt, hash });
+  store.set('users', users);
+  return { success: true, id };
+});
+
+ipcMain.handle('auth-delete-user', (_, { id }) => {
+  let users = store.get('users', []);
+  const target = users.find(u => u.id === id);
+  if (!target) return { success: false, error: 'Nicht gefunden' };
+  if (target.role === 'admin' && users.filter(u => u.role === 'admin').length <= 1)
+    return { success: false, error: 'Letzter Admin kann nicht gelöscht werden' };
+  users = users.filter(u => u.id !== id);
+  store.set('users', users);
+  return { success: true };
+});
+
+ipcMain.handle('auth-change-password', (_, { id, newPassword }) => {
+  const users = store.get('users', []);
+  const user = users.find(u => u.id === id);
+  if (!user) return { success: false, error: 'Nicht gefunden' };
+  user.salt = crypto.randomBytes(16).toString('hex');
+  user.hash = hashPassword(newPassword, user.salt);
+  store.set('users', users);
+  return { success: true };
+});
+
+ipcMain.handle('auth-has-users', () => {
+  return store.get('users', []).length > 0;
+});
+
+ipcMain.handle('auth-get-station', () => {
+  return store.get('station', {});
 });
 
 // ── Log export ────────────────────────────────────────────────────────────────

@@ -36,13 +36,21 @@
     ],
     "win": {
       "target": [
-        { "target": "zip",      "arch": ["x64"] },
-        { "target": "portable", "arch": ["x64"] }
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "zip",  "arch": ["x64"] }
       ],
       "signAndEditExecutable": false
     },
-    "portable": {
-      "artifactName": "RadioFlare-Portable-${version}.exe"
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": null,
+      "uninstallerIcon": null,
+      "installerHeaderIcon": null,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "RadioFlare",
+      "artifactName": "RadioFlare-Setup-${version}.exe"
     }
   }
 }

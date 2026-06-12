@@ -7,6 +7,7 @@ import { StreamingManager } from './streaming.js';
 import { Knob, VUMeter }    from './knob.js';
 import { JogWheel }         from './jogwheel.js';
 import { SetupWizard }      from './setup-wizard.js';
+import { Auth }             from './auth.js';
 
 const $  = id => document.getElementById(id);
 const fmtTime = s => { if (!s||isNaN(s)) return '0:00.0'; return `${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`; };
@@ -52,6 +53,14 @@ const App = {
   _lastTick: 0,
 
   async init() {
+    // Auth first
+    try {
+      this.auth = new Auth(user => this._onLogin(user));
+      await this.auth.init();
+    } catch(e) {
+      console.error('Auth init error:', e);
+    }
+
     this.engine    = new AudioEngine();
     await this.engine.init();
     this.streaming = new StreamingManager(this.engine);
@@ -353,6 +362,8 @@ const App = {
     $('btn-cfg').onclick=()=>this.openCfg();
     const wizBtn=$('btn-wizard');
     if(wizBtn) wizBtn.onclick=()=>this.wizard.show();
+    const usrBtn=$('btn-users');
+    if(usrBtn) usrBtn.onclick=()=>this.auth?.showUserPanel();
     $('cfg-ov').addEventListener('click',e=>{ if(e.target===$('cfg-ov')) this.closeCfg(); });
 
     // Context menu
@@ -658,6 +669,24 @@ const App = {
     if($('st-btn')) $('st-btn').textContent=d.connected?'Trennen':'Verbinden';
   },
   _getCfg(){return{protocol:$('c-proto')?.value||'icecast2',host:$('c-host')?.value||'localhost',port:parseInt($('c-port')?.value)||8000,mountpoint:$('c-mnt')?.value||'/stream',password:$('c-pass')?.value||'',format:$('c-fmt')?.value||'mp3',bitrate:parseInt($('c-br')?.value)||128,channels:parseInt($('c-ch')?.value)||2,stationName:$('c-sn')?.value||'',description:$('c-desc')?.value||'',genre:$('c-genre')?.value||'',website:$('c-web')?.value||''};},
+
+  // ── Login callback ───────────────────────────────────────────────────────
+  async _onLogin(user) {
+    // Show user name in titlebar
+    const usrBtn = $('btn-users');
+    if (usrBtn) {
+      if (user.role === 'admin') {
+        usrBtn.style.display = '';
+        usrBtn.title = `Angemeldet als ${user.displayName} (Admin) — Klick zum Verwalten`;
+      } else {
+        usrBtn.style.display = 'none';
+      }
+    }
+    // Show station name
+    const station = await window.radioAPI.authGetStation();
+    const stn = $('stn');
+    if (stn && station.name) stn.textContent = station.name;
+  },
 
   // ── Wizard complete ───────────────────────────────────────────────────────
   async _onWizardComplete(settings, skipped) {

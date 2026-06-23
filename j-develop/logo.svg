@@ -1,0 +1,25 @@
+<svg viewBox="0 0 820 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="820" height="300" fill="#050810"/>
+
+  <text x="25" y="212"
+    font-family="Impact,'Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-size="178" font-weight="900" letter-spacing="-5"
+    fill="rgba(0,22,11,0.95)">J-DEVELOP</text>
+
+  <text x="22" y="208"
+    font-family="Impact,'Arial Black','Helvetica Neue',Arial,sans-serif"
+    font-size="178" font-weight="900" letter-spacing="-5"
+    fill="rgba(255,255,255,0.86)"
+    stroke="rgba(255,255,255,0.22)" stroke-width="1.6"
+    paint-order="stroke fill">J-DEVELOP</text>
+
+  <text x="24" y="262"
+    font-family="Impact,'Arial Black',Arial,sans-serif"
+    font-size="44" letter-spacing="3"
+    fill="rgba(255,255,255,0.35)">.de</text>
+
+  <text x="138" y="263"
+    font-family="'Courier New','Share Tech Mono',monospace"
+    font-size="16" letter-spacing="5.5"
+    fill="rgba(255,255,255,0.26)">Discord Bots &amp; Automation</text>
+</svg>

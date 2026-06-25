@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>HVK · Team-Gruppen</title>
+<link rel="icon" href="logo.png">
+<style>
+  :root{
+    --blue-deep:#0d3a66;
+    --blue:#1f6fb3;
+    --blue-light:#4fa3df;
+    --red:#e2231a;
+    --red-dark:#a8160f;
+    --ink:#16202b;
+    --paper:#f4f6f8;
+    --card:#ffffff;
+    --line:#e1e6eb;
+    --muted:#6b7785;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom);
+    overscroll-behavior-y:contain;
+  }
+
+  /* ---- header ---- */
+  header{
+    background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 60%,var(--blue-light) 100%);
+    padding:14px 16px 18px;
+    position:sticky;
+    top:0;
+    z-index:50;
+    box-shadow:0 6px 18px rgba(13,58,102,0.25);
+  }
+  .brand-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand-row img{
+    height:42px;
+    width:auto;
+    filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+  }
+  .brand-text h1{
+    margin:0;
+    font-size:1.15rem;
+    color:#fff;
+    letter-spacing:-0.01em;
+    font-weight:800;
+  }
+  .brand-text p{
+    margin:1px 0 0;
+    color:#d7e8fa;
+    font-size:0.74rem;
+    font-weight:500;
+  }
+  .accent-bar{
+    height:4px;
+    width:54px;
+    background:var(--red);
+    border-radius:3px;
+    margin-top:10px;
+    transform:skewX(-12deg);
+  }
+
+  /* ---- toolbar ---- */
+  .toolbar{
+    display:flex;
+    gap:8px;
+    padding:10px 12px;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:72px;
+    z-index:40;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .toolbar::-webkit-scrollbar{display:none;}
+  input#search{
+    flex:1;
+    min-width:0;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:9px 12px;
+    font-size:0.92rem;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  input#search:focus{outline:none;border-color:var(--blue);}
+  button{
+    border:none;
+    border-radius:10px;
+    padding:9px 14px;
+    font-weight:700;
+    font-size:0.86rem;
+    white-space:nowrap;
+    cursor:pointer;
+    transition:transform .12s ease, filter .12s ease;
+  }
+  button:active{transform:scale(0.96);}
+  .btn-primary{
+    background:var(--red);
+    color:#fff;
+    box-shadow:0 3px 10px rgba(226,35,26,0.35);
+  }
+  .btn-primary:hover{filter:brightness(1.06);}
+  .btn-ghost{
+    background:var(--paper);
+    color:var(--ink);
+    border:1.5px solid var(--line);
+  }
+
+  /* ---- board ---- */
+  #board{
+    display:flex;
+    gap:12px;
+    padding:14px 12px 28px;
+    overflow-x:auto;
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+  }
+  .col{
+    flex:0 0 auto;
+    width:78vw;
+    max-width:280px;
+    scroll-snap-align:start;
+  }
+  @media (min-width:640px){
+    .col{ width:240px; }
+  }
+
+  .panel{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px;
+    box-shadow:0 2px 8px rgba(13,58,102,0.06), 0 10px 24px rgba(13,58,102,0.04);
+    min-height:160px;
+  }
+  .panel.pool{
+    border-top:3px solid var(--blue);
+  }
+  .panel-head{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
+  }
+  .panel-head .dot{
+    width:9px;height:9px;border-radius:50%;
+    background:var(--blue);
+    flex:0 0 auto;
+  }
+  .panel.pool .panel-head .dot{background:var(--blue);}
+  .panel:not(.pool) .panel-head .dot{background:var(--red);}
+  .group-name{
+    flex:1;
+    min-width:0;
+    border:none;
+    background:transparent;
+    font-weight:800;
+    font-size:0.95rem;
+    color:var(--ink);
+    padding:2px 0;
+  }
+  .group-name:focus{outline:none;border-bottom:1.5px dashed var(--blue);}
+  .pill{
+    font-size:0.7rem;
+    font-weight:700;
+    color:var(--muted);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:2px 8px;
+    flex:0 0 auto;
+  }
+  .icon-btn{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:1rem;
+    padding:2px 4px;
+    line-height:1;
+  }
+  .icon-btn:hover{color:var(--red);}
+
+  .dropzone{
+    min-height:54px;
+    border-radius:10px;
+    padding:2px;
+    transition:background .15s ease, outline .15s ease;
+  }
+  .dropzone.dragover{
+    background:rgba(31,111,179,0.08);
+    outline:2px dashed var(--blue);
+  }
+
+  .card{
+    background:#fbfcfd;
+    border:1px solid var(--line);
+    border-left:4px solid var(--blue);
+    border-radius:9px;
+    padding:10px 12px;
+    margin-bottom:7px;
+    font-size:0.9rem;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+    user-select:none;
+    touch-action:manipulation;
+    transition:transform .1s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .panel:not(.pool) .card{ border-left-color:var(--red); }
+  .card:active{transform:scale(0.985);}
+  .card.selected{
+    background:#fff6e9;
+    border-color:var(--red);
+    border-left-color:var(--red);
+    box-shadow:0 0 0 2px rgba(226,35,26,0.18);
+  }
+  .card.dragging{opacity:0.4;}
+
+  .empty-hint{
+    color:var(--muted);
+    font-size:0.78rem;
+    text-align:center;
+    padding:14px 4px;
+    font-style:italic;
+  }
+
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.72rem;
+    padding:6px 0 18px;
+  }
+
+  /* selected card toast */
+  #toast{
+    position:fixed;
+    left:50%;
+    bottom:14px;
+    transform:translateX(-50%) translateY(120%);
+    background:var(--ink);
+    color:#fff;
+    font-size:0.82rem;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:10px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    transition:transform .25s ease;
+    z-index:80;
+    max-width:90vw;
+    text-align:center;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* ---- export modal ---- */
+  #exportOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(13,20,30,0.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+  }
+  #exportOverlay.show{display:flex;}
+  .modal{
+    background:#fff;
+    border-radius:16px;
+    padding:20px;
+    width:100%;
+    max-width:320px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.3);
+  }
+  .modal h2{
+    margin:0 0 4px;
+    font-size:1.05rem;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .modal p{
+    margin:0 0 16px;
+    font-size:0.8rem;
+    color:var(--muted);
+  }
+  .modal .choice{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    width:100%;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:10px;
+    font-weight:700;
+    font-size:0.92rem;
+    color:var(--ink);
+    cursor:pointer;
+    text-align:left;
+  }
+  .modal .choice:hover{border-color:var(--blue);}
+  .modal .choice .emoji{font-size:1.2rem;}
+  .modal .cancel{
+    background:none;
+    color:var(--muted);
+    font-weight:600;
+    font-size:0.85rem;
+    width:100%;
+    text-align:center;
+    padding:8px;
+  }
+
+  /* ---- offscreen export render target ---- */
+  #exportRender{
+    position:fixed;
+    left:-99999px;
+    top:0;
+    width:640px;
+    background:#fff;
+    padding:28px;
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  }
+  #exportRender .ex-head{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:6px;
+  }
+  #exportRender .ex-head img{height:48px;}
+  #exportRender .ex-head h2{
+    margin:0;
+    font-size:1.3rem;
+    font-weight:800;
+    color:var(--ink);
+  }
+  #exportRender .ex-bar{
+    height:5px;
+    width:64px;
+    background:var(--red);
+    border-radius:3px;
+    margin:8px 0 22px;
+    transform:skewX(-12deg);
+  }
+  #exportRender .ex-groups{
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  #exportRender .ex-group{
+    width:288px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    border-top:4px solid var(--blue);
+  }
+  #exportRender .ex-group.pool-group{ border-top-color:var(--muted); }
+  #exportRender .ex-group h3{
+    margin:0 0 10px;
+    font-size:1rem;
+    font-weight:800;
+    color:var(--ink);
+  }
+  #exportRender .ex-group ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+  }
+  #exportRender .ex-group li{
+    font-size:0.88rem;
+    font-weight:600;
+    color:var(--ink);
+    padding:6px 0;
+    border-bottom:1px solid #f0f2f4;
+  }
+  #exportRender .ex-group li:last-child{border-bottom:none;}
+  #exportRender .ex-footer{
+    margin-top:20px;
+    font-size:0.72rem;
+    color:var(--muted);
+    text-align:right;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-row">
+    <img src="logo.png" alt="HVK Logo">
+    <div class="brand-text">
+      <h1>Team-Gruppen</h1>
+      <p>Mitglieder schnell in Gruppen einteilen</p>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+</header>
+
+<div class="toolbar">
+  <input id="search" type="text" placeholder="Name suchen…" autocomplete="off">
+  <button class="btn-primary" id="addGroup">+ Gruppe</button>
+  <button class="btn-ghost" id="exportBtn">⤓ Export</button>
+  <a href="qr.html" class="btn-ghost" style="text-decoration:none;display:inline-flex;align-items:center;">📱 QR-Codes</a>
+  <button class="btn-ghost" id="resetAll">Zurücksetzen</button>
+</div>
+
+<div id="board">
+  <div class="col">
+    <div class="panel pool" id="poolPanel">
+      <div class="panel-head">
+        <span class="dot"></span>
+        <span class="group-name" style="pointer-events:none;">Pool</span>
+        <span class="pill" id="poolCount">0</span>
+      </div>
+      <div class="dropzone" id="poolDrop"></div>
+    </div>
+  </div>
+</div>
+
+<footer>Tippen: Name wählen → Gruppe tippen, um zu verschieben. Am PC zusätzlich per Drag &amp; Drop.</footer>
+
+<div id="toast"></div>
+
+<div id="exportOverlay">
+  <div class="modal">
+    <h2>Gruppen exportieren</h2>
+    <p>Erstellt eine fertige Übersicht aller Gruppen.</p>
+    <button class="choice" id="exportPng"><span class="emoji">🖼️</span> Als PNG-Bild</button>
+    <button class="choice" id="exportPdf"><span class="emoji">📄</span> Als PDF</button>
+    <button class="cancel" id="exportCancel">Abbrechen</button>
+  </div>
+</div>
+
+<div id="exportRender"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const names = [
+  "Paul Ehrler","Sina Loeffler","David Gawron","Matteo Cavalera","Josefine Renz",
+  "Deni Sahovic","Karla Pelc","Arina Buerkle","Louanne Kuhn","Alara Kamci",
+  "Georgios Sdrolias-Bilias","Antonia Avallone","Mailo Lukic","Marius Loeding",
+  "Malik Barth","Yusuf Oezguel","Gentian Alimetaj","Celin Ditz",
+  "taylin.tekdemirkoparan","Lisa Schliwinski",
+  "Benjamin Croll","Michal Bednarczyk","Leandro Buzov","Mayla Friedrich",
+  "Lilly Weissert","Linda Kalt","Kate Dorst","Alina Laibel","Franziska Ebers",
+  "Gueney Gectan"
+];
+
+let groupCount = 0;
+let dragged = null;
+let selectedCard = null;
+
+const board = document.getElementById('board');
+const poolDrop = document.getElementById('poolDrop');
+const toast = document.getElementById('toast');
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>toast.classList.remove('show'), 1400);
+}
+
+function makeCard(name){
+  const div = document.createElement('div');
+  div.className = 'card';
+  div.draggable = true;
+  div.textContent = name;
+
+  div.addEventListener('dragstart', ()=>{
+    dragged = div;
+    div.classList.add('dragging');
+  });
+  div.addEventListener('dragend', ()=>{
+    div.classList.remove('dragging');
+    updateCounts();
+  });
+
+  div.addEventListener('click', ()=>{
+    if(selectedCard === div){
+      div.classList.remove('selected');
+      selectedCard = null;
+      return;
+    }
+    if(selectedCard) selectedCard.classList.remove('selected');
+    selectedCard = div;
+    div.classList.add('selected');
+    showToast('"' + name + '" gewählt — jetzt Ziel-Gruppe tippen');
+  });
+
+  return div;
+}
+
+function setupDropzone(zone){
+  zone.addEventListener('dragover', e=>{
+    e.preventDefault();
+    zone.classList.add('dragover');
+  });
+  zone.addEventListener('dragleave', ()=>{
+    zone.classList.remove('dragover');
+  });
+  zone.addEventListener('drop', e=>{
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if(dragged){
+      zone.appendChild(dragged);
+      updateCounts();
+    }
+  });
+  // tap-to-move target
+  zone.addEventListener('click', e=>{
+    if(e.target.closest('.card')) return; // handled by card click
+    if(selectedCard){
+      zone.appendChild(selectedCard);
+      selectedCard.classList.remove('selected');
+      selectedCard = null;
+      updateCounts();
+    }
+  });
+}
+
+function updateCounts(){
+  document.getElementById('poolCount').textContent = poolDrop.children.length;
+  document.querySelectorAll('.panel:not(.pool)').forEach(p=>{
+    const c = p.querySelector('.pill');
+    const d = p.querySelector('.dropzone');
+    if(c && d) c.textContent = d.children.length;
+  });
+}
+
+function applyFilter(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  document.querySelectorAll('.card').forEach(c=>{
+    c.style.display = c.textContent.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+setupDropzone(poolDrop);
+names.forEach(n => poolDrop.appendChild(makeCard(n)));
+updateCounts();
+
+document.getElementById('search').addEventListener('input', applyFilter);
+
+document.getElementById('addGroup').addEventListener('click', ()=>{
+  groupCount++;
+  const col = document.createElement('div');
+  col.className = 'col';
+  col.innerHTML = `
+    <div class="panel">
+      <div class="panel-head">
+        <span class="dot"></span>
+        <input class="group-name" value="Gruppe ${groupCount}">
+        <span class="pill">0</span>
+        <button class="icon-btn" title="Gruppe löschen">✕</button>
+      </div>
+      <div class="dropzone"></div>
+    </div>
+  `;
+  board.appendChild(col);
+  const dropzone = col.querySelector('.dropzone');
+  setupDropzone(dropzone);
+  col.querySelector('.icon-btn').addEventListener('click', ()=>{
+    while(dropzone.firstChild){ poolDrop.appendChild(dropzone.firstChild); }
+    col.remove();
+    updateCounts();
+  });
+  col.scrollIntoView({behavior:'smooth', inline:'end'});
+});
+
+document.getElementById('resetAll').addEventListener('click', ()=>{
+  document.querySelectorAll('.panel:not(.pool) .dropzone').forEach(d=>{
+    while(d.firstChild){ poolDrop.appendChild(d.firstChild); }
+  });
+  if(selectedCard){ selectedCard.classList.remove('selected'); selectedCard = null; }
+  updateCounts();
+});
+
+// starter groups
+document.getElementById('addGroup').click();
+document.getElementById('addGroup').click();
+
+/* ---------- Export ---------- */
+const exportOverlay = document.getElementById('exportOverlay');
+const exportRender = document.getElementById('exportRender');
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  exportOverlay.classList.add('show');
+});
+document.getElementById('exportCancel').addEventListener('click', ()=>{
+  exportOverlay.classList.remove('show');
+});
+exportOverlay.addEventListener('click', e=>{
+  if(e.target === exportOverlay) exportOverlay.classList.remove('show');
+});
+
+function buildExportMarkup(){
+  const groups = [];
+
+  const poolNames = Array.from(poolDrop.querySelectorAll('.card')).map(c=>c.textContent);
+  if(poolNames.length){
+    groups.push({ title: 'Nicht zugeordnet', names: poolNames, pool:true });
+  }
+
+  document.querySelectorAll('.panel:not(.pool)').forEach(p=>{
+    const title = p.querySelector('.group-name').value || 'Gruppe';
+    const names = Array.from(p.querySelectorAll('.card')).map(c=>c.textContent);
+    if(names.length) groups.push({ title, names, pool:false });
+  });
+
+  const dateStr = new Date().toLocaleDateString('de-DE');
+
+  exportRender.innerHTML = `
+    <div class="ex-head">
+      <img src="logo.png" alt="HVK Logo">
+      <h2>Team-Gruppen</h2>
+    </div>
+    <div class="ex-bar"></div>
+    <div class="ex-groups">
+      ${groups.map(g => `
+        <div class="ex-group${g.pool ? ' pool-group' : ''}">
+          <h3>${escapeHtml(g.title)}${g.pool ? '' : ' (' + g.names.length + ')'}</h3>
+          <ul>${g.names.map(n => `<li>${escapeHtml(n)}</li>`).join('')}</ul>
+        </div>
+      `).join('')}
+    </div>
+    <div class="ex-footer">Erstellt am ${dateStr}</div>
+  `;
+
+  return groups.length > 0;
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function renderExportCanvas(){
+  const hasContent = buildExportMarkup();
+  if(!hasContent){
+    showToast('Noch keine Namen in Gruppen einsortiert');
+    return null;
+  }
+  return await html2canvas(exportRender, { scale: 2, backgroundColor: '#ffffff' });
+}
+
+document.getElementById('exportPng').addEventListener('click', async ()=>{
+  exportOverlay.classList.remove('show');
+  showToast('Bild wird erstellt…');
+  const canvas = await renderExportCanvas();
+  if(!canvas) return;
+  canvas.toBlob(blob=>{
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'team-gruppen.png';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+});
+
+document.getElementById('exportPdf').addEventListener('click', async ()=>{
+  exportOverlay.classList.remove('show');
+  showToast('PDF wird erstellt…');
+  const canvas = await renderExportCanvas();
+  if(!canvas) return;
+  const { jsPDF } = window.jspdf;
+  const imgData = canvas.toDataURL('image/png');
+  const pxToMm = px => px * 0.264583; // 96dpi reference; canvas is rendered at scale 2
+  const mmWidth = pxToMm(canvas.width / 2);
+  const mmHeight = pxToMm(canvas.height / 2);
+
+  const pdf = new jsPDF({
+    orientation: mmWidth > mmHeight ? 'landscape' : 'portrait',
+    unit: 'mm',
+    format: [mmWidth, mmHeight]
+  });
+  pdf.addImage(imgData, 'PNG', 0, 0, mmWidth, mmHeight);
+  pdf.save('team-gruppen.pdf');
+});
+</script>
+
+</body>
+</html>

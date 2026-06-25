@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kontakt – FixIt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --bg: #080808; --bg-raised: #0F0F0F; --surface: #121212; --elevated: #1A1A1A;
+  --border: #222; --border-hi: #333; --orange: #FF6200; --orange-lit: #FF7B28;
+  --og: rgba(255,98,0,0.14); --og-sm: rgba(255,98,0,0.07);
+  --text: #EFEFEF; --text-2: #888; --text-3: #444;
+  --ff-disp: 'Bebas Neue', sans-serif; --ff-head: 'Syne', sans-serif;
+  --ff-body: 'DM Sans', sans-serif; --ff-mono: 'DM Mono', monospace;
+}
+body { background: var(--bg); color: var(--text); font-family: var(--ff-body); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: .028; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 200px; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+nav { position: fixed; inset: 0 0 auto; z-index: 700; padding: 16px 0; background: rgba(8,8,8,.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.nav-logo { font-family: var(--ff-disp); font-size: 1.9rem; letter-spacing: .04em; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--ff-head); font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-btn { font-family: var(--ff-head); font-weight: 700; font-size: .85rem; letter-spacing: .04em; padding: 9px 22px; border-radius: 8px; background: var(--orange); color: #000; text-decoration: none; transition: background .2s, transform .15s; }
+.nav-btn:hover { background: var(--orange-lit); transform: translateY(-1px); }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; }
+.nav-toggle span { display: block; width: 100%; height: 2px; border-radius: 2px; background: var(--text); transition: transform .3s, opacity .3s; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-mobile-menu { position: fixed; inset: 0; z-index: 600; background: rgba(8,8,8,.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.nav-mobile-menu.open { opacity: 1; pointer-events: auto; }
+.nav-mobile-menu a { font-family: var(--ff-head); font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em; color: var(--text); text-decoration: none; }
+.nav-mobile-menu a.nav-btn { font-size: 1rem; margin-top: 14px; }
+@media (max-width: 960px) { .nav-links { display: none; } .nav-inner > .nav-btn { display: none; } .nav-toggle { display: flex; } }
+
+.page-hero { padding: 140px 0 64px; border-bottom: 1px solid var(--border); }
+.page-hero .lbl { font-family: var(--ff-mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.page-hero h1 { font-family: var(--ff-head); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -.03em; color: var(--text); line-height: 1.1; overflow-wrap: break-word; word-break: break-word; hyphens: auto; }
+.page-hero p { font-size: .95rem; color: var(--text-2); margin-top: 12px; max-width: 500px; }
+
+.page-content { padding: 72px 0 120px; }
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 64px;
+  align-items: start;
+}
+
+/* Form */
+.form-title { font-family: var(--ff-head); font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 32px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-family: var(--ff-mono); font-size: .68rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: .93rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text-3); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: rgba(255,98,0,.4);
+  box-shadow: 0 0 0 3px rgba(255,98,0,.08);
+}
+.form-group textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+.form-group select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 40px; }
+.form-group select option { background: var(--elevated); }
+
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--orange);
+  color: #000;
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .03em;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s, transform .15s, box-shadow .25s;
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+.btn-submit::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.16) 0%, transparent 55%); pointer-events: none; }
+.btn-submit:hover { background: var(--orange-lit); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(255,98,0,.35); }
+.btn-submit:active { transform: translateY(0); }
+
+.form-note { font-size: .8rem; color: var(--text-3); margin-top: 14px; line-height: 1.6; }
+.form-note a { color: var(--text-2); text-decoration: none; }
+.form-note a:hover { color: var(--orange); }
+
+/* Success message */
+.form-success {
+  display: none;
+  background: rgba(255,98,0,.07);
+  border: 1px solid rgba(255,98,0,.25);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  margin-top: 20px;
+}
+.form-success p { font-family: var(--ff-head); font-weight: 600; color: var(--text); }
+.form-success span { font-size: .88rem; color: var(--text-2); display: block; margin-top: 6px; }
+
+/* Sidebar info cards */
+.info-cards { display: flex; flex-direction: column; gap: 16px; }
+.info-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 24px;
+  transition: border-color .3s;
+}
+.info-card:hover { border-color: rgba(255,98,0,.25); }
+.ic-icon {
+  width: 40px; height: 40px;
+  background: var(--og-sm);
+  border: 1px solid rgba(255,98,0,.18);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.ic-title { font-family: var(--ff-head); font-size: .95rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.ic-body { font-size: .85rem; color: var(--text-2); line-height: 1.7; }
+.ic-body a { color: var(--orange); text-decoration: none; }
+.ic-body a:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .info-cards { flex-direction: row; flex-wrap: wrap; }
+  .info-card { flex: 1; min-width: 240px; }
+}
+@media (max-width: 600px) {
+  .info-cards { flex-direction: column; }
+}
+
+footer { padding: 44px 0; border-top: 1px solid var(--border); }
+.foot-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot-logo { font-family: var(--ff-disp); font-size: 1.55rem; letter-spacing: .05em; color: var(--text); text-decoration: none; }
+.foot-logo em { color: var(--orange); font-style: normal; }
+.foot-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; }
+.foot-links a { font-size: .82rem; color: var(--text-3); text-decoration: none; transition: color .2s; }
+.foot-links a:hover { color: var(--text-2); }
+.foot-copy { font-size: .78rem; color: var(--text-3); }
+@media (max-width: 600px) { .foot-inner { flex-direction: column; align-items: flex-start; } }
+html, html * { cursor: none; }
+.cursor-dot { position: fixed; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: opacity .2s; box-shadow: 0 0 8px rgba(255,98,0,.6); }
+.cursor-dot.hide { opacity: 0; }
+.cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid rgba(255,98,0,.5); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .35s cubic-bezier(.22,1,.36,1), height .35s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s; }
+.cursor-ring.expand { width: 64px; height: 64px; border-color: rgba(255,98,0,.9); background: rgba(255,98,0,.05); }
+.scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--orange), #FF7B28, #ffaa00); transform-origin: left; transform: scaleX(0); z-index: 9001; box-shadow: 0 0 14px rgba(255,98,0,.8); pointer-events: none; }
+@media (max-width: 600px) { .cursor-dot, .cursor-ring { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Fix<em>It</em></a>
+      <ul class="nav-links">
+        <li><a href="index.html#how">Wie es funktioniert</a></li>
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+      <a href="index.html#download" class="nav-btn">Herunterladen</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="index.html#how">Wie es funktioniert</a>
+  <a href="index.html#features">Features</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#download" class="nav-btn">Herunterladen</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="lbl">Schreib uns</div>
+    <h1>Kontakt</h1>
+    <p>Fragen zur App, Feedback oder ein gefundener Fehler? Wir freuen uns über jede Nachricht.</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="contact-grid">
+
+      <!-- Form -->
+      <div>
+        <div class="form-title">Nachricht schicken</div>
+        <form id="contactForm" action="mailto:kontakt@fix-it.website" method="post" enctype="text/plain">
+          <div class="form-group">
+            <label>Dein Name</label>
+            <input type="text" name="name" placeholder="Max Mustermann" required>
+          </div>
+          <div class="form-group">
+            <label>E-Mail-Adresse</label>
+            <input type="email" name="email" placeholder="max@beispiel.de" required>
+          </div>
+          <div class="form-group">
+            <label>Betreff</label>
+            <select name="betreff">
+              <option value="">Bitte wählen...</option>
+              <option value="feedback">Feedback zur App</option>
+              <option value="bug">Fehler melden</option>
+              <option value="feature">Feature-Wunsch</option>
+              <option value="presse">Presse / Kooperation</option>
+              <option value="sonstiges">Sonstiges</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Nachricht</label>
+            <textarea name="nachricht" placeholder="Was möchtest du uns mitteilen?" required></textarea>
+          </div>
+          <button type="submit" class="btn-submit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+            Nachricht senden
+          </button>
+          <p class="form-note">Mit dem Absenden stimmst du unserer <a href="datenschutz.html">Datenschutzerklärung</a> zu. Wir antworten in der Regel innerhalb von 1–2 Werktagen.</p>
+        </form>
+      </div>
+
+      <!-- Info cards -->
+      <div class="info-cards">
+        <div class="info-card">
+          <div class="ic-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <div class="ic-title">Per E-Mail</div>
+          <div class="ic-body">Du erreichst uns direkt unter:<br><a href="mailto:kontakt@fix-it.website">kontakt@fix-it.website</a></div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="ic-title">Antwortzeit</div>
+          <div class="ic-body">Wir antworten in der Regel innerhalb von <strong style="color:var(--text)">1–2 Werktagen</strong> auf deine Anfrage.</div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="ic-title">Feedback & Ideen</div>
+          <div class="ic-body">FixIt wächst mit eurer Hilfe. Teile Verbesserungsvorschläge, gemeldete Fehler oder Wünsche für neue Features – jede Nachricht wird gelesen.</div>
+        </div>
+
+        <div class="info-card">
+          <div class="ic-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
+            </svg>
+          </div>
+          <div class="ic-title">Rechtliches</div>
+          <div class="ic-body">Für rechtliche Anfragen wende dich an die im <a href="impressum.html">Impressum</a> genannte Adresse.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <a href="index.html" class="foot-logo">Fix<em>It</em></a>
+      <ul class="foot-links">
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="agb.html">AGB</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+      </ul>
+      <span class="foot-copy">&copy; 2026 FixIt. Alle Rechte vorbehalten.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const navToggle = document.getElementById('navToggle');
+const navMobileMenu = document.getElementById('navMobileMenu');
+navToggle.addEventListener('click', () => {
+  const isOpen = navMobileMenu.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+navMobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navToggle.classList.remove('open');
+  navMobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}));
+</script>
+</body>
+</html>

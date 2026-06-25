@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>HVK · Gruppe eintragen</title>
+<link rel="icon" href="logo.png">
+<style>
+  :root{
+    --blue-deep:#0d3a66;
+    --blue:#1f6fb3;
+    --blue-light:#4fa3df;
+    --red:#e2231a;
+    --ink:#16202b;
+    --paper:#f4f6f8;
+    --card:#ffffff;
+    --line:#e1e6eb;
+    --muted:#6b7785;
+    --green:#1e8f5e;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  header{
+    background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 60%,var(--blue-light) 100%);
+    padding:18px 18px 22px;
+    box-shadow:0 6px 18px rgba(13,58,102,0.25);
+  }
+  .brand-row{display:flex;align-items:center;gap:12px;}
+  .brand-row img{height:40px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));}
+  .brand-text h1{margin:0;font-size:1.05rem;color:#fff;font-weight:800;letter-spacing:-0.01em;}
+  .brand-text p{margin:1px 0 0;color:#d7e8fa;font-size:0.74rem;}
+  .accent-bar{height:4px;width:54px;background:var(--red);border-radius:3px;margin-top:10px;transform:skewX(-12deg);}
+
+  main{padding:20px 16px 40px;max-width:480px;margin:0 auto;}
+
+  .group-title{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:4px;
+  }
+  .group-title h2{
+    margin:0;
+    font-size:1.5rem;
+    font-weight:800;
+    letter-spacing:-0.02em;
+  }
+  .cap-badge{
+    font-size:0.85rem;
+    font-weight:800;
+    padding:4px 12px;
+    border-radius:999px;
+    background:var(--card);
+    border:1.5px solid var(--line);
+    color:var(--muted);
+  }
+  .cap-badge.full{
+    background:#fdeceb;
+    border-color:#f4c4c0;
+    color:var(--red);
+  }
+  .cap-badge.ok{
+    background:#e9f7ef;
+    border-color:#bfe6cf;
+    color:var(--green);
+  }
+
+  .member-list{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:8px;
+    margin:14px 0 20px;
+    box-shadow:0 2px 8px rgba(13,58,102,0.06);
+    min-height:48px;
+  }
+  .member{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 10px;
+    border-bottom:1px solid #f0f2f4;
+  }
+  .member:last-child{border-bottom:none;}
+  .avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:var(--blue);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:0.78rem;font-weight:800;
+    flex:0 0 auto;
+  }
+  .member span.name{flex:1;font-weight:700;font-size:0.92rem;}
+  .member button.remove{
+    background:none;border:none;color:var(--muted);
+    font-size:0.95rem;padding:4px 6px;cursor:pointer;
+  }
+  .member button.remove:hover{color:var(--red);}
+  .empty{
+    color:var(--muted);
+    font-size:0.85rem;
+    font-style:italic;
+    text-align:center;
+    padding:16px 4px;
+  }
+
+  .signup-box{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    box-shadow:0 2px 8px rgba(13,58,102,0.06);
+  }
+  .signup-box label{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--muted);
+    display:block;
+    margin-bottom:6px;
+  }
+  select{
+    width:100%;
+    padding:11px 12px;
+    border-radius:10px;
+    border:1.5px solid var(--line);
+    font-size:0.95rem;
+    background:var(--paper);
+    color:var(--ink);
+    margin-bottom:12px;
+  }
+  select:focus{outline:none;border-color:var(--blue);}
+  button.join{
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:var(--red);
+    color:#fff;
+    font-weight:800;
+    font-size:0.98rem;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(226,35,26,0.3);
+  }
+  button.join:disabled{
+    background:#c9ccd1;
+    box-shadow:none;
+    cursor:not-allowed;
+  }
+  button.join:active:not(:disabled){transform:scale(0.98);}
+
+  .msg{
+    margin-top:10px;
+    font-size:0.84rem;
+    font-weight:700;
+    text-align:center;
+    padding:8px 10px;
+    border-radius:8px;
+    display:none;
+  }
+  .msg.show{display:block;}
+  .msg.error{background:#fdeceb;color:var(--red);}
+  .msg.ok{background:#e9f7ef;color:var(--green);}
+
+  .switch-group{
+    text-align:center;
+    margin-top:18px;
+    font-size:0.8rem;
+  }
+  .switch-group a{
+    color:var(--blue);
+    text-decoration:none;
+    font-weight:700;
+    margin:0 6px;
+  }
+  .switch-group a.active{
+    color:var(--red);
+    text-decoration:underline;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-row">
+    <img src="logo.png" alt="HVK Logo">
+    <div class="brand-text">
+      <h1>Gruppen-Eintragung</h1>
+      <p>Trag dich selbst in deine Gruppe ein</p>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+</header>
+
+<main>
+  <div class="group-title">
+    <h2 id="groupHeading">Gruppe …</h2>
+    <span class="cap-badge" id="capBadge">0/5</span>
+  </div>
+
+  <div class="member-list" id="memberList">
+    <div class="empty">Lädt…</div>
+  </div>
+
+  <div class="signup-box">
+    <label for="nameSelect">Dein Name</label>
+    <select id="nameSelect">
+      <option value="">– Namen wählen –</option>
+    </select>
+    <button class="join" id="joinBtn">Ich bin in dieser Gruppe</button>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="switch-group" id="switchGroup"></div>
+</main>
+
+<script>
+const GROUP_IDS = ['1','2','3','4','5','6'];
+const params = new URLSearchParams(location.search);
+let currentGroup = params.get('g');
+if(!GROUP_IDS.includes(currentGroup)) currentGroup = '1';
+
+const groupHeading = document.getElementById('groupHeading');
+const capBadge = document.getElementById('capBadge');
+const memberList = document.getElementById('memberList');
+const nameSelect = document.getElementById('nameSelect');
+const joinBtn = document.getElementById('joinBtn');
+const msg = document.getElementById('msg');
+const switchGroup = document.getElementById('switchGroup');
+
+let lastData = null;
+let polling = null;
+
+function initial(name){
+  return name.trim().charAt(0).toUpperCase() || '?';
+}
+
+function showMsg(text, type){
+  msg.textContent = text;
+  msg.className = 'msg show ' + type;
+  clearTimeout(msg._t);
+  msg._t = setTimeout(()=> msg.classList.remove('show'), 3200);
+}
+
+function render(data){
+  lastData = data;
+  const members = data.state[currentGroup] || [];
+  const cap = data.capacity;
+
+  groupHeading.textContent = 'Gruppe ' + currentGroup;
+  capBadge.textContent = members.length + '/' + cap;
+  capBadge.className = 'cap-badge ' + (members.length >= cap ? 'full' : 'ok');
+
+  memberList.innerHTML = '';
+  if(members.length === 0){
+    memberList.innerHTML = '<div class="empty">Noch niemand eingetragen</div>';
+  } else {
+    members.forEach(name=>{
+      const row = document.createElement('div');
+      row.className = 'member';
+      row.innerHTML = `
+        <span class="avatar">${initial(name)}</span>
+        <span class="name">${escapeHtml(name)}</span>
+        <button class="remove" title="Entfernen" data-name="${escapeHtml(name)}">✕</button>
+      `;
+      memberList.appendChild(row);
+    });
+  }
+
+  // build name dropdown: everyone not yet assigned anywhere
+  const assigned = new Set();
+  GROUP_IDS.forEach(id => (data.state[id] || []).forEach(n => assigned.add(n)));
+
+  const prevValue = nameSelect.value;
+  nameSelect.innerHTML = '<option value="">– Namen wählen –</option>';
+  data.master.forEach(name=>{
+    if(assigned.has(name)) return;
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    nameSelect.appendChild(opt);
+  });
+  if([...nameSelect.options].some(o=>o.value === prevValue)) nameSelect.value = prevValue;
+
+  joinBtn.disabled = members.length >= cap;
+  joinBtn.textContent = members.length >= cap ? 'Gruppe ist voll' : 'Ich bin in dieser Gruppe';
+
+  switchGroup.innerHTML = GROUP_IDS.map(id => {
+    const count = (data.state[id] || []).length;
+    return `<a href="?g=${id}" class="${id===currentGroup?'active':''}">G${id} (${count}/${cap})</a>`;
+  }).join(' · ');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function loadState(){
+  try{
+    const res = await fetch('/api/groups', { cache: 'no-store' });
+    const data = await res.json();
+    render(data);
+  }catch(e){
+    memberList.innerHTML = '<div class="empty">Verbindung fehlgeschlagen — bitte neu laden</div>';
+  }
+}
+
+async function postAction(action, name){
+  try{
+    const res = await fetch('/api/groups', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group: currentGroup, name, action })
+    });
+    const data = await res.json();
+    if(!res.ok){
+      showMsg(data.error || 'Fehler', 'error');
+      if(data.state) render({ state: data.state, capacity: data.capacity, master: data.master });
+      return;
+    }
+    render(data);
+    showMsg(action === 'remove' ? 'Entfernt' : 'Eingetragen ✓', 'ok');
+  }catch(e){
+    showMsg('Verbindung fehlgeschlagen', 'error');
+  }
+}
+
+joinBtn.addEventListener('click', ()=>{
+  const name = nameSelect.value;
+  if(!name){ showMsg('Bitte erst deinen Namen wählen', 'error'); return; }
+  postAction('add', name);
+});
+
+memberList.addEventListener('click', e=>{
+  const btn = e.target.closest('button.remove');
+  if(!btn) return;
+  postAction('remove', btn.dataset.name);
+});
+
+loadState();
+polling = setInterval(loadState, 4000);
+</script>
+
+</body>
+</html>

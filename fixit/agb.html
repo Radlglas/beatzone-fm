@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGB – FixIt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --bg: #080808; --bg-raised: #0F0F0F; --surface: #121212; --elevated: #1A1A1A;
+  --border: #222; --border-hi: #333; --orange: #FF6200; --orange-lit: #FF7B28;
+  --og: rgba(255,98,0,0.14); --og-sm: rgba(255,98,0,0.07);
+  --text: #EFEFEF; --text-2: #888; --text-3: #444;
+  --ff-disp: 'Bebas Neue', sans-serif; --ff-head: 'Syne', sans-serif;
+  --ff-body: 'DM Sans', sans-serif; --ff-mono: 'DM Mono', monospace;
+}
+body { background: var(--bg); color: var(--text); font-family: var(--ff-body); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: .028; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 200px; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+nav { position: fixed; inset: 0 0 auto; z-index: 700; padding: 16px 0; background: rgba(8,8,8,.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.nav-logo { font-family: var(--ff-disp); font-size: 1.9rem; letter-spacing: .04em; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--ff-head); font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-btn { font-family: var(--ff-head); font-weight: 700; font-size: .85rem; letter-spacing: .04em; padding: 9px 22px; border-radius: 8px; background: var(--orange); color: #000; text-decoration: none; transition: background .2s, transform .15s; }
+.nav-btn:hover { background: var(--orange-lit); transform: translateY(-1px); }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; }
+.nav-toggle span { display: block; width: 100%; height: 2px; border-radius: 2px; background: var(--text); transition: transform .3s, opacity .3s; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-mobile-menu { position: fixed; inset: 0; z-index: 600; background: rgba(8,8,8,.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.nav-mobile-menu.open { opacity: 1; pointer-events: auto; }
+.nav-mobile-menu a { font-family: var(--ff-head); font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em; color: var(--text); text-decoration: none; }
+.nav-mobile-menu a.nav-btn { font-size: 1rem; margin-top: 14px; }
+@media (max-width: 960px) { .nav-links { display: none; } .nav-inner > .nav-btn { display: none; } .nav-toggle { display: flex; } }
+.page-hero { padding: 140px 0 64px; border-bottom: 1px solid var(--border); }
+.page-hero .lbl { font-family: var(--ff-mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.page-hero h1 { font-family: var(--ff-head); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -.03em; color: var(--text); line-height: 1.1; overflow-wrap: break-word; word-break: break-word; hyphens: auto; }
+.page-hero p { font-size: .95rem; color: var(--text-2); margin-top: 12px; }
+.page-content { padding: 72px 0 120px; }
+.content-wrap { max-width: 760px; }
+.section-block { margin-bottom: 48px; }
+.section-block h2 { font-family: var(--ff-head); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.section-block p { font-size: .93rem; color: var(--text-2); line-height: 1.85; margin-bottom: 10px; }
+.section-block p:last-child { margin-bottom: 0; }
+.section-block ul { margin: 8px 0 10px 20px; }
+.section-block ul li { font-size: .93rem; color: var(--text-2); line-height: 1.85; margin-bottom: 4px; }
+.section-block a { color: var(--orange); text-decoration: none; }
+.section-block a:hover { text-decoration: underline; }
+.last-updated { font-family: var(--ff-mono); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 56px; }
+footer { padding: 44px 0; border-top: 1px solid var(--border); }
+.foot-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot-logo { font-family: var(--ff-disp); font-size: 1.55rem; letter-spacing: .05em; color: var(--text); text-decoration: none; }
+.foot-logo em { color: var(--orange); font-style: normal; }
+.foot-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; }
+.foot-links a { font-size: .82rem; color: var(--text-3); text-decoration: none; transition: color .2s; }
+.foot-links a:hover { color: var(--text-2); }
+.foot-copy { font-size: .78rem; color: var(--text-3); }
+@media (max-width: 600px) { .foot-inner { flex-direction: column; align-items: flex-start; } }
+html, html * { cursor: none; }
+.cursor-dot { position: fixed; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: opacity .2s; box-shadow: 0 0 8px rgba(255,98,0,.6); }
+.cursor-dot.hide { opacity: 0; }
+.cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid rgba(255,98,0,.5); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .35s cubic-bezier(.22,1,.36,1), height .35s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s; }
+.cursor-ring.expand { width: 64px; height: 64px; border-color: rgba(255,98,0,.9); background: rgba(255,98,0,.05); }
+.scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--orange), #FF7B28, #ffaa00); transform-origin: left; transform: scaleX(0); z-index: 9001; box-shadow: 0 0 14px rgba(255,98,0,.8); pointer-events: none; }
+@media (max-width: 600px) { .cursor-dot, .cursor-ring { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Fix<em>It</em></a>
+      <ul class="nav-links">
+        <li><a href="index.html#how">Wie es funktioniert</a></li>
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+      <a href="index.html#download" class="nav-btn">Herunterladen</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="index.html#how">Wie es funktioniert</a>
+  <a href="index.html#features">Features</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#download" class="nav-btn">Herunterladen</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="lbl">Rechtliches</div>
+    <h1>Allgemeine Geschäftsbedingungen</h1>
+    <p>Nutzungsbedingungen für die FixIt-App und die Website fix-it.website</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="content-wrap">
+      <p class="last-updated">Stand: Januar 2026</p>
+
+      <div class="section-block">
+        <h2>§ 1 Geltungsbereich</h2>
+        <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für die Nutzung der App „FixIt" sowie der Website fix-it.website. Mit dem Herunterladen und der Nutzung der App erklärst du dich mit diesen Bedingungen einverstanden.</p>
+        <p>Anbieter der App ist der im Impressum genannte Betreiber (nachfolgend „wir" oder „Anbieter").</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 2 Kostenlose Nutzung</h2>
+        <p>FixIt ist eine kostenlose App und wird kostenlos über den Google Play Store angeboten. Es fallen keine Gebühren für den Download oder die Nutzung der App an.</p>
+        <p>Der Anbieter behält sich vor, die App oder einzelne Funktionen jederzeit zu ändern, zu erweitern oder einzustellen.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 3 Leistungsbeschreibung</h2>
+        <p>FixIt stellt folgende Funktionen bereit:</p>
+        <ul>
+          <li>KI-gestützte Erkennung von Ersatzteilen per Foto</li>
+          <li>Preisvergleich bei ausgewählten Online-Shops</li>
+          <li>Anzeige passender Reparatur-Videos</li>
+          <li>KI-Chat zur Beantwortung von Fragen zu Teilen und Reparaturen</li>
+          <li>Speicherung eines Scan-Verlaufs auf dem Gerät</li>
+        </ul>
+        <p>Die Nutzung der App setzt eine aktive Internetverbindung voraus. Ein Anspruch auf ständige Verfügbarkeit besteht nicht.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 4 Preisangaben und Preisvergleich</h2>
+        <p>Die in der App angezeigten Preise stammen von Drittanbietern und werden ohne Gewähr dargestellt. Die Preise können sich jederzeit ändern. Der Anbieter übernimmt keine Haftung für die Aktualität, Vollständigkeit oder Richtigkeit der angezeigten Preise.</p>
+        <p>Die App enthält keine eigene Kauffunktion. Käufe werden ausschließlich beim jeweiligen Händler direkt abgewickelt. Für den Kaufprozess und etwaige Verträge mit Händlern ist allein der jeweilige Händler verantwortlich.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 5 KI-Teileerkennung</h2>
+        <p>Die Teileerkennung erfolgt durch ein KI-Modell und kann Fehler enthalten. Erkennungsergebnisse sind unverbindlich und dienen nur als Orientierungshilfe. Der Anbieter übernimmt keine Haftung für Schäden, die durch fehlerhafte Erkennungsergebnisse entstehen – insbesondere dann, wenn auf Basis eines falschen Ergebnisses ein Ersatzteil gekauft oder verbaut wird.</p>
+        <p>Vor dem Kauf eines Teils empfehlen wir, das Ergebnis durch einen Fachmann oder anhand der Fahrzeugdokumentation zu überprüfen.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 6 Nutzerpflichten</h2>
+        <p>Du verpflichtest dich, die App ausschließlich für den vorgesehenen Zweck und im Einklang mit geltendem Recht zu nutzen. Insbesondere ist es untersagt:</p>
+        <ul>
+          <li>Die App zu reverse engineeren, zu dekompilieren oder anderweitig zu analysieren</li>
+          <li>Die App zu manipulieren oder zu missbrauchen</li>
+          <li>Inhalte automatisiert abzurufen (Scraping)</li>
+          <li>Die App für rechtswidrige Zwecke zu verwenden</li>
+        </ul>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 7 Haftungsbeschränkung</h2>
+        <p>Der Anbieter haftet nur für Schäden, die auf vorsätzlichem oder grob fahrlässigem Verhalten beruhen. Eine Haftung für leichte Fahrlässigkeit ist – soweit gesetzlich zulässig – ausgeschlossen.</p>
+        <p>Der Anbieter übernimmt keine Haftung für Schäden durch Datenverlust, Fehlfunktionen des Geräts oder Ausfälle der App.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 8 Datenschutz</h2>
+        <p>Informationen zur Verarbeitung personenbezogener Daten findest du in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 9 Änderungen der AGB</h2>
+        <p>Der Anbieter behält sich vor, diese AGB jederzeit zu ändern. Über wesentliche Änderungen wird in der App oder auf der Website informiert. Die weitere Nutzung der App nach einer Änderung gilt als Zustimmung zu den geänderten Bedingungen.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 10 Anwendbares Recht</h2>
+        <p>Es gilt das Recht der Bundesrepublik Deutschland. Für Verbraucher innerhalb der EU gelten ergänzend die zwingenden Verbraucherschutzvorschriften des jeweiligen Wohnsitzlandes.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>§ 11 Kontakt</h2>
+        <p>Bei Fragen zu diesen AGB wende dich bitte über unser <a href="kontakt.html">Kontaktformular</a> oder per E-Mail an uns (Adresse siehe <a href="impressum.html">Impressum</a>).</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <a href="index.html" class="foot-logo">Fix<em>It</em></a>
+      <ul class="foot-links">
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="agb.html">AGB</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+      </ul>
+      <span class="foot-copy">&copy; 2026 FixIt. Alle Rechte vorbehalten.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const navToggle = document.getElementById('navToggle');
+const navMobileMenu = document.getElementById('navMobileMenu');
+navToggle.addEventListener('click', () => {
+  const isOpen = navMobileMenu.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+navMobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navToggle.classList.remove('open');
+  navMobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}));
+</script>
+</body>
+</html>

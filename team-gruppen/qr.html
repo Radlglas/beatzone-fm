@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>HVK · QR-Codes Gruppen</title>
+<link rel="icon" href="logo.png">
+<style>
+  :root{
+    --blue-deep:#0d3a66;
+    --blue:#1f6fb3;
+    --blue-light:#4fa3df;
+    --red:#e2231a;
+    --ink:#16202b;
+    --paper:#f4f6f8;
+    --card:#ffffff;
+    --line:#e1e6eb;
+    --muted:#6b7785;
+    --green:#1e8f5e;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:30px;
+  }
+  header{
+    background:linear-gradient(135deg,var(--blue-deep) 0%,var(--blue) 60%,var(--blue-light) 100%);
+    padding:18px 18px 22px;
+    box-shadow:0 6px 18px rgba(13,58,102,0.25);
+  }
+  .brand-row{display:flex;align-items:center;gap:12px;}
+  .brand-row img{height:40px;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.25));}
+  .brand-text h1{margin:0;font-size:1.05rem;color:#fff;font-weight:800;letter-spacing:-0.01em;}
+  .brand-text p{margin:1px 0 0;color:#d7e8fa;font-size:0.74rem;}
+  .accent-bar{height:4px;width:54px;background:var(--red);border-radius:3px;margin-top:10px;transform:skewX(-12deg);}
+
+  main{padding:18px 14px 30px;max-width:1000px;margin:0 auto;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:16px;
+  }
+  .gcard{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(13,58,102,0.06), 0 10px 24px rgba(13,58,102,0.04);
+    border-top:4px solid var(--blue);
+  }
+  .gcard h2{
+    margin:0 0 4px;
+    font-size:1.1rem;
+    font-weight:800;
+  }
+  .gcard .count{
+    font-size:0.8rem;
+    font-weight:700;
+    color:var(--muted);
+    margin-bottom:10px;
+  }
+  .gcard .count.full{color:var(--red);}
+  .gcard .count.ok{color:var(--green);}
+  .gcard img.qr{
+    width:170px;
+    height:170px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    margin-bottom:10px;
+  }
+  .gcard .link{
+    font-size:0.72rem;
+    color:var(--muted);
+    word-break:break-all;
+    margin-bottom:10px;
+  }
+  .gcard button{
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:7px 12px;
+    font-weight:700;
+    font-size:0.78rem;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .gcard button:hover{border-color:var(--blue);}
+  .gcard .names{
+    margin-top:10px;
+    text-align:left;
+    font-size:0.78rem;
+    color:var(--ink);
+    border-top:1px solid #f0f2f4;
+    padding-top:8px;
+  }
+  .gcard .names div{padding:2px 0;}
+  .gcard .names .empty{color:var(--muted);font-style:italic;}
+
+  .refresh-note{
+    text-align:center;
+    color:var(--muted);
+    font-size:0.78rem;
+    margin:14px 0 4px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-row">
+    <img src="logo.png" alt="HVK Logo">
+    <div class="brand-text">
+      <h1>QR-Codes je Gruppe</h1>
+      <p>6 Gruppen · max. 5 pro Gruppe · jede:r trägt sich selbst ein</p>
+    </div>
+  </div>
+  <div class="accent-bar"></div>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="refresh-note">Aktualisiert automatisch alle 5 Sekunden</div>
+</main>
+
+<script>
+const GROUP_IDS = ['1','2','3','4','5','6'];
+const base = location.origin + location.pathname.replace(/qr\.html$/, '');
+const grid = document.getElementById('grid');
+
+function qrUrl(link){
+  return 'https://api.qrserver.com/v1/create-qr-code/?size=340x340&margin=8&data=' + encodeURIComponent(link);
+}
+
+function render(data){
+  grid.innerHTML = GROUP_IDS.map(id=>{
+    const link = base + 'signup.html?g=' + id;
+    const members = data.state[id] || [];
+    const cap = data.capacity;
+    const statusClass = members.length >= cap ? 'full' : 'ok';
+    const namesHtml = members.length
+      ? members.map(n=>`<div>• ${escapeHtml(n)}</div>`).join('')
+      : '<div class="empty">Noch niemand</div>';
+    return `
+      <div class="gcard">
+        <h2>Gruppe ${id}</h2>
+        <div class="count ${statusClass}">${members.length}/${cap} Plätze belegt</div>
+        <img class="qr" src="${qrUrl(link)}" alt="QR Gruppe ${id}">
+        <div class="link">${link}</div>
+        <button onclick="navigator.clipboard.writeText('${link}')">Link kopieren</button>
+        <div class="names">${namesHtml}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(s){
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function loadState(){
+  try{
+    const res = await fetch('/api/groups', { cache: 'no-store' });
+    const data = await res.json();
+    render(data);
+  }catch(e){
+    grid.innerHTML = '<p style="text-align:center;color:#6b7785;">Verbindung fehlgeschlagen — bitte neu laden</p>';
+  }
+}
+
+loadState();
+setInterval(loadState, 5000);
+</script>
+
+</body>
+</html>

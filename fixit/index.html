@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FixIt – Teil fotografieren. Erkennen. Günstig kaufen.</title>
+<meta name="description" content="FixIt erkennt dein defektes Teil per Foto, vergleicht Preise in über 20 Online-Shops und zeigt passende Reparatur-Videos. Kostenlos im Google Play Store.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+/* ── Reset & Root ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg:          #080808;
+  --bg-raised:   #0F0F0F;
+  --surface:     #121212;
+  --elevated:    #1A1A1A;
+  --border:      #222222;
+  --border-hi:   #333333;
+  --orange:      #FF6200;
+  --orange-lit:  #FF7B28;
+  --og:          rgba(255,98,0,0.14);
+  --og-sm:       rgba(255,98,0,0.07);
+  --text:        #EFEFEF;
+  --text-2:      #888;
+  --text-3:      #444;
+  --ff-disp:     'Bebas Neue', sans-serif;
+  --ff-head:     'Syne', sans-serif;
+  --ff-body:     'DM Sans', sans-serif;
+  --ff-mono:     'DM Mono', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ff-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* film-grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: .028;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+section { padding: 120px 0; }
+
+/* ── Scroll-reveal ──────────────────────────────────────────── */
+[data-r] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .65s cubic-bezier(.22,1,.36,1),
+              transform .65s cubic-bezier(.22,1,.36,1);
+}
+[data-r].in { opacity: 1; transform: none; }
+[data-r][data-d="1"] { transition-delay: .08s; }
+[data-r][data-d="2"] { transition-delay: .16s; }
+[data-r][data-d="3"] { transition-delay: .24s; }
+[data-r][data-d="4"] { transition-delay: .32s; }
+[data-r][data-d="5"] { transition-delay: .40s; }
+
+/* ── Navigation ─────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 700;
+  padding: 22px 0;
+  transition: background .35s, border-color .35s, backdrop-filter .35s;
+}
+nav.solid {
+  background: rgba(8,8,8,.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.nav-logo {
+  font-family: var(--ff-disp);
+  font-size: 1.9rem;
+  letter-spacing: .04em;
+  color: var(--text);
+  text-decoration: none;
+  user-select: none;
+}
+.nav-logo em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-family: var(--ff-head);
+  font-size: .82rem;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-btn {
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: .85rem;
+  letter-spacing: .04em;
+  padding: 9px 22px;
+  border-radius: 8px;
+  background: var(--orange);
+  color: #000;
+  text-decoration: none;
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.nav-btn:hover {
+  background: var(--orange-lit);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(255,98,0,.35);
+}
+
+/* Mobile nav toggle */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--text);
+  transition: transform .3s, opacity .3s;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.nav-mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: rgba(8,8,8,.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.nav-mobile-menu.open { opacity: 1; pointer-events: auto; }
+.nav-mobile-menu a {
+  font-family: var(--ff-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--text);
+  text-decoration: none;
+}
+.nav-mobile-menu a.nav-btn {
+  font-size: 1rem;
+  margin-top: 14px;
+}
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-inner > .nav-btn { display: none; }
+  .nav-toggle { display: flex; }
+}
+
+/* ── Hero ───────────────────────────────────────────────────── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 130px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Canvas particle layer */
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: .7;
+}
+
+/* Animated orbs */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(72px);
+  z-index: 0;
+}
+.hero-orb-1 {
+  width: 680px; height: 680px;
+  right: -80px; top: -120px;
+  background: radial-gradient(circle, rgba(255,98,0,.09) 0%, transparent 68%);
+  animation: orb-float-1 14s ease-in-out infinite;
+}
+.hero-orb-2 {
+  width: 420px; height: 420px;
+  right: 280px; bottom: -60px;
+  background: radial-gradient(circle, rgba(255,160,60,.06) 0%, transparent 70%);
+  animation: orb-float-2 18s ease-in-out infinite;
+}
+.hero-orb-3 {
+  width: 300px; height: 300px;
+  left: -60px; top: 30%;
+  background: radial-gradient(circle, rgba(255,98,0,.04) 0%, transparent 70%);
+  animation: orb-float-3 22s ease-in-out infinite;
+}
+
+/* Wide hero scan line */
+.hero-scan-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,98,0,.08) 15%,
+    rgba(255,180,80,.22) 50%,
+    rgba(255,98,0,.08) 85%,
+    transparent 100%);
+  box-shadow: 0 0 20px rgba(255,98,0,.08);
+  pointer-events: none;
+  z-index: 1;
+  animation: hero-scan 10s ease-in-out infinite;
+}
+@keyframes hero-scan {
+  0%   { top: -2px; opacity: 0; }
+  4%   { opacity: 1; }
+  96%  { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.hero-grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 90% 90% at 55% 50%, black 20%, transparent 80%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  gap: 48px;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: var(--og-sm);
+  border: 1px solid rgba(255,98,0,.25);
+  border-radius: 100px;
+  padding: 7px 16px;
+  margin-bottom: 32px;
+}
+.badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--orange);
+  animation: pulse-dot 2.2s ease-in-out infinite;
+}
+.hero-badge span {
+  font-family: var(--ff-mono);
+  font-size: .7rem;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.hero-title {
+  font-family: var(--ff-disp);
+  font-size: clamp(88px, 12vw, 168px);
+  line-height: .92;
+  letter-spacing: .02em;
+  color: var(--text);
+  margin-bottom: 24px;
+  position: relative;
+}
+.hero-title-accent { color: var(--orange); }
+
+/* Glitch flicker on hero title */
+.hero-title::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0; top: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  color: var(--orange);
+  clip-path: polygon(0 30%, 100% 30%, 100% 55%, 0 55%);
+  opacity: 0;
+  animation: glitch-clip 9s ease-in-out infinite;
+  transform: translateX(-3px);
+  pointer-events: none;
+}
+@keyframes glitch-clip {
+  0%,88%,100% { opacity: 0; }
+  89%   { opacity: .6; transform: translateX(-3px); clip-path: polygon(0 28%, 100% 28%, 100% 44%, 0 44%); }
+  90%   { opacity: 0; }
+  91%   { opacity: .5; transform: translateX(2px); clip-path: polygon(0 62%, 100% 62%, 100% 76%, 0 76%); }
+  92%   { opacity: 0; }
+  93%   { opacity: .4; transform: translateX(-2px); clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); }
+  94%   { opacity: 0; }
+}
+
+.hero-tagline {
+  font-family: var(--ff-head);
+  font-size: clamp(1.05rem, 2vw, 1.3rem);
+  font-weight: 700;
+  color: var(--text-2);
+  letter-spacing: -.015em;
+  margin-bottom: 14px;
+}
+
+.hero-sub {
+  font-size: .95rem;
+  color: var(--text-3);
+  max-width: 440px;
+  line-height: 1.8;
+  margin-bottom: 42px;
+}
+.hero-sub strong { color: var(--text-2); font-weight: 500; }
+
+.hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--orange);
+  color: #000;
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: .95rem;
+  letter-spacing: .03em;
+  padding: 15px 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: background .2s, transform .15s, box-shadow .25s;
+  animation: cta-pulse 3.5s ease-in-out infinite;
+}
+.btn-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.18) 0%, transparent 55%);
+  pointer-events: none;
+}
+.btn-cta:hover {
+  background: var(--orange-lit);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 36px rgba(255,98,0,.5), 0 2px 10px rgba(255,98,0,.22);
+  animation: none;
+}
+.btn-cta:active { transform: translateY(0); animation: none; }
+.btn-cta svg { flex-shrink: 0; }
+@keyframes cta-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,98,0,0); }
+  50%      { box-shadow: 0 0 0 8px rgba(255,98,0,.12); }
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--ff-head);
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: color .2s;
+}
+.btn-ghost:hover { color: var(--text); }
+
+.hero-proof {
+  display: flex;
+  gap: 36px;
+  margin-top: 52px;
+  padding-top: 36px;
+  border-top: 1px solid var(--border);
+}
+.proof-item {}
+.proof-val {
+  font-family: var(--ff-disp);
+  font-size: 2.1rem;
+  letter-spacing: .04em;
+  color: var(--text);
+  line-height: 1;
+}
+.proof-val span { color: var(--orange); }
+.proof-lbl {
+  font-family: var(--ff-mono);
+  font-size: .68rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+/* ── Phone Mockup ───────────────────────────────────────────── */
+.hero-phone-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  perspective: 1400px;
+}
+.phone-rings {
+  position: absolute;
+  inset: -80px;
+  pointer-events: none;
+}
+.phone-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255,98,0,.12);
+  animation: ring-expand 4s ease-in-out infinite;
+}
+.phone-ring:nth-child(2) {
+  inset: 60px;
+  border-color: rgba(255,98,0,.08);
+  animation-delay: 1.2s;
+}
+.phone-ring:nth-child(3) {
+  inset: 130px;
+  border-color: rgba(255,98,0,.05);
+  animation-delay: 2.4s;
+}
+
+/* Tilt wrapper receives JS transform */
+.phone-tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform .12s ease-out;
+}
+
+.phone-outer {
+  position: relative;
+  z-index: 2;
+  animation: float-phone 7s ease-in-out infinite;
+  filter: drop-shadow(0 48px 72px rgba(0,0,0,.85))
+          drop-shadow(0 0 60px rgba(255,98,0,.14));
+}
+
+.phone-body {
+  width: 262px;
+  background: #0A0A0A;
+  border-radius: 46px;
+  border: 2px solid #282828;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    0 0 0 6px rgba(255,255,255,.015);
+  overflow: hidden;
+}
+.phone-screen {
+  background: #070707;
+  margin: 4px;
+  border-radius: 42px;
+  height: 556px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic island */
+.pill {
+  width: 96px; height: 28px;
+  background: #000;
+  border-radius: 20px;
+  margin: 14px auto 0;
+  flex-shrink: 0;
+}
+
+/* App top bar */
+.app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px 10px;
+  flex-shrink: 0;
+}
+.app-name {
+  font-family: var(--ff-disp);
+  font-size: 1.3rem;
+  letter-spacing: .06em;
+  color: #fff;
+}
+.app-name em { color: var(--orange); font-style: normal; }
+.app-icon {
+  width: 32px; height: 32px;
+  background: #1a1a1a;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Scan viewport */
+.scan-view {
+  flex: 1;
+  margin: 0 14px;
+  border-radius: 18px;
+  background: #0E0E0E;
+  border: 1px solid #1E1E1E;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gear/part illustration */
+.part-svg {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -52%);
+  width: 140px; height: 140px;
+  opacity: .55;
+  transition: opacity .5s;
+}
+
+/* Scan animation */
+.scan-beam {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--orange) 25%,
+    rgba(255,200,120,.95) 50%,
+    var(--orange) 75%,
+    transparent 100%);
+  box-shadow: 0 0 18px var(--orange), 0 0 36px rgba(255,98,0,.45);
+  animation: scan-move 2.8s ease-in-out infinite;
+  transition: opacity .4s;
+}
+.scan-beam::after {
+  content: '';
+  position: absolute;
+  inset: -8px 0;
+  background: inherit;
+  filter: blur(6px);
+  opacity: .4;
+}
+
+/* Corner brackets */
+.sc {
+  position: absolute;
+  width: 22px; height: 22px;
+  border-color: var(--orange);
+  border-style: solid;
+  transition: border-color .5s, box-shadow .5s;
+}
+.sc.tl { top: 14px; left: 14px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
+.sc.tr { top: 14px; right: 14px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
+.sc.bl { bottom: 14px; left: 14px; border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
+.sc.br { bottom: 14px; right: 14px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
+
+.scan-status {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--ff-mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--orange);
+  animation: blink-text 1.6s ease-in-out infinite;
+  white-space: nowrap;
+  transition: opacity .3s;
+}
+
+/* Alt status labels (shown in different phone states) */
+.scan-label-alt {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--ff-mono);
+  font-size: .58rem;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity .4s;
+  pointer-events: none;
+}
+.scan-label-found { color: #4ade80; }
+.scan-label-compare { color: var(--orange-lit); animation: blink-text 1.2s ease-in-out infinite; }
+
+/* ── Phone state machine ─────────────────────────────────────── */
+/* scanning (default) — beam active, orange brackets, scan-status visible */
+.phone-screen[data-state="found"] .scan-beam { opacity: 0; }
+.phone-screen[data-state="found"] .scan-status { opacity: 0; animation: none; }
+.phone-screen[data-state="found"] .scan-label-found { opacity: 1; }
+.phone-screen[data-state="found"] .sc {
+  border-color: #4ade80;
+  box-shadow: 0 0 14px rgba(74,222,128,.55), 0 0 28px rgba(74,222,128,.2);
+}
+.phone-screen[data-state="found"] .part-svg { opacity: .85; }
+
+.phone-screen[data-state="comparing"] .scan-beam { opacity: 0; }
+.phone-screen[data-state="comparing"] .scan-status { opacity: 0; animation: none; }
+.phone-screen[data-state="comparing"] .scan-label-compare { opacity: 1; }
+
+.phone-screen[data-state="results"] .scan-beam { opacity: 0; }
+.phone-screen[data-state="results"] .scan-status { opacity: 0; animation: none; }
+.phone-screen[data-state="results"] .sc { border-color: var(--orange); box-shadow: none; }
+
+/* Comparing state: dim result panel to show loading */
+.phone-screen[data-state="comparing"] .result-head { opacity: .4; }
+.phone-screen[data-state="comparing"] .price-row { opacity: .15; }
+
+.result-head { transition: opacity .35s; }
+.price-row { transition: opacity .35s; }
+
+/* Result panel */
+.result-panel {
+  margin: 12px 14px 16px;
+  background: #0F0F0F;
+  border: 1px solid #1E1E1E;
+  border-radius: 16px;
+  padding: 13px 14px;
+  flex-shrink: 0;
+}
+.result-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 11px;
+}
+.result-ai-dot {
+  width: 30px; height: 30px;
+  flex-shrink: 0;
+  background: var(--og-sm);
+  border: 1px solid rgba(255,98,0,.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.result-info {}
+.result-part {
+  font-family: var(--ff-head);
+  font-size: .72rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+.result-conf {
+  font-family: var(--ff-mono);
+  font-size: .59rem;
+  color: var(--orange);
+  margin-top: 2px;
+}
+.price-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 5px;
+}
+.pc {
+  background: #161616;
+  border: 1px solid #252525;
+  border-radius: 8px;
+  padding: 7px 8px;
+}
+.pc.best {
+  border-color: rgba(255,98,0,.4);
+  background: rgba(255,98,0,.06);
+}
+.pc-shop {
+  font-family: var(--ff-mono);
+  font-size: .55rem;
+  color: var(--text-3);
+  margin-bottom: 2px;
+}
+.pc-price {
+  font-family: var(--ff-mono);
+  font-size: .68rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.pc.best .pc-price { color: var(--orange); }
+
+/* ── Section label / header ─────────────────────────────────── */
+.lbl {
+  font-family: var(--ff-mono);
+  font-size: .7rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 12px;
+}
+.sec-title {
+  font-family: var(--ff-head);
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  color: var(--text);
+  line-height: 1.1;
+}
+.sec-sub {
+  font-size: .95rem;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-top: 14px;
+  max-width: 520px;
+}
+
+/* ── Marquee strip ──────────────────────────────────────────── */
+.marquee-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+  padding: 18px 0;
+  user-select: none;
+  position: relative;
+  z-index: 1;
+}
+.marquee-strip::before,
+.marquee-strip::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-strip::before { left: 0; background: linear-gradient(90deg, var(--surface), transparent); }
+.marquee-strip::after  { right: 0; background: linear-gradient(-90deg, var(--surface), transparent); }
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 52px;
+  animation: marquee-scroll 30s linear infinite;
+  white-space: nowrap;
+}
+.marquee-strip:hover .marquee-track { animation-play-state: paused; }
+.marquee-track .mw {
+  font-family: var(--ff-disp);
+  font-size: 1rem;
+  letter-spacing: .15em;
+  color: var(--text-3);
+  transition: color .25s;
+}
+.marquee-track .mw:hover { color: var(--text-2); }
+.marquee-track .sep {
+  color: var(--orange);
+  font-size: .65rem;
+  opacity: .45;
+  flex-shrink: 0;
+}
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ── How It Works ───────────────────────────────────────────── */
+#how {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+#how::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 50% 50%,
+    rgba(255,98,0,.04), transparent);
+  pointer-events: none;
+}
+
+.how-header { text-align: center; margin-bottom: 72px; }
+.how-header .sec-sub { margin: 14px auto 0; }
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  position: relative;
+}
+
+/* connector line between steps */
+.steps::before {
+  content: '';
+  position: absolute;
+  height: 1px;
+  top: 40px;
+  left: calc(16.66% + 16px);
+  right: calc(16.66% + 16px);
+  background: linear-gradient(90deg,
+    var(--orange) 0%, rgba(255,98,0,.25) 50%, var(--orange) 100%);
+  opacity: .3;
+}
+
+.step {
+  text-align: center;
+  padding: 0 36px;
+  position: relative;
+}
+.step-circle {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 28px;
+  position: relative;
+  transition: border-color .3s, box-shadow .3s, background .3s;
+}
+.step:hover .step-circle {
+  border-color: var(--orange);
+  box-shadow: 0 0 32px var(--og), 0 0 64px rgba(255,98,0,.05);
+  background: rgba(255,98,0,.06);
+}
+.step-n {
+  position: absolute;
+  top: -8px; right: -8px;
+  width: 24px; height: 24px;
+  background: var(--orange);
+  color: #000;
+  border-radius: 50%;
+  font-family: var(--ff-mono);
+  font-size: .7rem;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+}
+.step-t {
+  font-family: var(--ff-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.step-d {
+  font-size: .88rem;
+  color: var(--text-2);
+  line-height: 1.75;
+}
+
+/* ── Features ───────────────────────────────────────────────── */
+#features {}
+
+.feat-head { margin-bottom: 56px; }
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(12,1fr);
+  grid-auto-rows: auto;
+  gap: 14px;
+}
+.fc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .35s, transform .35s, box-shadow .35s;
+  cursor: default;
+}
+.fc::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 0% 0%, var(--og-sm), transparent 55%);
+  opacity: 0;
+  transition: opacity .35s;
+}
+.fc:hover {
+  border-color: rgba(255,98,0,.32);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,98,0,.06);
+}
+.fc:hover::before { opacity: 1; }
+
+.fc:nth-child(1) { grid-column: span 5; }
+.fc:nth-child(2) { grid-column: span 7; }
+.fc:nth-child(3) { grid-column: span 4; }
+.fc:nth-child(4) { grid-column: span 4; }
+.fc:nth-child(5) { grid-column: span 4; }
+
+.fc-icon {
+  width: 50px; height: 50px;
+  background: var(--og-sm);
+  border: 1px solid rgba(255,98,0,.18);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 22px;
+  transition: background .3s, border-color .3s, box-shadow .3s, transform .3s;
+}
+.fc:hover .fc-icon {
+  background: var(--og);
+  border-color: rgba(255,98,0,.4);
+  box-shadow: 0 0 26px var(--og);
+  transform: scale(1.08);
+}
+.fc-title {
+  font-family: var(--ff-head);
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+  margin-bottom: 10px;
+}
+.fc-body {
+  font-size: .88rem;
+  color: var(--text-2);
+  line-height: 1.8;
+}
+.fc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 18px;
+  background: var(--og-sm);
+  border: 1px solid rgba(255,98,0,.18);
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-family: var(--ff-mono);
+  font-size: .64rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+/* Big card extra visuals */
+.fc-visual {
+  margin-top: 24px;
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+}
+.fc-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.fc-bar-row:last-child { margin-bottom: 0; }
+.fc-bar-shop {
+  font-family: var(--ff-mono);
+  font-size: .65rem;
+  color: var(--text-2);
+  width: 64px;
+  flex-shrink: 0;
+}
+.fc-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.fc-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--orange);
+  opacity: .5;
+  transition: opacity .35s, width .8s cubic-bezier(.22,1,.36,1);
+}
+.fc:hover .fc-bar-fill { opacity: 1; }
+.fc-bar-price {
+  font-family: var(--ff-mono);
+  font-size: .68rem;
+  color: var(--text);
+  width: 48px;
+  text-align: right;
+  flex-shrink: 0;
+}
+.fc-bar-price.best { color: var(--orange); font-weight: 500; }
+
+/* ── Why FixIt ──────────────────────────────────────────────── */
+#why {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+#why::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 70% at 50% 50%,
+    rgba(255,98,0,.05), transparent);
+  pointer-events: none;
+}
+.why-head { text-align: center; margin-bottom: 64px; }
+.why-head .sec-sub { margin: 14px auto 0; }
+
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  overflow: hidden;
+}
+.wi {
+  background: var(--surface);
+  padding: 48px 44px;
+  position: relative;
+  transition: background .3s;
+  overflow: hidden;
+}
+.wi:hover { background: var(--elevated); }
+.wi::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, transparent, var(--orange), transparent);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform .5s cubic-bezier(.22,1,.36,1);
+}
+.wi:hover::after { transform: scaleY(1); }
+.wi-num {
+  font-family: var(--ff-disp);
+  font-size: 3.8rem;
+  line-height: 1;
+  color: var(--border-hi);
+  margin-bottom: 6px;
+  transition: color .3s;
+}
+.wi:hover .wi-num { color: rgba(255,98,0,.2); }
+.wi-title {
+  font-family: var(--ff-head);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.wi-body {
+  font-size: .9rem;
+  color: var(--text-2);
+  line-height: 1.75;
+}
+
+/* ── FAQ ────────────────────────────────────────────────────── */
+#faq {}
+.faq-head { text-align: center; margin-bottom: 64px; }
+.faq-wrap { max-width: 780px; margin: 0 auto; }
+.faq-item { border-bottom: 1px solid var(--border); }
+.faq-item:first-child { border-top: 1px solid var(--border); }
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 26px 0;
+  cursor: pointer;
+  user-select: none;
+}
+.faq-qt {
+  font-family: var(--ff-head);
+  font-size: .98rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: color .2s;
+}
+.faq-q:hover .faq-qt { color: var(--orange); }
+.faq-ic {
+  width: 28px; height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .25s, background .25s, transform .35s cubic-bezier(.22,1,.36,1);
+}
+.faq-item.open .faq-ic {
+  border-color: var(--orange);
+  background: var(--og);
+  transform: rotate(45deg);
+}
+.faq-a {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height .45s cubic-bezier(.22,1,.36,1), padding .3s;
+}
+.faq-item.open .faq-a { max-height: 320px; padding-bottom: 24px; }
+.faq-a p { font-size: .93rem; color: var(--text-2); line-height: 1.85; }
+
+/* ── Download CTA ───────────────────────────────────────────── */
+#download {}
+.dl-card {
+  background: var(--elevated);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 88px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.dl-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 0%, rgba(255,98,0,.16), transparent),
+    radial-gradient(ellipse 50% 50% at 50% 100%, rgba(255,98,0,.07), transparent);
+  pointer-events: none;
+}
+/* Beam lines */
+.dl-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(
+    rgba(255,98,0,.03) 0deg 2deg,
+    transparent 2deg 20deg
+  );
+  animation: beam-rotate 30s linear infinite;
+  transform-origin: center;
+  pointer-events: none;
+}
+@keyframes beam-rotate { to { transform: rotate(360deg); } }
+
+.dl-label { position: relative; z-index: 1; }
+.dl-title {
+  font-family: var(--ff-disp);
+  font-size: clamp(3rem, 7vw, 6rem);
+  letter-spacing: .02em;
+  line-height: .96;
+  color: var(--text);
+  margin: 14px 0 20px;
+  position: relative;
+  z-index: 1;
+}
+.dl-sub {
+  font-size: 1rem;
+  color: var(--text-2);
+  max-width: 460px;
+  margin: 0 auto 48px;
+  line-height: 1.75;
+  position: relative;
+  z-index: 1;
+}
+.store-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+.store-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 26px;
+  text-decoration: none;
+  transition: border-color .25s, background .25s, transform .15s, box-shadow .25s;
+}
+.store-btn:hover {
+  border-color: rgba(255,98,0,.4);
+  background: var(--bg-raised);
+  transform: translateY(-3px);
+  box-shadow: 0 14px 44px rgba(0,0,0,.5), 0 0 0 1px rgba(255,98,0,.1), 0 0 40px rgba(255,98,0,.08);
+}
+.store-btn:active { transform: translateY(0); }
+.store-lbl {
+  font-family: var(--ff-mono);
+  font-size: .62rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 3px;
+}
+.store-name {
+  font-family: var(--ff-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.dl-note {
+  font-family: var(--ff-mono);
+  font-size: .68rem;
+  letter-spacing: .08em;
+  color: var(--text-3);
+  margin-top: 28px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Floating Download Button ────────────────────────────────── */
+.float-dl {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--orange);
+  color: #000;
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: .82rem;
+  letter-spacing: .03em;
+  padding: 12px 20px 12px 16px;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow:
+    0 8px 28px rgba(255,98,0,.45),
+    0 2px 8px rgba(0,0,0,.5);
+  transform: translateY(88px) scale(.9);
+  opacity: 0;
+  transition: transform .5s cubic-bezier(.22,1,.36,1), opacity .4s, background .2s, box-shadow .25s;
+  pointer-events: none;
+}
+.float-dl.visible {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+.float-dl:hover {
+  background: var(--orange-lit);
+  box-shadow: 0 12px 40px rgba(255,98,0,.6), 0 2px 10px rgba(0,0,0,.4);
+  transform: translateY(-2px) scale(1);
+}
+.float-dl:active { transform: translateY(0) scale(.97); }
+
+/* ── Cursor spotlight ────────────────────────────────────────── */
+.cursor-spot {
+  position: fixed;
+  width: 480px; height: 480px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 8998;
+  background: radial-gradient(circle, rgba(255,98,0,.028) 0%, transparent 65%);
+  transform: translate(-50%, -50%);
+  mix-blend-mode: screen;
+  will-change: left, top;
+  transition: opacity .3s;
+}
+
+/* ── Footer ─────────────────────────────────────────────────── */
+footer {
+  padding: 44px 0;
+  border-top: 1px solid var(--border);
+}
+.foot-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.foot-logo {
+  font-family: var(--ff-disp);
+  font-size: 1.55rem;
+  letter-spacing: .05em;
+  color: var(--text);
+  text-decoration: none;
+}
+.foot-logo em { color: var(--orange); font-style: normal; }
+.foot-links { display: flex; gap: 28px; list-style: none; }
+.foot-links a {
+  font-size: .82rem;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color .2s;
+}
+.foot-links a:hover { color: var(--text-2); }
+.foot-copy { font-size: .78rem; color: var(--text-3); }
+
+/* ── Keyframes ──────────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:.45; transform:scale(.75); }
+}
+@keyframes float-phone {
+  0%,100% { transform: translateY(0) rotate(.3deg); }
+  40% { transform: translateY(-14px) rotate(-.4deg); }
+  70% { transform: translateY(-7px) rotate(.2deg); }
+}
+@keyframes ring-expand {
+  0%,100% { opacity:.7; transform:scale(1); }
+  50% { opacity:.2; transform:scale(1.06); }
+}
+@keyframes scan-move {
+  0% { top: 8%; }
+  50% { top: 84%; }
+  100% { top: 8%; }
+}
+@keyframes blink-text {
+  0%,100% { opacity:1; }
+  50% { opacity:.3; }
+}
+@keyframes orb-float-1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(-50px,40px) scale(1.1); }
+  66% { transform: translate(25px,-25px) scale(.93); }
+}
+@keyframes orb-float-2 {
+  0%,100% { transform: translate(0,0); }
+  50% { transform: translate(35px,-50px); }
+}
+@keyframes orb-float-3 {
+  0%,100% { transform: translate(0,0); }
+  40% { transform: translate(20px,30px); }
+  70% { transform: translate(-10px,-15px); }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .hero-content { grid-template-columns: 1fr; }
+  .hero-phone-wrap { order: -1; }
+  .phone-rings { display: none; }
+
+  .steps { grid-template-columns: 1fr; gap: 44px; }
+  .steps::before { display: none; }
+
+  .feat-grid { grid-template-columns: 1fr !important; }
+  .fc:nth-child(n) { grid-column: span 1 !important; }
+
+  .why-grid { grid-template-columns: 1fr; }
+
+  .dl-card { padding: 56px 32px; }
+  .float-dl { bottom: 20px; right: 20px; }
+}
+
+@media (max-width: 600px) {
+  section { padding: 80px 0; }
+  .hero-badge { align-items: flex-start; padding: 8px 14px; max-width: 100%; }
+  .hero-badge .badge-dot { margin-top: 5px; }
+  .hero-badge span { font-size: .64rem; line-height: 1.5; white-space: normal; }
+  .hero-proof { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .proof-val { font-size: 1.5rem; }
+  .proof-lbl { font-size: .6rem; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .step { padding: 0 16px; }
+  .wi { padding: 36px 28px; }
+  .foot-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+  .foot-links { flex-wrap: wrap; gap: 20px; }
+  .float-dl { display: none; }
+  .cursor-spot { display: none; }
+  .cursor-dot, .cursor-ring, .scroll-progress { display: none; }
+}
+
+/* ── Custom cursor ──────────────────────────────────────────── */
+html, html * { cursor: none; }
+.cursor-dot {
+  position: fixed;
+  width: 7px; height: 7px;
+  background: var(--orange);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transform: translate(-50%,-50%);
+  transition: opacity .2s, width .2s, height .2s;
+  box-shadow: 0 0 8px rgba(255,98,0,.6);
+}
+.cursor-dot.hide { opacity: 0; }
+.cursor-ring {
+  position: fixed;
+  width: 40px; height: 40px;
+  border: 1.5px solid rgba(255,98,0,.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width .35s cubic-bezier(.22,1,.36,1),
+              height .35s cubic-bezier(.22,1,.36,1),
+              border-color .3s, background .3s;
+}
+.cursor-ring.expand {
+  width: 64px; height: 64px;
+  border-color: rgba(255,98,0,.9);
+  background: rgba(255,98,0,.05);
+}
+
+/* ── Scroll progress bar ────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), var(--orange-lit), #ffaa00);
+  transform-origin: left;
+  transform: scaleX(0);
+  z-index: 9001;
+  box-shadow: 0 0 14px rgba(255,98,0,.8), 0 0 4px rgba(255,98,0,.5);
+  pointer-events: none;
+}
+
+/* ── Letter drop animation on hero title ────────────────────── */
+.hero-title .tl {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-60px) rotate(-8deg);
+  animation: letter-drop .65s cubic-bezier(.22,1,.36,1) forwards;
+  animation-delay: calc(0.5s + var(--i,0) * 0.09s);
+}
+@keyframes letter-drop {
+  to { opacity: 1; transform: none; }
+}
+
+/* ── Scramble char color ────────────────────────────────────── */
+.sc-char { color: var(--orange); opacity: .7; }
+
+/* ── Ripple ─────────────────────────────────────────────────── */
+@keyframes ripple-expand {
+  from { width:0; height:0; opacity:.5; }
+  to   { width:320px; height:320px; opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<!-- Scroll progress -->
+<div class="scroll-progress" id="scrollProgress"></div>
+<!-- Cursor spotlight -->
+<div class="cursor-spot" id="cursorSpot"></div>
+
+<!-- ──────────────────── NAV ──────────────────────────────── -->
+<nav id="nav">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">Fix<em>It</em></a>
+      <ul class="nav-links">
+        <li><a href="#how">Wie es funktioniert</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a href="#download" class="nav-btn">Herunterladen</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="#how">Wie es funktioniert</a>
+  <a href="#features">Features</a>
+  <a href="#faq">FAQ</a>
+  <a href="#download" class="nav-btn">Herunterladen</a>
+</div>
+
+<!-- ──────────────────── HERO ─────────────────────────────── -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="hero-scan-line"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge" data-r>
+          <span class="badge-dot"></span>
+          <span>Jetzt kostenlos im Google Play Store</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="tl" style="--i:0">F</span><span class="tl" style="--i:1">i</span><span class="tl" style="--i:2">x</span><span class="tl hero-title-accent" style="--i:3">I</span><span class="tl hero-title-accent" style="--i:4">t</span>
+        </h1>
+        <p class="hero-tagline" id="heroTagline">Teil fotografieren. Erkennen. Günstig kaufen.</p>
+        <p class="hero-sub" data-r data-d="3">
+          Fotografiere ein defektes oder unbekanntes Teil – unsere KI erkennt es in Sekunden,
+          vergleicht Preise bei <strong>über 20 Online-Shops</strong> und zeigt passende
+          Reparatur-Videos.
+        </p>
+        <div class="hero-actions" data-r data-d="4">
+          <a href="#download" class="btn-cta">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16l-5-5 1.4-1.4L11 13.2V4h2v9.2l2.6-3.6L17 11z"/><path d="M5 20h14"/>
+            </svg>
+            Jetzt herunterladen
+          </a>
+          <a href="#how" class="btn-ghost">
+            So funktioniert's
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+        <div class="hero-proof" data-r data-d="5">
+          <div class="proof-item">
+            <div class="proof-val">20<span>+</span></div>
+            <div class="proof-lbl">Shops verglichen</div>
+          </div>
+          <div class="proof-item">
+            <div class="proof-val">Kostenlos</div>
+            <div class="proof-lbl">Gratis herunterladen</div>
+          </div>
+          <div class="proof-item">
+            <div class="proof-val">Android</div>
+            <div class="proof-lbl">Google Play Store</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockup -->
+      <div class="hero-phone-wrap" data-r data-d="2">
+        <div class="phone-rings">
+          <div class="phone-ring"></div>
+          <div class="phone-ring"></div>
+          <div class="phone-ring"></div>
+        </div>
+        <div class="phone-tilt" id="phoneTilt">
+          <div class="phone-outer">
+            <div class="phone-body">
+              <div class="phone-screen" id="phoneScreen" data-state="scanning">
+                <!-- Dynamic island -->
+                <div class="pill"></div>
+                <!-- App bar -->
+                <div class="app-bar">
+                  <div class="app-name">Fix<em>It</em></div>
+                  <div class="app-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+                    </svg>
+                  </div>
+                </div>
+                <!-- Scan area -->
+                <div class="scan-view">
+                  <!-- Part illustration (ball bearing) -->
+                  <svg class="part-svg" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="70" cy="70" r="65" stroke="#333" stroke-width="3"/>
+                    <circle cx="70" cy="70" r="50" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="70" cy="70" r="38" stroke="#333" stroke-width="2.5"/>
+                    <circle cx="70" cy="70" r="22" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="70" cy="70" r="10" fill="#1A1A1A" stroke="#333" stroke-width="1.5"/>
+                    <circle cx="70" cy="32" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <circle cx="104" cy="50" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <circle cx="104" cy="90" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <circle cx="70" cy="108" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <circle cx="36" cy="90" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <circle cx="36" cy="50" r="6" fill="#2C2C2C" stroke="#3A3A3A" stroke-width="1"/>
+                    <ellipse cx="55" cy="42" rx="16" ry="8" fill="white" opacity=".04" transform="rotate(-30 55 42)"/>
+                  </svg>
+                  <!-- Scan beam -->
+                  <div class="scan-beam"></div>
+                  <!-- Corner brackets -->
+                  <div class="sc tl"></div>
+                  <div class="sc tr"></div>
+                  <div class="sc bl"></div>
+                  <div class="sc br"></div>
+                  <!-- Status labels -->
+                  <div class="scan-status">KI analysiert ...</div>
+                  <div class="scan-label-alt scan-label-found">Erkannt &mdash; 97 %</div>
+                  <div class="scan-label-alt scan-label-compare">Vergleiche 20+ Shops &hellip;</div>
+                </div>
+                <!-- Result panel -->
+                <div class="result-panel">
+                  <div class="result-head">
+                    <div class="result-ai-dot">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                      </svg>
+                    </div>
+                    <div class="result-info">
+                      <div class="result-part">Hinterachslager BMW 3er (F30)</div>
+                      <div class="result-conf">97% Übereinstimmung</div>
+                    </div>
+                  </div>
+                  <div class="price-row">
+                    <div class="pc best">
+                      <div class="pc-shop">Amazon</div>
+                      <div class="pc-price">23,49 €</div>
+                    </div>
+                    <div class="pc">
+                      <div class="pc-shop">Autodoc</div>
+                      <div class="pc-price">27,90 €</div>
+                    </div>
+                    <div class="pc">
+                      <div class="pc-shop">KfzTeile</div>
+                      <div class="pc-price">31,15 €</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- / Phone -->
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── MARQUEE ─────────────────────────────── -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="mw">TEIL ERKENNEN</span>
+    <span class="sep">◆</span>
+    <span class="mw">KI ERKENNUNG</span>
+    <span class="sep">◆</span>
+    <span class="mw">PREISVERGLEICH</span>
+    <span class="sep">◆</span>
+    <span class="mw">REPARATUR VIDEOS</span>
+    <span class="sep">◆</span>
+    <span class="mw">KI CHAT</span>
+    <span class="sep">◆</span>
+    <span class="mw">20+ SHOPS</span>
+    <span class="sep">◆</span>
+    <span class="mw">KOSTENLOS</span>
+    <span class="sep">◆</span>
+    <span class="mw">ANDROID APP</span>
+    <span class="sep">◆</span>
+    <span class="mw">SCAN VERLAUF</span>
+    <span class="sep">◆</span>
+    <!-- repeat for seamless loop -->
+    <span class="mw">TEIL ERKENNEN</span>
+    <span class="sep">◆</span>
+    <span class="mw">KI ERKENNUNG</span>
+    <span class="sep">◆</span>
+    <span class="mw">PREISVERGLEICH</span>
+    <span class="sep">◆</span>
+    <span class="mw">REPARATUR VIDEOS</span>
+    <span class="sep">◆</span>
+    <span class="mw">KI CHAT</span>
+    <span class="sep">◆</span>
+    <span class="mw">20+ SHOPS</span>
+    <span class="sep">◆</span>
+    <span class="mw">KOSTENLOS</span>
+    <span class="sep">◆</span>
+    <span class="mw">ANDROID APP</span>
+    <span class="sep">◆</span>
+    <span class="mw">SCAN VERLAUF</span>
+    <span class="sep">◆</span>
+  </div>
+</div>
+
+<!-- ──────────────────── HOW IT WORKS ────────────────────────── -->
+<section id="how">
+  <div class="container">
+    <div class="how-header">
+      <div class="lbl" data-r>So einfach geht's</div>
+      <h2 class="sec-title" data-r data-d="1">In 3 Schritten zum besten Preis</h2>
+      <p class="sec-sub" data-r data-d="2">
+        Kein langes Suchen, kein Fachwissen nötig. Einfach Foto machen – FixIt erledigt den Rest.
+      </p>
+    </div>
+    <div class="steps">
+      <div class="step" data-r data-d="1">
+        <div class="step-circle">
+          <span class="step-n">1</span>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+        </div>
+        <div class="step-t">Foto machen</div>
+        <div class="step-d">
+          Fotografiere das defekte oder unbekannte Teil mit deiner Smartphone-Kamera.
+          Ein Foto reicht aus – auch bei schlechter Beleuchtung.
+        </div>
+      </div>
+      <div class="step" data-r data-d="2">
+        <div class="step-circle">
+          <span class="step-n">2</span>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+            <path d="M9 8h.01M12 8h.01M15 8h.01M9 11h.01M12 11h.01M15 11h.01"/>
+          </svg>
+        </div>
+        <div class="step-t">KI erkennt das Teil</div>
+        <div class="step-d">
+          Unsere KI analysiert das Bild in Sekunden und identifiziert das Teil
+          mit Hersteller, Modell und passenden Ersatzteilnummern.
+        </div>
+      </div>
+      <div class="step" data-r data-d="3">
+        <div class="step-circle">
+          <span class="step-n">3</span>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+        </div>
+        <div class="step-t">Preisvergleich &amp; kaufen</div>
+        <div class="step-d">
+          FixIt vergleicht sofort Preise aus über 20 Shops und zeigt dir,
+          wo du am günstigsten kaufst – mit direktem Link zum Shop.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── FEATURES ────────────────────────────── -->
+<section id="features">
+  <div class="container">
+    <div class="feat-head">
+      <div class="lbl" data-r>Alles, was du brauchst</div>
+      <h2 class="sec-title" data-r data-d="1">Dein digitaler Reparatur-Assistent</h2>
+    </div>
+    <div class="feat-grid">
+
+      <!-- 1: AI recognition (big left) -->
+      <div class="fc" data-r data-d="1">
+        <div class="fc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <div class="fc-title">KI-Teileerkennung</div>
+        <div class="fc-body">
+          Unsere KI wurde auf einer großen Auswahl an Ersatzteilen trainiert und erkennt
+          Fahrzeugteile, Haushaltsgeräte, Elektronik und Werkzeugkomponenten
+          zuverlässig per Foto. Kein Teilekatalog, kein Googeln.
+        </div>
+        <div class="fc-tag">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5"/></svg>
+          Erkennung in &lt; 3 Sekunden
+        </div>
+      </div>
+
+      <!-- 2: Price comparison (big right) -->
+      <div class="fc" data-r data-d="2">
+        <div class="fc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <div class="fc-title">Preisvergleich in Echtzeit</div>
+        <div class="fc-body">
+          FixIt fragt gleichzeitig über 20 Online-Shops ab – von Amazon und eBay
+          bis zu Autodoc, TeilePower und spezialisierten Fachhändlern. Du siehst
+          den günstigsten Preis auf einen Blick, inklusive Versandkosten.
+        </div>
+        <div class="fc-visual">
+          <div class="fc-bar-row">
+            <div class="fc-bar-shop">Amazon</div>
+            <div class="fc-bar-track"><div class="fc-bar-fill" style="width:78%"></div></div>
+            <div class="fc-bar-price best">23,49 €</div>
+          </div>
+          <div class="fc-bar-row">
+            <div class="fc-bar-shop">Autodoc</div>
+            <div class="fc-bar-track"><div class="fc-bar-fill" style="width:65%;opacity:.35"></div></div>
+            <div class="fc-bar-price">27,90 €</div>
+          </div>
+          <div class="fc-bar-row">
+            <div class="fc-bar-shop">KfzTeile24</div>
+            <div class="fc-bar-track"><div class="fc-bar-fill" style="width:52%;opacity:.28"></div></div>
+            <div class="fc-bar-price">31,15 €</div>
+          </div>
+          <div class="fc-bar-row">
+            <div class="fc-bar-shop">eBay</div>
+            <div class="fc-bar-track"><div class="fc-bar-fill" style="width:44%;opacity:.22"></div></div>
+            <div class="fc-bar-price">35,00 €</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3: AI Chat -->
+      <div class="fc" data-r data-d="1">
+        <div class="fc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="fc-title">KI-Chat</div>
+        <div class="fc-body">
+          Stelle direkte Fragen zum erkannten Teil: Einbauanleitung,
+          Kompatibilität, Werkzeug, Schwierigkeitsgrad. Der KI-Assistent
+          antwortet präzise und auf dein Fahrzeug abgestimmt.
+        </div>
+      </div>
+
+      <!-- 4: Repair Videos -->
+      <div class="fc" data-r data-d="2">
+        <div class="fc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+        </div>
+        <div class="fc-title">Reparatur-Videos</div>
+        <div class="fc-body">
+          Zu jedem erkannten Teil zeigt FixIt automatisch passende
+          Schritt-für-Schritt-Reparatur­videos. Kein Suchen auf YouTube –
+          die relevanten Anleitungen direkt in der App.
+        </div>
+      </div>
+
+      <!-- 5: Scan History -->
+      <div class="fc" data-r data-d="3">
+        <div class="fc-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF6200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div class="fc-title">Scan-Verlauf</div>
+        <div class="fc-body">
+          Alle deine Scans werden gespeichert. Rufe frühere Teilefunde
+          jederzeit wieder auf, vergleiche Preise erneut oder frage
+          die KI zu einem älteren Fund.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── WHY FIXIT ───────────────────────────── -->
+<section id="why">
+  <div class="container">
+    <div class="why-head">
+      <div class="lbl" data-r>Warum FixIt</div>
+      <h2 class="sec-title" data-r data-d="1">Weniger Aufwand. Mehr sparen.</h2>
+      <p class="sec-sub" data-r data-d="2">
+        Früher hat ein einfacher Teiletausch Stunden an Recherche gekostet.
+        FixIt macht das in Sekunden – und günstiger.
+      </p>
+    </div>
+    <div class="why-grid" data-r data-d="1">
+      <div class="wi">
+        <div class="wi-num">01</div>
+        <div class="wi-title">Stunden sparen</div>
+        <div class="wi-body">
+          Kein langes Googeln nach Teilenummern, kein Blättern in dicken Katalogen.
+          Ein Foto reicht – FixIt liefert das Ergebnis in Sekunden.
+        </div>
+      </div>
+      <div class="wi">
+        <div class="wi-num">02</div>
+        <div class="wi-title">Kein Fachwissen nötig</div>
+        <div class="wi-body">
+          Egal ob Anfänger oder erfahrener Schrauber – FixIt erklärt dir alles,
+          was du für den Einbau brauchst, in verständlicher Sprache.
+        </div>
+      </div>
+      <div class="wi">
+        <div class="wi-num">03</div>
+        <div class="wi-title">Immer den besten Preis</div>
+        <div class="wi-body">
+          Kein Shop-Hopping mehr. FixIt vergleicht über 20 Händler gleichzeitig
+          und zeigt dir sofort, wo du am günstigsten kaufst.
+        </div>
+      </div>
+      <div class="wi">
+        <div class="wi-num">04</div>
+        <div class="wi-title">Alles in einer App</div>
+        <div class="wi-body">
+          Erkennung, Preisvergleich, Reparaturvideo und KI-Chat – du brauchst
+          keine fünf verschiedenen Apps oder Webseiten mehr. FixIt ist alles in einem.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── FAQ ──────────────────────────────────── -->
+<section id="faq">
+  <div class="container">
+    <div class="faq-head">
+      <div class="lbl" data-r>Häufige Fragen</div>
+      <h2 class="sec-title" data-r data-d="1">Du hast Fragen? Wir haben Antworten.</h2>
+    </div>
+    <div class="faq-wrap">
+
+      <div class="faq-item" data-r data-d="1">
+        <div class="faq-q">
+          <span class="faq-qt">Welche Teile kann FixIt erkennen?</span>
+          <span class="faq-ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+        </div>
+        <div class="faq-a">
+          <p>FixIt erkennt eine breite Palette von Ersatzteilen: Kfz-Teile (Motor, Fahrwerk, Bremsen, Karosserie), Haushaltsgeräte-Komponenten, Elektronik-Bauteile sowie Werkzeuge und Industrieteile. Das KI-Modell wird kontinuierlich erweitert – das Sortiment wächst mit jedem Update.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-r data-d="2">
+        <div class="faq-q">
+          <span class="faq-qt">Ist FixIt kostenlos?</span>
+          <span class="faq-ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+        </div>
+        <div class="faq-a">
+          <p>Ja – FixIt ist vollständig kostenlos. Einfach im Google Play Store herunterladen, keine Registrierung nötig. Teileerkennung, Preisvergleich, Reparatur-Videos und KI-Chat sind alle ohne Bezahlung nutzbar.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-r data-d="3">
+        <div class="faq-q">
+          <span class="faq-qt">In welchen Shops wird der Preis verglichen?</span>
+          <span class="faq-ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+        </div>
+        <div class="faq-a">
+          <p>Aktuell werden über 20 Shops abgefragt, darunter Amazon, eBay, Autodoc, TeilePower, KfzTeile24, Japanparts, Febi Bilstein und weitere Spezialanbieter. Neue Shops werden regelmäßig hinzugefügt. Die Preisabfrage erfolgt in Echtzeit beim Scan – du siehst immer die tagesaktuellen Angebote.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-r data-d="4">
+        <div class="faq-q">
+          <span class="faq-qt">Wie genau ist die KI-Erkennung?</span>
+          <span class="faq-ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+        </div>
+        <div class="faq-a">
+          <p>Bei klaren, gut beleuchteten Fotos erkennt die KI die meisten gängigen Kfz-Teile zuverlässig. Bei seltenen Teilen oder stark beschädigten Komponenten kann die Genauigkeit geringer sein. In solchen Fällen zeigt FixIt die wahrscheinlichsten Treffer mit Konfidenzwert an – du kannst das Ergebnis manuell korrigieren.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" data-r data-d="5">
+        <div class="faq-q">
+          <span class="faq-qt">Funktioniert FixIt auch ohne Internetverbindung?</span>
+          <span class="faq-ic">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </span>
+        </div>
+        <div class="faq-a">
+          <p>Die KI-Erkennung und der Preisvergleich benötigen eine Internetverbindung. Im Offline-Modus kannst du jedoch deinen gespeicherten Scan-Verlauf einsehen und frühere Suchergebnisse abrufen. Für alle anderen Funktionen empfehlen wir eine stabile WLAN- oder Mobilfunkverbindung.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── DOWNLOAD ────────────────────────────── -->
+<section id="download">
+  <div class="container">
+    <div class="dl-card" data-r>
+      <div class="lbl dl-label">Kostenlos starten</div>
+      <h2 class="dl-title">
+        Bereit, dein<br>erstes Teil zu scannen?
+      </h2>
+      <p class="dl-sub">
+        Lade FixIt kostenlos herunter und sieh in Sekunden, was dein Teil kostet –
+        und wo du es am günstigsten bekommst.
+      </p>
+      <div class="store-row">
+        <a href="#" class="store-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <path d="M4.5 2.5C3.12 3.5 2 5.27 2 7.15V16.85C2 18.73 3.12 20.5 4.5 21.5L12 14L4.5 2.5Z" fill="#888"/>
+            <path d="M12 14L4.5 21.5C4.83 21.82 5.24 22 5.67 22C6.12 22 6.57 21.84 6.92 21.5L21 14L12 14Z" fill="#666"/>
+            <path d="M21 14L6.92 21.5C7.27 21.84 7.72 22 8.17 22C8.6 22 9.01 21.82 9.34 21.5L21 14Z" fill="#555"/>
+            <path d="M21 10L9.34 2.5C9.01 2.18 8.6 2 8.17 2C7.72 2 7.27 2.16 6.92 2.5L21 10Z" fill="#555"/>
+            <path d="M21 10L6.92 2.5L21 10Z M4.5 2.5L12 14L21 10L6.92 2.5C6.57 2.16 6.12 2 5.67 2C5.24 2 4.83 2.18 4.5 2.5Z" fill="#777"/>
+          </svg>
+          <div>
+            <div class="store-lbl">Jetzt auf</div>
+            <div class="store-name">Google Play</div>
+          </div>
+        </a>
+      </div>
+      <div class="dl-note">Kostenlos · Android 10+ · Keine Registrierung erforderlich</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── FOOTER ──────────────────────────────── -->
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <a href="#" class="foot-logo">Fix<em>It</em></a>
+      <ul class="foot-links">
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="agb.html">AGB</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+      </ul>
+      <span class="foot-copy">&copy; 2026 FixIt. Alle Rechte vorbehalten.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating download button -->
+<a href="#download" class="float-dl" id="floatDl">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 16l-5-5 1.4-1.4L11 13.2V4h2v9.2l2.6-3.6L17 11z"/><path d="M5 20h14"/>
+  </svg>
+  Herunterladen
+</a>
+
+<script>
+// ── Scroll reveal ──────────────────────────────────────────────
+const revealEls = document.querySelectorAll('[data-r]');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+revealEls.forEach(el => observer.observe(el));
+
+// ── Nav scroll state ────────────────────────────────────────────
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('solid', window.scrollY > 60);
+}, { passive: true });
+
+// ── Mobile nav toggle ──────────────────────────────────────────
+const navToggle = document.getElementById('navToggle');
+const navMobileMenu = document.getElementById('navMobileMenu');
+function closeMobileNav() {
+  navToggle.classList.remove('open');
+  navMobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+navToggle.addEventListener('click', () => {
+  const isOpen = navMobileMenu.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+navMobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileNav));
+
+// ── FAQ accordion ───────────────────────────────────────────────
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  });
+});
+
+// ── Canvas particle system ──────────────────────────────────────
+(function initCanvas() {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const N = 55;
+  const MAX_DIST = 130;
+  let particles = [];
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    // Re-clamp particles to new size
+    particles.forEach(p => {
+      p.x = Math.min(p.x, W);
+      p.y = Math.min(p.y, H);
+    });
+  }
+
+  class P {
+    constructor() { this.init(); }
+    init() {
+      this.x = Math.random() * W;
+      this.y = Math.random() * H;
+      this.vx = (Math.random() - .5) * .38;
+      this.vy = (Math.random() - .5) * .38;
+      this.r  = Math.random() * 1.4 + .4;
+      this.op = Math.random() * .35 + .08;
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < 0)  { this.x = 0;  this.vx *= -1; }
+      if (this.x > W)  { this.x = W;  this.vx *= -1; }
+      if (this.y < 0)  { this.y = 0;  this.vy *= -1; }
+      if (this.y > H)  { this.y = H;  this.vy *= -1; }
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,120,30,${this.op})`;
+      ctx.fill();
+    }
+  }
+
+  function init() {
+    particles = [];
+    for (let i = 0; i < N; i++) particles.push(new P());
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < MAX_DIST) {
+          const a = (1 - d / MAX_DIST) * .055;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(255,98,0,${a})`;
+          ctx.lineWidth = .7;
+          ctx.stroke();
+        }
+      }
+      particles[i].update();
+      particles[i].draw();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  init();
+  frame();
+})();
+
+// ── Hero decorative dots ────────────────────────────────────────
+(function addDots() {
+  const bg = document.querySelector('.hero-grid-bg');
+  if (!bg) return;
+  [[12,18],[68,32],[45,72],[82,55],[28,85],[90,15],[55,45]].forEach(([x,y]) => {
+    const d = document.createElement('div');
+    d.style.cssText = `left:${x}%;top:${y}%;position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(255,98,0,0.4);`;
+    bg.appendChild(d);
+  });
+})();
+
+// ── Cursor spotlight ────────────────────────────────────────────
+(function initSpotlight() {
+  const spot = document.getElementById('cursorSpot');
+  if (!spot) return;
+  let cx = -999, cy = -999;
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    spot.style.left = cx + 'px';
+    spot.style.top  = cy + 'px';
+  });
+})();
+
+// ── Phone 3D tilt on hero hover ─────────────────────────────────
+(function initTilt() {
+  const hero  = document.getElementById('hero');
+  const tilt  = document.getElementById('phoneTilt');
+  if (!hero || !tilt) return;
+  const MAX_X = 8, MAX_Y = 6;
+
+  hero.addEventListener('mousemove', e => {
+    const r  = hero.getBoundingClientRect();
+    const dx = (e.clientX - (r.left + r.width  / 2)) / (r.width  / 2);
+    const dy = (e.clientY - (r.top  + r.height / 2)) / (r.height / 2);
+    tilt.style.transform = `perspective(1200px) rotateY(${dx * MAX_X}deg) rotateX(${-dy * MAX_Y}deg)`;
+  }, { passive: true });
+
+  hero.addEventListener('mouseleave', () => {
+    tilt.style.transform = 'perspective(1200px) rotateY(0deg) rotateX(0deg)';
+  });
+})();
+
+// ── Phone state cycling ─────────────────────────────────────────
+(function cyclePhone() {
+  const screen = document.getElementById('phoneScreen');
+  if (!screen) return;
+
+  function go(state, duration, next) {
+    screen.dataset.state = state;
+    setTimeout(next, duration);
+  }
+
+  function loop() {
+    go('scanning',  3200, () =>
+    go('found',     1400, () =>
+    go('comparing', 2000, () =>
+    go('results',   3200, loop))));
+  }
+
+  loop();
+})();
+
+// ── Custom cursor ───────────────────────────────────────────────
+(function initCursor() {
+  const dot  = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  if (!dot || !ring) return;
+  let mx = -999, my = -999, rx = -999, ry = -999;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  (function loop() {
+    rx = lerp(rx, mx, .13);
+    ry = lerp(ry, my, .13);
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a, button, .fc, .wi, .faq-q, .store-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => { ring.classList.add('expand');    dot.classList.add('hide'); });
+    el.addEventListener('mouseleave', () => { ring.classList.remove('expand'); dot.classList.remove('hide'); });
+  });
+})();
+
+// ── Scroll progress bar ─────────────────────────────────────────
+(function initProgress() {
+  const bar = document.getElementById('scrollProgress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+    bar.style.transform = `scaleX(${Math.min(pct, 1)})`;
+  }, { passive: true });
+})();
+
+// ── Text scramble on section titles ────────────────────────────
+(function initScramble() {
+  const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ#@!$%&?';
+  function scramble(el) {
+    const orig = el.textContent;
+    let frame = 0;
+    const total = orig.length * 4;
+    const id = setInterval(() => {
+      el.innerHTML = orig.split('').map((c, i) => {
+        if (c === ' ') return ' ';
+        if (frame / 4 > i) return c;
+        return `<span class="sc-char">${CHARS[Math.floor(Math.random()*CHARS.length)]}</span>`;
+      }).join('');
+      if (++frame > total) { clearInterval(id); el.textContent = orig; }
+    }, 28);
+  }
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting && !e.target.dataset.scrambled) {
+        e.target.dataset.scrambled = '1';
+        setTimeout(() => scramble(e.target), 120);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.sec-title').forEach(el => obs.observe(el));
+})();
+
+// ── Magnetic buttons ────────────────────────────────────────────
+(function initMagnetic() {
+  document.querySelectorAll('.btn-cta, .float-dl').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width  / 2) * .28;
+      const y = (e.clientY - r.top  - r.height / 2) * .28;
+      btn.style.transform = `translate(${x}px,${y}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
+})();
+
+// ── Hero parallax ───────────────────────────────────────────────
+(function initParallax() {
+  const canvas = document.getElementById('heroCanvas');
+  const grid   = document.querySelector('.hero-grid-bg');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > window.innerHeight) return;
+    if (canvas) canvas.style.transform = `translateY(${y * .14}px)`;
+    if (grid)   grid.style.transform   = `translateY(${y * .07}px)`;
+  }, { passive: true });
+})();
+
+// ── Proof stat counter (20+) ────────────────────────────────────
+(function initCounter() {
+  const el = [...document.querySelectorAll('.proof-val')].find(e => e.textContent.includes('20'));
+  if (!el) return;
+  const obs = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    obs.disconnect();
+    let n = 0;
+    const tick = () => {
+      n = Math.min(n + 1, 20);
+      el.innerHTML = n + '<span>+</span>';
+      if (n < 20) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, { threshold: 1 });
+  obs.observe(el);
+})();
+
+// ── Typing effect on hero tagline ───────────────────────────────
+(function initTyping() {
+  const el = document.getElementById('heroTagline');
+  if (!el) return;
+  const full = el.textContent.trim();
+  el.textContent = '';
+  el.style.cssText += ';border-right:2px solid var(--orange);display:inline-block;min-height:1.4em;opacity:1;';
+  let i = 0;
+  setTimeout(() => {
+    const t = setInterval(() => {
+      el.textContent = full.slice(0, ++i);
+      if (i >= full.length) {
+        clearInterval(t);
+        setTimeout(() => { el.style.borderRight = 'none'; }, 700);
+      }
+    }, 42);
+  }, 900);
+})();
+
+// ── Click ripple on buttons ─────────────────────────────────────
+(function initRipple() {
+  document.querySelectorAll('.btn-cta, .store-btn, .nav-btn').forEach(btn => {
+    btn.style.overflow = 'hidden';
+    btn.style.position = 'relative';
+    btn.addEventListener('click', e => {
+      const r = btn.getBoundingClientRect();
+      const s = document.createElement('span');
+      s.style.cssText = `position:absolute;border-radius:50%;background:rgba(255,255,255,.22);
+        width:0;height:0;left:${e.clientX-r.left}px;top:${e.clientY-r.top}px;
+        transform:translate(-50%,-50%);animation:ripple-expand .6s ease-out forwards;pointer-events:none;`;
+      btn.appendChild(s);
+      setTimeout(() => s.remove(), 650);
+    });
+  });
+})();
+
+// ── Floating download CTA show/hide ────────────────────────────
+(function initFloatDl() {
+  const btn  = document.getElementById('floatDl');
+  const hero = document.getElementById('hero');
+  const dl   = document.getElementById('download');
+  if (!btn || !hero || !dl) return;
+
+  function update() {
+    const heroBtm = hero.getBoundingClientRect().bottom;
+    const dlTop   = dl.getBoundingClientRect().top;
+    const show    = heroBtm < 0 && dlTop > window.innerHeight;
+    btn.classList.toggle('visible', show);
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+</body>
+</html>

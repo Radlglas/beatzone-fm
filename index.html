@@ -678,6 +678,88 @@ footer{
 }
 
 /* ═══════════════════════════════
+   HISTORY — Recently Played
+═══════════════════════════════ */
+#history{
+  border-bottom:1px solid var(--rule);
+  padding:clamp(48px,6vw,80px) clamp(20px,5vw,64px);
+}
+.hist-wrap{max-width:1280px;margin:0 auto;}
+.hist-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:32px;flex-wrap:wrap;gap:12px;
+}
+.hist-badge{
+  display:flex;align-items:center;gap:7px;
+  font-family:'Space Mono',monospace;
+  font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--mid);padding-bottom:6px;
+}
+.hist-badge-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--red);animation:pop 1.3s ease-in-out infinite;
+}
+.hist-list{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0 40px;
+}
+.hist-track{
+  display:grid;
+  grid-template-columns:48px 1fr max-content;
+  align-items:center;gap:14px;
+  padding:14px 0;border-top:1px solid var(--rule);
+  transition:background .15s;
+  position:relative;
+}
+.hist-track::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:0;
+  background:var(--red);transition:width .25s ease;
+}
+.hist-track:hover::before{width:2px;}
+.hist-track:hover{background:rgba(14,12,9,.025);}
+.hist-art{
+  width:48px;height:48px;border-radius:3px;
+  background:var(--cream2);overflow:hidden;
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.hist-art img{width:100%;height:100%;object-fit:cover;display:block;}
+.hist-art-ph{display:flex;align-items:center;gap:2px;}
+.hist-art-ph span{
+  width:2px;border-radius:1px;background:var(--faint);
+  animation:wv var(--d,.5s) var(--dl,0s) ease-in-out infinite alternate;
+}
+.hist-info{min-width:0;overflow:hidden;}
+.hist-title{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:800;font-size:1.05rem;letter-spacing:.02em;
+  color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .15s;
+}
+.hist-track:hover .hist-title{color:var(--red);}
+.hist-artist{
+  font-family:'Space Mono',monospace;
+  font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mid);margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hist-meta{
+  font-family:'Space Mono',monospace;
+  font-size:.54rem;letter-spacing:.08em;
+  color:var(--faint);text-align:right;
+  white-space:nowrap;padding-right:2px;
+  display:flex;flex-direction:column;gap:3px;align-items:flex-end;
+}
+.hist-dur{opacity:.55;}
+.hist-empty{
+  grid-column:1/-1;padding:48px 0;text-align:center;
+  font-family:'Space Mono',monospace;font-size:.65rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--faint);
+}
+@media(max-width:900px){.hist-list{grid-template-columns:1fr;gap:0;}}
+
+/* ═══════════════════════════════
    TRANSITIONS
 ═══════════════════════════════ */
 .rev{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease;}
@@ -858,6 +940,22 @@ footer{
     <div class="t-inner" id="ticker-el"></div>
   </div>
 </div>
+
+<!-- RECENTLY PLAYED -->
+<section id="history">
+  <div class="hist-wrap">
+    <div class="hist-head">
+      <div class="sec-ttl rev">ZULETZT <em>GESPIELT</em></div>
+      <div class="hist-badge rev d1">
+        <span class="hist-badge-dot"></span>
+        Live aktualisiert
+      </div>
+    </div>
+    <div id="hist-list" class="hist-list">
+      <div class="hist-empty">Lädt Verlauf…</div>
+    </div>
+  </div>
+</section>
 
 <!-- SHOWS -->
 <section id="shows">
@@ -1321,6 +1419,47 @@ function toggleMute(){
   }
 })();
 
+/* ── RECENTLY PLAYED ── */
+function timeAgo(unixTs){
+  const s=Math.floor(Date.now()/1000)-unixTs;
+  if(s<90)return'gerade';
+  if(s<3600)return`vor ${Math.floor(s/60)} Min.`;
+  if(s<86400)return`vor ${Math.floor(s/3600)} Std.`;
+  return`vor ${Math.floor(s/86400)} T.`;
+}
+function fmtDur(sec){
+  if(!sec||sec<1)return'';
+  return`${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+}
+function renderHistory(history){
+  const list=document.getElementById('hist-list');
+  if(!list)return;
+  if(!history||!history.length){
+    list.innerHTML='<div class="hist-empty">Noch keine Titel gespielt.</div>';
+    return;
+  }
+  list.innerHTML=history.slice(0,8).map((item,i)=>{
+    const song=item.song||{};
+    const title=song.title||'Unbekannt';
+    const artist=song.artist||'';
+    const art=song.art||'';
+    const ago=item.played_at?timeAgo(item.played_at):'';
+    const dur=fmtDur(item.duration);
+    const ph=`<div class="hist-art-ph">${[8,14,10,16,9].map((h,j)=>`<span style="height:${h}px;--d:${(.4+j*.07).toFixed(2)}s;--dl:${(j*.06).toFixed(2)}s;"></span>`).join('')}</div>`;
+    return`<div class="hist-track">
+      <div class="hist-art">${art?`<img src="${art}" alt="" loading="lazy" onerror="this.style.display='none'"/>${ph}`:ph}</div>
+      <div class="hist-info">
+        <div class="hist-title">${title}</div>
+        ${artist?`<div class="hist-artist">${artist}</div>`:''}
+      </div>
+      <div class="hist-meta">
+        <span>${ago}</span>
+        ${dur?`<span class="hist-dur">${dur}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
 /* Now Playing API */
 const NP_API = 'https://rp.cynoria.de/api/nowplaying/1';
 
@@ -1362,6 +1501,9 @@ function fetchNowPlaying(){
         };
         imgEl.src = art;
       }
+
+      /* recently played */
+      renderHistory(data.song_history || []);
     })
     .catch(() => {}); // silent fail — stream still works
 }

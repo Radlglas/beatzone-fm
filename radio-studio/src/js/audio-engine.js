@@ -18,6 +18,12 @@ export class AudioEngine {
   async init() {
     this.ctx = new AudioContext({ sampleRate: 44100, latencyHint: 'interactive' });
 
+    // Resume AudioContext on any user gesture (required by autoplay policy)
+    const resume = () => { if (this.ctx.state !== 'running') this.ctx.resume(); };
+    document.addEventListener('click',     resume, { passive: true });
+    document.addEventListener('mousedown', resume, { passive: true });
+    document.addEventListener('keydown',   resume, { passive: true });
+
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.value = 1.0;
 
@@ -46,7 +52,11 @@ export class AudioEngine {
     this.decks[0] = this._createDeck(0);
     this.decks[1] = this._createDeck(1);
 
-    await this.ctx.audioWorklet.addModule('./js/audio-capture-worklet.js');
+    try {
+      await this.ctx.audioWorklet.addModule('./js/audio-capture-worklet.js');
+    } catch(e) {
+      console.warn('[AudioEngine] Worklet not loaded:', e.message);
+    }
 
     return this;
   }
@@ -206,6 +216,7 @@ export class AudioEngine {
   }
 
   async loadTrack(deckIdx, filePath, meta = null) {
+    if (this.ctx.state !== 'running') { try { await this.ctx.resume(); } catch(_) {} }
     const deck = this.decks[deckIdx];
     this.stop(deckIdx);
 
@@ -278,7 +289,9 @@ export class AudioEngine {
   play(deckIdx) {
     const deck = this.decks[deckIdx];
     if (!deck.buffer || deck.playing) return;
-    this._startSource(deck);
+    const go = () => this._startSource(deck);
+    if (this.ctx.state !== 'running') this.ctx.resume().then(go).catch(go);
+    else go();
   }
 
   _startSource(deck) {

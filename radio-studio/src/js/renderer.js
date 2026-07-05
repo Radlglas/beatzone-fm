@@ -305,7 +305,7 @@ const App = {
     set(val);
     thumb.addEventListener('mousedown',e=>{dragging=true;startY=e.clientY;startVal=val;e.preventDefault();});
     track.addEventListener('click',e=>{if(dragging)return;const r=track.getBoundingClientRect();set(1-(e.clientY-r.top)/r.height);});
-    window.addEventListener('mousemove',e=>{if(!dragging)return;const h=track.offsetHeight||90;set(startVal-(e.clientY-startY)/h);});
+    window.addEventListener('mousemove',e=>{if(!dragging)return;const h=track.offsetHeight||110;set(startVal-(e.clientY-startY)/h);});
     window.addEventListener('mouseup',()=>{dragging=false;});
   },
 
@@ -505,16 +505,31 @@ const App = {
     if($('lib-st')) $('lib-st').textContent=`${tracks.length} Tracks`;
     $('tbody').innerHTML=tracks.map(t=>`
       <tr data-path="${t.path}" draggable="true">
+        <td class="cd-load"><div class="td-ab">
+          <button data-deck="0">A</button>
+          <button data-deck="1">B</button>
+        </div></td>
         <td class="ct" title="${t.title}">${t.title}</td>
         <td class="ca" title="${t.artist}">${t.artist}</td>
-        <td class="cal">${t.album}</td>
         <td class="cb">${t.bpm?t.bpm.toFixed(1):''}</td>
         <td class="ck">${t.key||''}</td>
         <td class="cd">${fmtDur(t.duration)}</td>
         <td class="cg">${t.genre}</td>
       </tr>`).join('');
     $('tbody').querySelectorAll('tr').forEach(row=>{
-      row.addEventListener('dblclick',()=>this.loadToDeck(0,row.dataset.path));
+      // A / B load buttons
+      row.querySelectorAll('.td-ab button').forEach(btn=>{
+        btn.addEventListener('click', e => {
+          e.stopPropagation();
+          this.loadToDeck(parseInt(btn.dataset.deck), row.dataset.path);
+        });
+      });
+      // Smart double-click: load to first free deck; Shift = force deck B
+      row.addEventListener('dblclick', e => {
+        if(e.target.closest('.td-ab')) return;
+        const target = e.shiftKey ? 1 : (this.engine.decks[0].playing && !this.engine.decks[1].playing ? 1 : 0);
+        this.loadToDeck(target, row.dataset.path);
+      });
       row.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',row.dataset.path);e.dataTransfer.effectAllowed='copy';});
     });
   },
@@ -672,7 +687,6 @@ const App = {
 
   // ── Login callback ───────────────────────────────────────────────────────
   async _onLogin(user) {
-    // Show user name in titlebar
     const usrBtn = $('btn-users');
     if (usrBtn) {
       if (user.role === 'admin') {
@@ -682,10 +696,8 @@ const App = {
         usrBtn.style.display = 'none';
       }
     }
-    // Show station name
-    const station = await window.radioAPI.authGetStation();
-    const stn = $('stn');
-    if (stn && station.name) stn.textContent = station.name;
+    // Hide station-name element — user doesn't want it shown
+    const stn = $('stn'); if (stn) stn.style.display = 'none';
   },
 
   // ── Wizard complete ───────────────────────────────────────────────────────
@@ -759,12 +771,11 @@ const App = {
     this._saveProfile();
     const s={profiles:this.state.profiles,stationName:$('c-sn')?.value,description:$('c-desc')?.value,genre:$('c-genre')?.value,website:$('c-web')?.value,xfade:$('c-xf')?.value};
     await window.radioAPI.saveSettings(s);
-    const stn=$('stn'); if(stn) stn.textContent=s.stationName||'—';
     this.closeCfg();
   },
   async _loadCfg(){
     const s=await window.radioAPI.getSettings(); if(!s) return;
-    if(s.stationName){if($('c-sn'))$('c-sn').value=s.stationName;const stn=$('stn');if(stn)stn.textContent=s.stationName;}
+    if(s.stationName){if($('c-sn'))$('c-sn').value=s.stationName;}
     if(s.slogan&&$('c-desc'))    $('c-desc').value=s.slogan;
     if(s.description&&$('c-desc'))$('c-desc').value=s.description;
     if(s.genre&&$('c-genre'))    $('c-genre').value=s.genre;

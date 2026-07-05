@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Impressum – FixIt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+:root {
+  --bg: #080808; --bg-raised: #0F0F0F; --surface: #121212; --elevated: #1A1A1A;
+  --border: #222; --border-hi: #333; --orange: #FF6200; --orange-lit: #FF7B28;
+  --og: rgba(255,98,0,0.14); --og-sm: rgba(255,98,0,0.07);
+  --text: #EFEFEF; --text-2: #888; --text-3: #444;
+  --ff-disp: 'Bebas Neue', sans-serif; --ff-head: 'Syne', sans-serif;
+  --ff-body: 'DM Sans', sans-serif; --ff-mono: 'DM Mono', monospace;
+}
+body { background: var(--bg); color: var(--text); font-family: var(--ff-body); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: .028; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 200px; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+
+/* Nav */
+nav { position: fixed; inset: 0 0 auto; z-index: 700; padding: 16px 0; background: rgba(8,8,8,.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.nav-logo { font-family: var(--ff-disp); font-size: 1.9rem; letter-spacing: .04em; color: var(--text); text-decoration: none; }
+.nav-logo em { color: var(--orange); font-style: normal; }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a { font-family: var(--ff-head); font-size: .82rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-2); text-decoration: none; transition: color .2s; }
+.nav-links a:hover { color: var(--text); }
+.nav-btn { font-family: var(--ff-head); font-weight: 700; font-size: .85rem; letter-spacing: .04em; padding: 9px 22px; border-radius: 8px; background: var(--orange); color: #000; text-decoration: none; transition: background .2s, transform .15s; }
+.nav-btn:hover { background: var(--orange-lit); transform: translateY(-1px); }
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; background: none; border: none; padding: 0; cursor: pointer; flex-shrink: 0; }
+.nav-toggle span { display: block; width: 100%; height: 2px; border-radius: 2px; background: var(--text); transition: transform .3s, opacity .3s; }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.nav-mobile-menu { position: fixed; inset: 0; z-index: 600; background: rgba(8,8,8,.97); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; opacity: 0; pointer-events: none; transition: opacity .3s; }
+.nav-mobile-menu.open { opacity: 1; pointer-events: auto; }
+.nav-mobile-menu a { font-family: var(--ff-head); font-size: 1.5rem; font-weight: 700; letter-spacing: -.01em; color: var(--text); text-decoration: none; }
+.nav-mobile-menu a.nav-btn { font-size: 1rem; margin-top: 14px; }
+@media (max-width: 960px) { .nav-links { display: none; } .nav-inner > .nav-btn { display: none; } .nav-toggle { display: flex; } }
+
+/* Page hero */
+.page-hero { padding: 140px 0 64px; border-bottom: 1px solid var(--border); }
+.page-hero .lbl { font-family: var(--ff-mono); font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin-bottom: 12px; }
+.page-hero h1 { font-family: var(--ff-head); font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -.03em; color: var(--text); line-height: 1.1; overflow-wrap: break-word; word-break: break-word; hyphens: auto; }
+.page-hero p { font-size: .95rem; color: var(--text-2); margin-top: 12px; }
+
+/* Content */
+.page-content { padding: 72px 0 120px; }
+.content-wrap { max-width: 760px; }
+.section-block { margin-bottom: 48px; }
+.section-block h2 { font-family: var(--ff-head); font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.section-block p { font-size: .93rem; color: var(--text-2); line-height: 1.85; margin-bottom: 10px; }
+.section-block p:last-child { margin-bottom: 0; }
+.section-block a { color: var(--orange); text-decoration: none; }
+.section-block a:hover { text-decoration: underline; }
+.placeholder { background: rgba(255,98,0,.08); border: 1px dashed rgba(255,98,0,.3); border-radius: 6px; padding: 2px 8px; font-family: var(--ff-mono); font-size: .82rem; color: var(--orange); }
+.info-grid { display: grid; grid-template-columns: 140px 1fr; gap: 6px 20px; font-size: .93rem; margin-bottom: 10px; }
+.info-grid dt { color: var(--text-3); }
+.info-grid dd { color: var(--text-2); }
+
+/* Footer */
+footer { padding: 44px 0; border-top: 1px solid var(--border); }
+.foot-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+.foot-logo { font-family: var(--ff-disp); font-size: 1.55rem; letter-spacing: .05em; color: var(--text); text-decoration: none; }
+.foot-logo em { color: var(--orange); font-style: normal; }
+.foot-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; }
+.foot-links a { font-size: .82rem; color: var(--text-3); text-decoration: none; transition: color .2s; }
+.foot-links a:hover { color: var(--text-2); }
+.foot-copy { font-size: .78rem; color: var(--text-3); }
+@media (max-width: 600px) { .foot-inner { flex-direction: column; align-items: flex-start; } .info-grid { grid-template-columns: 1fr; } }
+html, html * { cursor: none; }
+.cursor-dot { position: fixed; width: 7px; height: 7px; background: var(--orange); border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%,-50%); transition: opacity .2s; box-shadow: 0 0 8px rgba(255,98,0,.6); }
+.cursor-dot.hide { opacity: 0; }
+.cursor-ring { position: fixed; width: 40px; height: 40px; border: 1.5px solid rgba(255,98,0,.5); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); transition: width .35s cubic-bezier(.22,1,.36,1), height .35s cubic-bezier(.22,1,.36,1), border-color .3s, background .3s; }
+.cursor-ring.expand { width: 64px; height: 64px; border-color: rgba(255,98,0,.9); background: rgba(255,98,0,.05); }
+.scroll-progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--orange), #FF7B28, #ffaa00); transform-origin: left; transform: scaleX(0); z-index: 9001; box-shadow: 0 0 14px rgba(255,98,0,.8); pointer-events: none; }
+@media (max-width: 600px) { .cursor-dot, .cursor-ring { display: none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-logo">Fix<em>It</em></a>
+      <ul class="nav-links">
+        <li><a href="index.html#how">Wie es funktioniert</a></li>
+        <li><a href="index.html#features">Features</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+      </ul>
+      <a href="index.html#download" class="nav-btn">Herunterladen</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menü öffnen" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div class="nav-mobile-menu" id="navMobileMenu">
+  <a href="index.html#how">Wie es funktioniert</a>
+  <a href="index.html#features">Features</a>
+  <a href="index.html#faq">FAQ</a>
+  <a href="index.html#download" class="nav-btn">Herunterladen</a>
+</div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="lbl">Rechtliches</div>
+    <h1>Impressum</h1>
+    <p>Angaben gemäß § 5 TMG</p>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="container">
+    <div class="content-wrap">
+
+      <div class="section-block">
+        <h2>Verantwortlicher</h2>
+        <dl class="info-grid">
+          <dt>Name</dt>
+          <dd>Marius Löding</dd>
+          <dt>Straße</dt>
+          <dd>Breitenwasen 1/3a</dd>
+          <dt>PLZ / Ort</dt>
+          <dd>74211 Leingarten</dd>
+          <dt>Land</dt>
+          <dd>Deutschland</dd>
+        </dl>
+      </div>
+
+      <div class="section-block">
+        <h2>Kontakt</h2>
+        <dl class="info-grid">
+          <dt>E-Mail</dt>
+          <dd><a href="mailto:kontakt@fix-it.website">kontakt@fix-it.website</a></dd>
+        </dl>
+        <p>Bei Fragen oder rechtlichen Anliegen wende dich bitte per E-Mail an uns.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>Umsatzsteuer</h2>
+        <p>Da FixIt eine kostenlose App ist und kein Unternehmen im steuerrechtlichen Sinne betrieben wird, entfällt die Angabe einer Umsatzsteuer-Identifikationsnummer.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <dl class="info-grid">
+          <dt>Name</dt>
+          <dd>Marius Löding</dd>
+          <dt>Anschrift</dt>
+          <dd>Breitenwasen 1/3a, 74211 Leingarten</dd>
+        </dl>
+      </div>
+
+      <div class="section-block">
+        <h2>EU-Streitschlichtung</h2>
+        <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:
+          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr/</a>
+        </p>
+        <p>Unsere E-Mail-Adresse findest du oben im Impressum. Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>Haftung für Inhalte</h2>
+        <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen.</p>
+        <p>Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>Haftung für Links</h2>
+        <p>Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.</p>
+        <p>Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar.</p>
+      </div>
+
+      <div class="section-block">
+        <h2>Urheberrecht</h2>
+        <p>Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <a href="index.html" class="foot-logo">Fix<em>It</em></a>
+      <ul class="foot-links">
+        <li><a href="impressum.html">Impressum</a></li>
+        <li><a href="datenschutz.html">Datenschutz</a></li>
+        <li><a href="agb.html">AGB</a></li>
+        <li><a href="kontakt.html">Kontakt</a></li>
+      </ul>
+      <span class="foot-copy">&copy; 2026 FixIt. Alle Rechte vorbehalten.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+const navToggle = document.getElementById('navToggle');
+const navMobileMenu = document.getElementById('navMobileMenu');
+navToggle.addEventListener('click', () => {
+  const isOpen = navMobileMenu.classList.toggle('open');
+  navToggle.classList.toggle('open', isOpen);
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+  document.body.style.overflow = isOpen ? 'hidden' : '';
+});
+navMobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navToggle.classList.remove('open');
+  navMobileMenu.classList.remove('open');
+  navToggle.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}));
+</script>
+</body>
+</html>
